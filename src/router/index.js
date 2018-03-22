@@ -1,10 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import About from './views/About.vue'
-import Dashboard from './views/Dashboard.vue'
-import Course from './views/Course.vue'
+import Home from '@/views/Home.vue'
+import About from '@/views/About.vue'
+import Dashboard from '@/views/Dashboard.vue'
+import Course from '@/views/Course.vue'
 Vue.use(Router)
+// const routes=[];
+// const files=require.context('./', true, /^\.\/modules\/((?!\/)[\s\S])+\/route\.js$/)
+// files.keys().forEach(key => {
+//   if (key === './index.js') return
+//   routes.push(files(key).default) 
+// })
+// console.log(JSON.stringify(routes))
 
 export default new Router({
   routes: [

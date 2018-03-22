@@ -1,5 +1,5 @@
 <template>
-  <el-menu default-active="1-4-1" router=true class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+  <el-menu default-active="1-4-1" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
     <el-menu-item index="dashboard">
     <i class="el-icon-menu"></i>
     <span slot="title">校区概况</span>
