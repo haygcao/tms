@@ -16,11 +16,16 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/home', 
+      path: '/',
+      name: 'default',
+      component: Home
+    },
+    {
+      path: '/home',
       component: Home,
       name: 'home',
       redirect: '/home/dashboard',
-      meta: { auth: true },
+      meta: { auth: { roles: 'administrator', redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
       children: [
         {
           // 当 /user/:id/profile 匹配成功，
@@ -37,14 +42,9 @@ export default new Router({
       ]
     },
     {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
       path: '/login',
       name: 'login',
-      component: About
+      component: require('@/views/Login.vue').default
     }
   ]
 })

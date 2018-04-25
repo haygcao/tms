@@ -1,0 +1,3 @@
+export const CLEAR_STATE = 'CLEAR_STATE'
+export const RECEIVE_ALL = 'RECEIVE_ALL'
+export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE'

@@ -1,7 +1,14 @@
 // vue.config.js https://github.com/vuejs/vue-cli/blob/dev/docs/config.md
 module.exports = {
-    lintOnSave: true,
-    // configure webpack-dev-server behavior
+  lintOnSave: true,
+  configureWebpack: config => {
+    {
+      output: {
+        publicPath: './'
+      }
+    }
+  },
+  // configure webpack-dev-server behavior
   devServer: {
     open: process.platform === 'darwin',
     host: '0.0.0.0',
@@ -10,6 +17,6 @@ module.exports = {
     hotOnly: false,
     // See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#configuring-proxy
     proxy: null, // string | Object
-    before: app => {}
+    before: app => { }
   }
 }

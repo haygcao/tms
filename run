@@ -1,0 +1,2 @@
+# run the tms-nginx image
+docker run --rm --name tms-web-local -p 8001:80 -d really_edu/tms
