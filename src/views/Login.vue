@@ -68,59 +68,42 @@ export default {
       startLogoShow: false
     };
   },
+  computed: {
+    // ...mapGetters({
+    //   loginResult: "regions"
+    // })
+  },
   components: {},
   created() {},
   mounted() {
-    let ar = this.getAreas();
+    if (this.$auth.isAuthenticated()) {
+      this.$auth.logout();
+    }
+    // let ar = this.getAreas();
   },
   methods: {
     ...mapActions({
-      getAreas: "getAreas"
+      login: "login"
+      // getAreas: "getAreas"
     }),
-    getPayload(token) {
-      //const token = this.storage.getItem(this.tokenName);
-
-      if (token && token.split(".").length === 3) {
-        try {
-          const base64Url = token.split(".")[1];
-          const base64 = base64Url.replace("-", "+").replace("_", "/");
-          return JSON.parse(decodeBase64(base64));
-        } catch (e) {}
-      }
-    },
-    loginSuccess(res) {
+    submitForm(formName) {
       let self = this;
-      this.loginResult.error=false;
-      if (res.data.token) {
-        self.$auth.token(self.$auth.tokenDefaultName, res.data.token);
-        self.$auth.user(self.getPayload(res.data.token) || {});
-      }
-      // self.$auth.fetch().then(user=>{
-      //   console.log(user);
-      // })
-      console.log(res.data);
-    },
-    loginError(res) {
-      console.log(res);
-      
-      this.loginResult.message = res.response.data.error || "登录失败";
-      this.loginResult.error=true;
-    },
-    async submitForm(formName) {
-      let self = this;
-      this.loginResult.error=false;
+      this.loginResult.error = false;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var redirect = this.$auth.redirect();
-          this.$auth.login({
-            url: "/account/token",
-            body: this.loginForm, // Vue-resource
-            data: this.loginForm, // Axios
-            rememberMe: this.loginForm.rememberMe,
-            redirect: { name: redirect ? redirect.from.name : "default" },
-            fetchUser: false,
-            success: self.loginSuccess,
-            error: self.loginError
+          this.login(this.loginForm).then(res => {
+            // console.log("login=====>", res);
+            if (res.token) {
+              let me = {
+                username: this.loginForm.mobile,
+                rememberMe: this.loginForm.rememberMe
+              };
+              this.$auth.login(res.token, me);
+              this.$router.replace(this.$route.query.redirect || "/");
+            } else {
+              this.loginResult.error = true;
+              this.loginResult.message = res.message || "登录失败";
+            }
           });
         } else {
           return false;

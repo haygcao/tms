@@ -1,0 +1,135 @@
+<template>
+  <div class="admin">
+    <div class="layout-head">
+    <header  class="header">
+    <div  class="container">
+    <h1>
+        <router-link to="/"><img src="../../assets/logo.png" alt="element-logo" class="nav-logo"><span>睿乐后台管理</span></router-link>
+    </h1>
+    </div>
+    </header></div>
+    <el-container class="layout-main">
+      <el-menu default-active="1-4-1" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+
+        <el-submenu index="1">
+            <template slot="title">
+            <i class="el-icon-location"></i>
+            <span slot="title">盟商管理</span>
+            </template>
+            <el-menu-item index="/admin/franchisee">加盟校列表</el-menu-item>
+            <el-menu-item index="/admin/franchisee/create">新建加盟校</el-menu-item>
+            
+        </el-submenu>
+        <el-menu-item index="2">
+            <i class="el-icon-menu"></i>
+            <span slot="title">导航二</span>
+        </el-menu-item>
+
+    </el-menu>
+      <el-main>
+          <div class="page-container">
+        <transition name="el-fade-in" mode="out-in">
+          <router-view/>
+        </transition>
+          </div>
+      </el-main>
+    </el-container>
+  
+  </div>
+</template>
+<script>
+// @ is an alias to /src
+// import Header from "@/components/Header.vue";
+// import LeftSideMenu from "@/components/LeftSideMenu.vue";
+export default {
+  name: "admin",
+  data() {
+    return {
+      isCollapse: false,
+      activeIndex: "1",
+      activeIndex2: "1"
+    };
+  },
+  methods: {
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    }
+  }
+};
+</script>
+<style scoped lang="stylus">
+.layout-head {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1500;
+    height: 80px;
+}
+
+.header {
+    height: 80px;
+    background-color: #fff;
+    color: #fff;
+    top: 0;
+    left: 0;
+    width: 100%;
+    line-height: 80px;
+    z-index: 100;
+    position: relative;
+    height: 100%;
+}
+
+.header h1 {
+    margin: 0;
+    float: left;
+    font-size: 32px;
+    font-weight: 400;
+}
+
+.header h1 a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+}
+
+.header .container {
+    border-bottom: 1px solid #d2d2d2;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.header h1 a span {
+    box-sizing: content-box;
+    font-size: 22px;
+    line-height: 38px;
+    vertical-align: text-top;
+}
+
+.header .nav-logo {
+    height: 44px;
+    vertical-align: sub;
+}
+
+.el-menu-vertical:not(.el-menu--collapse) {
+    min-height: 400px;
+    height: 100%;
+}
+
+.admin {
+    height: 100%;
+}
+
+.layout-main {
+    height: 100%;
+    padding-top: 80px;
+}
+
+.page-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+</style>

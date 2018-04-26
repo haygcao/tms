@@ -4,6 +4,8 @@ import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Course from '@/views/Course.vue'
+import Admin from '@/views/admin/Admin.vue'
+import Franchisee from '@/views/admin/Franchisee.vue'
 Vue.use(Router)
 // const routes=[];
 // const files=require.context('./', true, /^\.\/modules\/((?!\/)[\s\S])+\/route\.js$/)
@@ -18,7 +20,29 @@ export default new Router({
     {
       path: '/',
       name: 'default',
-      component: Home
+      component: Home,
+      meta: { auth: { redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
+    },
+    {
+      path: '/admin',
+      component: Admin,
+      name: 'admin',
+      redirect: '/admin/franchisee',
+      meta: { auth: { roles: 'administrator', redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
+      children: [
+        {
+          // 当 /user/:id/profile 匹配成功，
+          // UserProfile 会被渲染在 User 的 <router-view> 中
+          path: 'franchisee',
+          component: Franchisee
+        },
+        {
+          // 当 /user/:id/posts 匹配成功
+          // UserPosts 会被渲染在 User 的 <router-view> 中
+          path: 'franchisee/create',
+          component:  require('@/views/admin/AddFranchisee.vue').default
+        }
+      ]
     },
     {
       path: '/home',

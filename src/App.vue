@@ -20,5 +20,6 @@ body, html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
    height: 100%;
+   overflow: hidden;
 }
 </style>

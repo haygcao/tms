@@ -31,7 +31,7 @@ const syncUserStore = function (store, auth, options) {
 }
 class Authenticate {
     constructor(Vue, options) {
-        let _options = {
+        let _defaultOpt = {
             tokenType: 'Bearer',
             storagePrefix: '_auth',
             loginPath: '/login',
@@ -63,7 +63,7 @@ class Authenticate {
             self.watch.$data.authenticated = false;
             if (self.options.Vue.router) {
                 let to = self.options.Vue.router.currentRoute;
-                if (to.path != self.options.logoutRedirect) {
+                if (to.path != self.options.logoutRedirect && to.path != self.options.loginPath) {
                     self.options.Vue.router.replace({ path: self.options.logoutRedirect, query: { redirect: to.fullPath } })
 
                 }
@@ -104,7 +104,7 @@ class Authenticate {
         this.__httpInterceptor();
     }
     get tokenStorage() {
-        return this.options.storage;
+        return this.options.tokenStorage;
     }
     get tokenName() {
 
@@ -167,11 +167,11 @@ class Authenticate {
             let data = { user: user, rememberMe: true }
             return this.tokenStorage.setItem(this._storageKey('rememberMe'), JSON.stringify(data), 12096e5);//14d
         } else {
-            return this.tokenStorage.getItem(this.getStorageKey('rememberMe'));
+            return this.tokenStorage.getItem(this._storageKey('rememberMe'));
         }
     }
     removeRememberMe() {
-        return this.tokenStorage.removeItem(this.getStorageKey('rememberMe'));
+        return this.tokenStorage.removeItem(this._storageKey('rememberMe'));
     }
     getPayload() {
         const token = this.getToken();
@@ -185,8 +185,9 @@ class Authenticate {
         }
     }
     _storageKey(name) {
-        if (this.options.tokenPrefix) {
-            return [this.options.tokenPrefix, name].join('_')
+
+        if (this.options.storagePrefix) {
+            return [this.options.storagePrefix, name].join('_')
         } else {
             return name;
         }
@@ -303,6 +304,10 @@ class Authenticate {
             return res;
         }
         function _responseErrorIntercept(err) {
+            let res=err.response||{};
+            if (_invalidToken(res)) {
+                auth.watch.$emit(AUTH_EVENTS.UNAUTHORIZED, res.data);
+            }
             // console.log('response error interceptors=====>', err);
             return Promise.reject(err);
         }
