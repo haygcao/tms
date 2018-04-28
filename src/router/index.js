@@ -34,6 +34,13 @@ export default new Router({
           // 当 /user/:id/profile 匹配成功，
           // UserProfile 会被渲染在 User 的 <router-view> 中
           path: 'franchisee',
+          redirect: '/admin/franchisee/1',
+        },
+        {
+          // 当 /user/:id/profile 匹配成功，
+          // UserProfile 会被渲染在 User 的 <router-view> 中
+          name:'franchisee_list',
+          path: 'franchisee/:page(\\d+)',
           component: Franchisee
         },
         {
@@ -41,6 +48,19 @@ export default new Router({
           // UserPosts 会被渲染在 User 的 <router-view> 中
           path: 'franchisee/create',
           component:  require('@/views/admin/AddFranchisee.vue').default
+        },
+        {
+          // 当 /user/:id/posts 匹配成功
+          // UserPosts 会被渲染在 User 的 <router-view> 中
+          name:'franchisee_detail',
+          path: 'franchisee/:franchisee_id/school',
+          component:  require('@/views/admin/FranchiseeDetail.vue').default
+        },
+        {
+          // 当 /user/:id/posts 匹配成功
+          // UserPosts 会被渲染在 User 的 <router-view> 中
+          path: 'franchisee/school/create',
+          component:  require('@/views/admin/AddSchool.vue').default
         }
       ]
     },

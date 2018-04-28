@@ -30,6 +30,12 @@ const getters = {
         }
         return list;
     },
+    regionName: (state) => (code) => {
+        let region = state.regions.find(p => p.region_code == code);
+        if (region) {
+            return region.region_name;
+        }
+    },
     // // provinceList: state => state.regions.filter(p => p.parent_id = '1'),
     children: (state) => (id) => {
         let l = state.regions.filter(p => p.parent_id === id);

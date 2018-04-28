@@ -1,7 +1,7 @@
 <template>
 <div>
 <el-header>
-<h3>创建盟商</h3>
+<h3>创建校区</h3>
 </el-header>
 <el-main>
 <el-form ref="form" :model="form" label-width="180px" class="create-form">
@@ -56,7 +56,7 @@
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
-  name: "create_franchisee",
+  name: "create_school",
   data() {
     return {
       region_options: [],
