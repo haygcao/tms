@@ -63,7 +63,7 @@ class Authenticate {
             self.watch.$data.authenticated = false;
             if (self.options.Vue.router) {
                 let to = self.options.Vue.router.currentRoute;
-                if (to.path != self.options.logoutRedirect && to.path != self.options.loginPath) {
+                if ( to.path != self.options.loginPath) {
                     self.options.Vue.router.replace({ path: self.options.logoutRedirect, query: { redirect: to.fullPath } })
 
                 }
@@ -77,7 +77,7 @@ class Authenticate {
             if (self.options.Vue.router) {
                 let to = self.options.Vue.router.currentRoute;
 
-                let event = new CustomEvent(AUTH_EVENTS.UNAUTHORIZED, data);
+                let event = new CustomEvent(AUTH_EVENTS.UNAUTHORIZED, { detail: data });
                 window.dispatchEvent(event);
                 if (to.path != self.options.loginPath) {
                     self.options.Vue.router.replace({ path: self.options.loginPath, query: { redirect: to.fullPath } })
@@ -115,7 +115,9 @@ class Authenticate {
     }
     get user() {
         if (this.isAuthenticated()) {
-            return this.watch.data;
+            // 这里使用 tokenstore 的数据，否则刷新后会丢失
+            //return this.watch.data;
+            return this.getPayload()
         }
         return null;
     }
@@ -304,7 +306,7 @@ class Authenticate {
             return res;
         }
         function _responseErrorIntercept(err) {
-            let res=err.response||{};
+            let res = err.response || {};
             if (_invalidToken(res)) {
                 auth.watch.$emit(AUTH_EVENTS.UNAUTHORIZED, res.data);
             }

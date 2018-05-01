@@ -3,7 +3,25 @@
 <header  class="header">
     <div  class="container">
     <h1><router-link to="/"><img src="../assets/logo.png" alt="element-logo" class="nav-logo"><span>睿乐盟</span>
-    </router-link></h1></div></header></div>
+    </router-link></h1>
+   <ul class="nav">
+    <li class="nav-item">
+    <router-link v-if="user==null" to="/login"><span>登录</span>
+    </router-link>
+    <el-dropdown v-if="user&&user.id" trigger="click">
+      <span class="el-dropdown-link">
+        {{user.user_name}}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item>
+            <a @click="logout()">退出登录</a>
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    </li>
+   </ul>
+    </div>
+</header></div>
 </template>
 
 <script>
@@ -11,6 +29,21 @@ export default {
   name: "Header",
   props: {
     msg: String
+  },
+  data() {
+    return {};
+  },
+  computed: {
+    user() {
+      console.log(this.$auth.user);
+      return this.$auth.user;
+    }
+  },
+  mounted() {},
+  methods: {
+      logout(){
+          this.$auth.logout();
+      }
   }
 };
 </script>
@@ -68,5 +101,22 @@ export default {
 .header .nav-logo {
     height: 44px;
     vertical-align: sub;
+}
+
+.header .nav {
+    float: right;
+    height: 100%;
+    line-height: 80px;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+header .nav-item {
+    margin: 0;
+    float: left;
+    list-style: none;
+    position: relative;
+    cursor: pointer;
 }
 </style>

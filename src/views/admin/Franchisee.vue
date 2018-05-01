@@ -28,14 +28,12 @@
       </template>
     </el-table-column>
     <el-table-column
-      prop="signed_date"
-      label="签约日期"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      prop="signed_expire_date"
-      label="授权到期日期"
-      width="120">
+      label="授权期限">
+       <template slot-scope="scope">
+          <span style="">{{ scope.row.signed_date }}</span>
+          至
+           <span style="">{{ scope.row.signed_expire_date }}</span>
+      </template>
     </el-table-column>
     <el-table-column
       fixed="right"
@@ -43,6 +41,7 @@
       width="100">
       <template slot-scope="scope">
         <el-button @click="handleClick(scope.row)" type="text" size="small">管理</el-button>
+         <el-button @click="handleDelClick(scope.row)" type="text" size="small">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -54,6 +53,7 @@
       :total="franchiseeList.count">
     </el-pagination>
   </div>
+
 </div>
 </template>
 
@@ -62,19 +62,21 @@ import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      pageSize: 20
+      pageSize: 20,
+      page: 1
     };
   },
   computed: {
     ...mapState({
-      franchiseeList: state => state.franchisee.franchiseeList,
+      franchiseeList: state => state.franchisee.franchiseeList
       // regions: state => state.region.regions
     })
   },
   beforeRouteUpdate(to, from, next) {
     // react to route changes...
     // don't forget to call next()
-    let offset = (to.params.page || 0) * this.pageSize;
+    this.page = to.params.page > 0 ? to.params.page : 1;
+    let offset = (this.page - 1) * this.pageSize;
     this.getList({ offset: offset, limit: this.pageSize });
   },
   created() {
@@ -85,17 +87,30 @@ export default {
     // }
   },
   mounted() {
-    let offset = (this.$route.params.page || 0) * this.pageSize;
+    let offset = (this.page - 1) * this.pageSize;
     this.getList({ offset: offset, limit: this.pageSize });
   },
   methods: {
     ...mapActions({
       getList: "getFranchiseeList",
-      // getRegions: "getRegions"
+      removeFranchisee: "removeFranchisee"
     }),
     handleClick(val) {
-      console.log(val)
-      this.$router.push({ name: "franchisee_detail", params: { franchisee_id: val.id } });
+      console.log(val);
+      this.$router.push({
+        name: "franchisee_detail",
+        params: { franchisee_id: val.id }
+      });
+    },
+    handleDelClick(val) {
+      let self = this;
+      this.$confirm("确认删除？")
+        .then(_ => {
+          self.removeFranchisee({
+            franchisee_id: val.id
+          });
+        })
+        .catch(_ => {});
     },
     // regionName(code) {
     //   let region = this.regions.find(p => p.region_code == code);

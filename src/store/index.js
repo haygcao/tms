@@ -3,8 +3,10 @@ import Vuex from 'vuex'
 
 import modules from './modules'
 import createLogger from 'vuex/dist/logger'
+import createPersistedState from 'vuex-persistedstate'
+
 Vue.use(Vuex)
-let plugins = [];
+let plugins = [createPersistedState()];
 if (process.env.NODE_ENV !== 'production') {
   plugins = plugins.concat([createLogger()]);
 

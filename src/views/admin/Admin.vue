@@ -6,6 +6,22 @@
     <h1>
         <router-link to="/"><img src="../../assets/logo.png" alt="element-logo" class="nav-logo"><span>睿乐后台管理</span></router-link>
     </h1>
+    <ul class="nav">
+    <li class="nav-item">
+    <router-link v-if="user==null" to="/login"><span>登录</span>
+    </router-link>
+    <el-dropdown v-if="user&&user.id" trigger="click">
+      <span class="el-dropdown-link">
+        {{user.user_name}}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item>
+            <a @click="logout()">退出登录</a>
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    </li>
+   </ul>
     </div>
     </header></div>
     <el-container class="layout-main">
@@ -50,7 +66,16 @@ export default {
       activeIndex2: "1"
     };
   },
+  computed: {
+    user() {
+      console.log(this.$auth.user);
+      return this.$auth.user;
+    }
+  },
   methods: {
+    logout() {
+      this.$auth.logout();
+    },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -60,7 +85,7 @@ export default {
   }
 };
 </script>
-<style scoped lang="stylus">
+<style lang="stylus">
 .layout-head {
     position: fixed;
     width: 100%;
@@ -131,5 +156,29 @@ export default {
 .page-container {
     max-width: 1000px;
     margin: 0 auto;
+}
+
+.el-row {
+    margin-bottom: 20px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+.header .nav {
+    float: right;
+    height: 100%;
+    line-height: 80px;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+header .nav-item {
+    margin: 0;
+    float: left;
+    list-style: none;
+    position: relative;
+    cursor: pointer;
 }
 </style>

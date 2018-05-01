@@ -59,7 +59,8 @@ export default new Router({
         {
           // 当 /user/:id/posts 匹配成功
           // UserPosts 会被渲染在 User 的 <router-view> 中
-          path: 'franchisee/school/create',
+          name:'franchisee_add_school',
+          path: 'franchisee/:franchisee_id/school/create',
           component:  require('@/views/admin/AddSchool.vue').default
         }
       ]
@@ -89,6 +90,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: require('@/views/Login.vue').default
-    }
+    },
+    {
+      path: '*',
+      name: '404',
+      component: require('@/views/404.vue').default
+    },
   ]
 })
