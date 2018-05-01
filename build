@@ -1,1 +1,1 @@
-docker build -t really_edu/tms .
+docker build -t reallyedu/tms-web .

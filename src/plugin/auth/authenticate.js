@@ -141,6 +141,17 @@ class Authenticate {
 
         this.watch.$emit(AUTH_EVENTS.LOGIN, payload || {});
     }
+    userInfo(userInfo){
+        if (userInfo && userInfo.id) {
+            let data = userInfo
+            return this.tokenStorage.setItem(this._storageKey('user_info'), JSON.stringify(data), 12096e5);//14d
+        } else {
+            let info= this.tokenStorage.getItem(this._storageKey('user_info'));
+            if(info){
+                return JSON.parse(info);
+            }
+        }
+    }
     logout() {
         this.removeToken();
         let remember = this.rememberMe();
@@ -169,7 +180,10 @@ class Authenticate {
             let data = { user: user, rememberMe: true }
             return this.tokenStorage.setItem(this._storageKey('rememberMe'), JSON.stringify(data), 12096e5);//14d
         } else {
-            return this.tokenStorage.getItem(this._storageKey('rememberMe'));
+            let info= this.tokenStorage.getItem(this._storageKey('rememberMe'));
+            if(info){
+                return JSON.parse(info);
+            }
         }
     }
     removeRememberMe() {

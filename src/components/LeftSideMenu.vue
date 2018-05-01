@@ -1,21 +1,22 @@
 <template>
-  <el-menu default-active="1-4-1" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-    <el-menu-item index="dashboard">
+  <el-menu default-active="home" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+    <el-menu-item index="home/dashboard">
     <i class="el-icon-menu"></i>
     <span slot="title">校区概况</span>
   </el-menu-item>
   <el-submenu index="2">
     <template slot="title">
       <i class="el-icon-location"></i>
-      <span slot="title">校区概况</span>
+      <span slot="title">业务管理</span>
     </template>
 
     <el-menu-item-group>
-      <span slot="title">分组一</span>
-      <el-menu-item index="1-1">选项1</el-menu-item>
-      <el-menu-item index="1-2">选项2</el-menu-item>
+      <span slot="title">员工</span>
+      <el-menu-item index="/employee">员工管理</el-menu-item>
+      <el-menu-item index="/employee/create">新增员工</el-menu-item>
+      <el-menu-item index="/employee/update">新增员工</el-menu-item>
     </el-menu-item-group>
-    <el-menu-item-group title="分组2">
+    <el-menu-item-group title="价格">
       <el-menu-item index="1-3">选项3</el-menu-item>
     </el-menu-item-group>
     <el-submenu index="1-4">

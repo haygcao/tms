@@ -70,7 +70,7 @@ export default new Router({
       component: Home,
       name: 'home',
       redirect: '/home/dashboard',
-      meta: { auth: { roles: 'administrator', redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
+      meta: { auth: { redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
       children: [
         {
           // 当 /user/:id/profile 匹配成功，
@@ -82,6 +82,32 @@ export default new Router({
           // 当 /user/:id/posts 匹配成功
           // UserPosts 会被渲染在 User 的 <router-view> 中
           path: 'course',
+          component: Course
+        }
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      name: 'employee',
+      redirect: '/employee/1',
+      meta: { auth: { redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
+      children: [
+        {
+          // 当 /user/:id/profile 匹配成功，
+          name:'employee_default',
+          path: 'employee',
+          redirect: '/employee/1',
+        },
+        {
+          // 当 /user/:id/profile 匹配成功，
+          name:'employee_list',
+          path: 'employee/:page(\\d+)',
+          component: require('@/views/employee/Employee.vue').default
+        },
+        {
+          name:'employee_create',
+          path: 'employee/create',
           component: Course
         }
       ]

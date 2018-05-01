@@ -83,8 +83,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      login: "login"
-      // getAreas: "getAreas"
+      login: "login",
+      fetchUser: "profile"
     }),
     submitForm(formName) {
       let self = this;
@@ -99,6 +99,7 @@ export default {
                 rememberMe: this.loginForm.rememberMe
               };
               this.$auth.login(res.token, me);
+              this.fetchUser();
               this.$router.replace(this.$route.query.redirect || "/");
             } else {
               this.loginResult.error = true;

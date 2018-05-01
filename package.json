@@ -5,9 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build --target=app",
+    "build:test": "vue-cli-service build --mode test --target=app",
     "test": "vue-cli-service test",
     "lint": "vue-cli-service lint",
-    "build:docker": "npm run build && docker build -t really_edu/tms ."
+    "build:docker": "npm run build && docker build -t really_edu/tms-web ."
   },
   "dependencies": {
     "@websanova/vue-auth": "^2.21.8-beta",

@@ -25,7 +25,7 @@
     </div>
     </header></div>
     <el-container class="layout-main">
-      <el-menu default-active="1-4-1" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+      <el-menu default-active="/admin/franchisee" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
 
         <el-submenu index="1">
             <template slot="title">

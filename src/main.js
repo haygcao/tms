@@ -21,7 +21,7 @@ importAll(require.context('@/assets/css/', false, /\.css$/));
 Vue.router = router;
 sync(store, router);//use vuex-router-sync to sync store and router state
 Vue.use(VueAxios, axios)
-axios.defaults.baseURL = 'http://localhost:7001/';
+axios.defaults.baseURL =process.env.VUE_APP_TMSAPI||'http://localhost:7001/';
 Vue.use(Auth, { router: router, store: store })
 // Vue.use(require('@websanova/vue-auth'), {
 //   auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
