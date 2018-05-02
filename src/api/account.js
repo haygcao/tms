@@ -1,5 +1,5 @@
 import axios from 'axios';
-import qs from 'qs';
+// import qs from 'qs';
 
 async function getAccounts(headers = {}) {
     const response = await axios.post('/api/accounts', null, headers);
@@ -24,7 +24,6 @@ async function profile() {
         console.log(err);
         return { code: 500, message: '获取数据失败' };
     }
-
 }
 async function logout() {
     return { success: true };

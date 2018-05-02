@@ -6,7 +6,7 @@
     </el-row>
     <el-row>
         <el-form ref="form" :model="form" label-width="180px" class="create-form">
-             <el-form-item label="商户" >
+        <el-form-item label="商户" >
            <label >{{current_franchisee.data.name}}</label>
         </el-form-item>
         <el-form-item label="名称" prop="name" :rules="[

@@ -108,7 +108,7 @@ export default new Router({
         {
           name:'employee_create',
           path: 'employee/create',
-          component: Course
+          component: require('@/views/employee/CreateEmployee.vue').default
         }
       ]
     },

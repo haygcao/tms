@@ -41,5 +41,14 @@ export default {
   height: 100%;
   padding-top: 80px;
 }
+
+.home .el-row {
+  margin-top: 20px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
 </style>
+
 
