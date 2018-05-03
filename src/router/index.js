@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
-import Dashboard from '@/views/Dashboard.vue'
 import Course from '@/views/Course.vue'
 import Admin from '@/views/admin/Admin.vue'
 import Franchisee from '@/views/admin/Franchisee.vue'
@@ -21,14 +20,14 @@ export default new Router({
       path: '/',
       name: 'default',
       component: Home,
-      meta: { auth: { redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
+      meta: { auth: true },
     },
     {
       path: '/admin',
       component: Admin,
       name: 'admin',
       redirect: '/admin/franchisee',
-      meta: { auth: { roles: 'administrator', redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
+      meta: { auth: { roles: ['administrator'] } },
       children: [
         {
           // 当 /user/:id/profile 匹配成功，
@@ -39,7 +38,7 @@ export default new Router({
         {
           // 当 /user/:id/profile 匹配成功，
           // UserProfile 会被渲染在 User 的 <router-view> 中
-          name:'franchisee_list',
+          name: 'franchisee_list',
           path: 'franchisee/:page(\\d+)',
           component: Franchisee
         },
@@ -47,36 +46,42 @@ export default new Router({
           // 当 /user/:id/posts 匹配成功
           // UserPosts 会被渲染在 User 的 <router-view> 中
           path: 'franchisee/create',
-          component:  require('@/views/admin/AddFranchisee.vue').default
+          component: require('@/views/admin/AddFranchisee.vue').default
         },
         {
           // 当 /user/:id/posts 匹配成功
           // UserPosts 会被渲染在 User 的 <router-view> 中
-          name:'franchisee_detail',
+          name: 'franchisee_detail',
           path: 'franchisee/:franchisee_id/school',
-          component:  require('@/views/admin/FranchiseeDetail.vue').default
+          component: require('@/views/admin/FranchiseeDetail.vue').default
         },
         {
           // 当 /user/:id/posts 匹配成功
           // UserPosts 会被渲染在 User 的 <router-view> 中
-          name:'franchisee_add_school',
+          name: 'franchisee_add_school',
           path: 'franchisee/:franchisee_id/school/create',
-          component:  require('@/views/admin/AddSchool.vue').default
+          component: require('@/views/admin/AddSchool.vue').default
         }
       ]
     },
     {
-      path: '/home',
+      path: '/teaching',
       component: Home,
-      name: 'home',
-      redirect: '/home/dashboard',
-      meta: { auth: { redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
+      name: 'teaching',
+      redirect: '/classroom',
+      meta: { auth: { roles: ["teaching_manager", "school_manager", "administrator", "franchisee_admin", "investor"] } },
       children: [
         {
           // 当 /user/:id/profile 匹配成功，
           // UserProfile 会被渲染在 User 的 <router-view> 中
-          path: 'dashboard',
-          component: Dashboard
+          path: 'classroom',
+          component: require('@/views/teaching_manage/Classroom.vue').default
+        },
+        {
+          // 当 /user/:id/profile 匹配成功，
+          // UserProfile 会被渲染在 User 的 <router-view> 中
+          path: 'classroom/create',
+          component: require('@/views/teaching_manage/AddClassroom.vue').default
         },
         {
           // 当 /user/:id/posts 匹配成功
@@ -87,26 +92,20 @@ export default new Router({
       ]
     },
     {
-      path: '/',
+      path: '/home',
       component: Home,
       name: 'employee',
-      redirect: '/employee/1',
-      meta: { auth: { redirect: { name: 'default' }, forbiddenRedirect: '/403' } },
+      redirect: '/employee',
+      meta: { auth: { roles: ['administrator', 'franchisee_admin', 'investor'] } },
       children: [
         {
           // 当 /user/:id/profile 匹配成功，
-          name:'employee_default',
+          name: 'employee_list',
           path: 'employee',
-          redirect: '/employee/1',
-        },
-        {
-          // 当 /user/:id/profile 匹配成功，
-          name:'employee_list',
-          path: 'employee/:page(\\d+)',
           component: require('@/views/employee/Employee.vue').default
         },
         {
-          name:'employee_create',
+          name: 'employee_create',
           path: 'employee/create',
           component: require('@/views/employee/CreateEmployee.vue').default
         }
@@ -116,6 +115,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: require('@/views/Login.vue').default
+    },
+    {
+      path: '/403',
+      name: '403',
+      component: require('@/views/403.vue').default
     },
     {
       path: '*',

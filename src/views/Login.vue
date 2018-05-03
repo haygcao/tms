@@ -99,8 +99,12 @@ export default {
                 rememberMe: this.loginForm.rememberMe
               };
               this.$auth.login(res.token, me);
-              this.fetchUser();
-              this.$router.replace(this.$route.query.redirect || "/");
+              this.fetchUser().then(user => {
+                if (user.data) {
+                  this.$auth.userInfo(user.data);
+                }
+                this.$router.replace(this.$route.query.redirect || "/");
+              });
             } else {
               this.loginResult.error = true;
               this.loginResult.message = res.message || "登录失败";

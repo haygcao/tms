@@ -49,6 +49,7 @@ const actions = {
        let profile= await account.profile();
 
         commit(fetch_user_info, { profile });
+        return Promise.resolve(profile);
     }
 }
 const mutations = {

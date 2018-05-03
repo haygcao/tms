@@ -31,7 +31,7 @@
       </el-form-item>
       <el-form-item label="手机号(登录睿乐系统)" prop="mobile" :rules="[
             { required: true, message: '请输入手机号', trigger: 'blur' },
-            { pattern : /^1[34578]\d{9}$/, message: '只支持中国大陆的手机号码', trigger: 'blur' },
+            { pattern : /^1[34578]\d{9}$/, message: '只支持中国大陆手机号码', trigger: 'blur' },
             ]">
           <el-col :span="24">
           <el-input v-model="createForm.mobile" placeholder="手机号为登录睿乐系统的账号"></el-input>
@@ -45,6 +45,7 @@
       </el-form-item>
       <el-form-item label="身份证号" prop="id_card" :rules="[
             { required: true, message: '请输入身份证号', trigger: 'blur' },
+            { pattern: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/, message: '只支持中国大陆身份证', trigger: 'blur' },
             ]">
           <el-input v-model="createForm.id_card" placeholder="身份证号"></el-input>
       </el-form-item>
@@ -67,10 +68,10 @@
           <el-option v-for="item in marital_status" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="学历" prop="marital_status" :rules="[
+      <el-form-item label="学历" prop="education" :rules="[
             { required: true, message: '请填写学历', trigger: 'blur' },
             ]">
-        <el-select v-model="createForm.marital_status" placeholder="学历">
+        <el-select v-model="createForm.education" placeholder="学历">
           <el-option v-for="item in educations" :key="item.key" :label="item.name" :value="item.key"></el-option>
         </el-select>
       </el-form-item>
@@ -93,6 +94,18 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="职位类型" prop="job_type" :rules="[
+            { required: true, message: '请输入职位类型', trigger: 'blur' },
+            ]">
+        <el-select v-model="createForm.job_type" placeholder="职位类型">
+          <el-option
+            v-for="item in job_types"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item v-if="isAddTeacher()" label="毕业院校" prop="graduated_from" :rules="[
             { required: true, message: '请输入毕业院校', trigger: 'blur' },
             ]">
@@ -108,14 +121,16 @@
             ]">
           <el-input type="textarea" v-model="createForm.teaching_achievement" placeholder="教学成果"></el-input>
       </el-form-item>
-      <el-form-item label="隶属校区" prop="schools">
+      <el-form-item label="隶属校区" prop="schools" :rules="[
+            { required: true, message: '请选择至少一个校区', trigger: 'blur' },
+            ]">
         <el-checkbox-group v-model="createForm.schools">
-        <el-checkbox label="备选项1" border></el-checkbox>
-        <el-checkbox label="备选项2" border ></el-checkbox>
+        <el-checkbox v-if="!muti_school" :label="schools[0].name" :disabled="true" checked border></el-checkbox>
+        <el-checkbox v-if="muti_school" v-for="item in schools" :key="item.id" :label="item.name" border></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit" icon="el-icon-search">保存</el-button>
+        <el-button type="primary" @click="onSubmit" :disabled="!createForm.employee_no" icon="el-icon-search">保存</el-button>
       </el-form-item>
     </el-form>
   </el-row>
@@ -130,12 +145,18 @@ export default {
   data() {
     return {
       genders: [{ value: 1, label: "男" }, { value: 0, label: "女" }],
+      job_types: [
+        { value: 0, label: "全职" },
+        { value: 1, label: "专职" },
+        { value: 2, label: "兼职" }
+      ],
       marital_status: [
         { value: 1, label: "已婚" },
         { value: 0, label: "未婚" }
       ],
       createForm: {
-        employee_no: "123",
+        employee_no: undefined,
+        employee_number: undefined,
         name: undefined,
         state: undefined,
         job_title: undefined,
@@ -149,6 +170,7 @@ export default {
         job_type: undefined,
         hire_date: undefined,
         graduated_from: undefined,
+        education: undefined,
         teaching_features: undefined,
         teaching_achievement: undefined,
         schools: []
@@ -159,19 +181,43 @@ export default {
     ...mapState({
       jobTitles: state => state.metadata.jobTitles,
       educations: state => state.metadata.educations,
-      createResult: state => state.employee.create_result
-    })
+      createResult: state => state.employee.create_result,
+      pre_build_employee: state => state.employee.new_employee
+    }),
+    schools: function() {
+      let schools = this.$auth.userInfo().schools || [];
+      return schools;
+    },
+    muti_school: function() {
+      return this.schools.length >= 2;
+    }
+  },
+  watch: {
+    pre_build_employee: function(val, old) {
+      if (val.code > 0) {
+        this.$message({
+          message: "无法获取到员工编号",
+          type: "error"
+        });
+      } else {
+        this.createForm.employee_no = val.data.employee_no;
+        this.createForm.employee_number = val.data.employee_number;
+      }
+    },
+    createResult: function(val, old) {}
   },
   mounted() {
     this.getJobTitles();
     this.getEducations();
+    this.generateEmployeeNo();
   },
   methods: {
     ...mapActions([
       "getJobTitles",
       "getEducations",
       "getEmployeeList",
-      "createEmployee"
+      "createEmployee",
+      "generateEmployeeNo"
     ]),
     isAddTeacher() {
       return this.createForm.job_title == "teacher";
@@ -181,9 +227,28 @@ export default {
       this.$refs["createForm"].validate(valid => {
         if (valid) {
           let payload = self.createForm;
+          let school_names = payload.schools;
+          payload.schools = this.schools.filter(v =>
+            school_names.includes(v.name)
+          );
           this.createEmployee(payload);
         }
       });
+    },
+    afterCreated(result) {
+      if (result.code > 0) {
+        this.$message({
+          message: result.message || "保存失败",
+          type: "error"
+        });
+      } else {
+        this.$message.success("保存成功");
+        this.resetForm();
+      }
+    },
+    resetForm(){
+        this.$refs['createForm'].resetFields();
+        this.generateEmployeeNo();
     }
   }
 };

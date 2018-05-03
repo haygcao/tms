@@ -5,6 +5,11 @@ const _titles = [
     { key: 'teaching_manager', name: '教学管理', show: true },
     { key: 'school_manager', name: '校区管理', show: true }
 ]
+const job_types = [
+    { value: 0, label: "全职" },
+    { value: 1, label: "专职" },
+    { value: 2, label: "兼职" }
+]
 const _educations = [
     { name: '大专以下', key: 'secondary' },
     { name: '大专', key: 'college' },

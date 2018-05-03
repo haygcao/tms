@@ -5,19 +5,24 @@ const AUTH_EVENTS = {
     LOGOUT: 'AUTH.LOGOUT',
     UNAUTHORIZED: 'AUTH.UNAUTHORIZED',
     FORBIDDEN: 'AUTH.FORBIDDEN',
-    REFRESH: 'AUTH.REFRESH'
+    REFRESH: 'AUTH.REFRESH',
+    USERINFO: 'AUTH.USERINFO'
 }
 const syncUserStore = function (store, auth, options) {
     let moduleName = (options || {}).moduleName || 'user'
 
     store.registerModule(moduleName, {
-        state: { data: null },
+        state: { data: null, user_info: null },
         mutations: {
             'auth/user_fetched': function (state, data) {
-                store.state[moduleName] = data;
+                store.state[moduleName].data = data;
             },
             'auth/user_removed': function (state) {
-                store.state[moduleName] = { data: null };
+                store.state[moduleName].data = null;
+                store.state[moduleName].user_info = null;
+            },
+            'auth/user_info': function (state, data) {
+                store.state[moduleName].user_info = data;
             },
         }
     })
@@ -27,7 +32,9 @@ const syncUserStore = function (store, auth, options) {
     auth.watch.$on(AUTH_EVENTS.LOGOUT, function () {
         store.commit('auth/user_removed')
     })
-
+    auth.watch.$on(AUTH_EVENTS.USERINFO, function (user) {
+        store.commit('auth/user_info', user)
+    });
 }
 class Authenticate {
     constructor(Vue, options) {
@@ -63,7 +70,7 @@ class Authenticate {
             self.watch.$data.authenticated = false;
             if (self.options.Vue.router) {
                 let to = self.options.Vue.router.currentRoute;
-                if ( to.path != self.options.loginPath) {
+                if (to.path != self.options.loginPath) {
                     self.options.Vue.router.replace({ path: self.options.logoutRedirect, query: { redirect: to.fullPath } })
 
                 }
@@ -85,6 +92,7 @@ class Authenticate {
                 }
             }
         });
+
         if (this.options.refreshToken && this.options.refreshToken.enable) {
             this.watch.$on(AUTH_EVENTS.REFRESH, function () {
                 if (self.options.store) {
@@ -141,19 +149,24 @@ class Authenticate {
 
         this.watch.$emit(AUTH_EVENTS.LOGIN, payload || {});
     }
-    userInfo(userInfo){
+    userInfo(userInfo) {
         if (userInfo && userInfo.id) {
-            let data = userInfo
+            let data = userInfo;
+            this.watch.$emit(AUTH_EVENTS.USERINFO, userInfo || {});
             return this.tokenStorage.setItem(this._storageKey('user_info'), JSON.stringify(data), 12096e5);//14d
         } else {
-            let info= this.tokenStorage.getItem(this._storageKey('user_info'));
-            if(info){
+            let info = this.tokenStorage.getItem(this._storageKey('user_info'));
+            if (info) {
                 return JSON.parse(info);
             }
         }
     }
+    removeUserInfo() {
+        return this.tokenStorage.removeItem(this._storageKey('user_info'))
+    }
     logout() {
         this.removeToken();
+        this.removeUserInfo();
         let remember = this.rememberMe();
         if (remember && !remember.rememberMe) {
             this.removeRememberMe();
@@ -164,7 +177,7 @@ class Authenticate {
 
         if (this._checkAuthenticated()) {
             if (role) {
-                return compare(role, this.watch.data[this.options.rolesVar]);
+                return this.isInRole(role)
             }
 
             return true;
@@ -173,15 +186,16 @@ class Authenticate {
         return false;
     }
     isInRole(roles) {
-        return compare(roles, this.watch.data[this.options.rolesVar]);
+        let userRoles = this.watch.data ? this.watch.data[this.options.rolesVar] : this.getPayload().roles;
+        return compare(roles, userRoles);
     }
     rememberMe(user) {
         if (user && user.userName) {
             let data = { user: user, rememberMe: true }
             return this.tokenStorage.setItem(this._storageKey('rememberMe'), JSON.stringify(data), 12096e5);//14d
         } else {
-            let info= this.tokenStorage.getItem(this._storageKey('rememberMe'));
-            if(info){
+            let info = this.tokenStorage.getItem(this._storageKey('rememberMe'));
+            if (info) {
                 return JSON.parse(info);
             }
         }
@@ -260,19 +274,39 @@ class Authenticate {
             if (authRoutes.length) {
                 authRouter = authRoutes[authRoutes.length - 1].meta.auth;
             }
+            let transfer = {};
             if (authRouter) {
                 // this route requires auth, check if logged in
                 // if not, redirect to login page.
                 if (!auth.isAuthenticated()) {
-                    next({
-                        path: auth.options.loginPath,//'/login',
-                        query: { redirect: to.fullPath }
-                    })
-                } else if (authRouter.constructor === Array && !auth.isInRole(authRouter)) {
-                    next({
-                        path: auth.options.forbiddenPath,//'/403',
-                        query: { redirect: to.fullPath }
-                    })
+
+                    // if (authRouter.redirect) {
+                    //     if (typeof authRouter.redirect === 'string') {
+                    //         transfer.path = authRouter.redirect
+                    //     }
+                    //     if (typeof authRouter.redirect === 'object') {
+                    //         transfer = authRouter.redirect
+                    //     }
+                    // } else {
+                    //     transfer.path = auth.options.loginPath
+                    // }
+                    transfer.path = auth.options.loginPath
+                    transfer.query = to.fullPath;
+                    next(transfer)
+                } else if (typeof authRouter === 'object' && authRouter.roles
+                    && (typeof authRouter.roles === 'string' || authRouter.roles.constructor === Array) && !auth.isInRole(authRouter.roles)) {
+                    // if (authRouter.redirect) {
+                    //     if (typeof authRouter.forbiddenRedirect === 'string') {
+                    //         transfer.path = authRouter.forbiddenRedirect
+                    //     }
+                    //     if (typeof authRouter.forbiddenRedirect === 'object') {
+                    //         transfer = authRouter.forbiddenRedirect
+                    //     }
+                    // } else {
+                    //     transfer.path = auth.options.forbiddenPath
+                    // }
+                    transfer.path = auth.options.forbiddenPath
+                    next(transfer)
                 }
                 else {
                     next()

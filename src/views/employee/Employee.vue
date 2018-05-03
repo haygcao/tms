@@ -39,7 +39,7 @@
   <el-row>
 
   </el-row>
-  <el-row>
+  <el-row v-loading="loading">
     <el-card class="box-card" v-for="item in employeeList.rows" :key="item.id">
       <div slot="header" class="clearfix">
         <span>{{item.name}}</span>
@@ -73,7 +73,8 @@ export default {
         job_title: undefined
       },
       pageSize: 12,
-      currentPage: 1
+      currentPage: 1,
+      loading: false
     };
   },
   computed: {
@@ -82,6 +83,13 @@ export default {
       educations: state => state.metadata.educations,
       employeeList: state => state.employee.employee_list.data
     })
+  },
+  watch: {
+    employeeList: function(val) {
+      if (val) {
+        this.loading = false;
+      }
+    }
   },
   mounted() {
     this.getJobTitles();
@@ -96,15 +104,17 @@ export default {
       "createEmployee"
     ]),
     onSearch() {
+      if (this.loading == true) return;
       this.search();
     },
     onAddEmployee() {
       this.$router.push({ name: "employee_create" });
     },
     search() {
+      this.loading = true;
       let payload = this.searchForm;
-      payload.limit = pageSize;
-      payload.offset = (this.currentPage - 1) * pageSize;
+      payload.limit = this.pageSize;
+      payload.offset = (this.currentPage - 1) * this.pageSize;
       this.getEmployeeList(payload);
     },
     handleCurrentChange(val) {
@@ -118,6 +128,9 @@ export default {
 
 <style lang="stylus">
 .box-card {
-  width: 400px;
+  width: 300px;
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 </style>

@@ -4,7 +4,11 @@
     <div  class="container">
     <h1><router-link to="/"><img src="../assets/logo.png" alt="element-logo" class="nav-logo"><span>睿乐盟</span>
     </router-link></h1>
+    <ul class="nav nav-left"><li class="nav-item"><school-select></school-select></li></ul>
    <ul class="nav">
+    <li class="nav-item">
+       
+    </li>
     <li class="nav-item">
     <router-link v-if="user==null" to="/login"><span>登录</span>
     </router-link>
@@ -25,25 +29,46 @@
 </template>
 
 <script>
+import SchoolSelect from "@/components/SchoolSelect.vue";
+import { mapActions, mapState } from "vuex";
 export default {
   name: "Header",
   props: {
     msg: String
   },
   data() {
-    return {};
+    return {
+    };
   },
   computed: {
+    ...mapState({ current_school: state => state.current_user.current_school }),
     user() {
-      console.log(this.$auth.user);
       return this.$auth.user;
+    },
+    schools() {
+      let schools = this.$auth.userInfo().schools || [];
+      return schools;
     }
   },
-  mounted() {},
+  mounted() {
+    // let schools = this.$auth.userInfo().schools || [];
+    if (this.schools.length > 0) {
+      this.switchSchool(this.schools[0]);
+    }
+  },
   methods: {
-      logout(){
-          this.$auth.logout();
-      }
+    ...mapActions(["switchSchool"]),
+    logout() {
+      this.$auth.logout();
+    },
+    switchSchoolCommand(command) {
+      alert(command);
+      let school = this.schools.find(v => v.id == command);
+      this.switchSchool(school);
+    }
+  },
+  components: {
+    SchoolSelect
   }
 };
 </script>
@@ -111,12 +136,15 @@ export default {
     padding: 0;
     margin: 0;
 }
-
+.header .nav.nav-left {
+    float: left !important;
+}
 header .nav-item {
     margin: 0;
     float: left;
     list-style: none;
     position: relative;
     cursor: pointer;
+    padding: 0 15px;
 }
 </style>

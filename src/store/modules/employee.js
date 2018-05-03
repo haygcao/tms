@@ -3,10 +3,14 @@ const { employee } = api;
 const mutations_types = {
     employee_list: "employee/list",
     employee_create: "employee/create",
+    employee_detail: "employee/employee_detail",
+    generateEmployeeNo: "employee/generateEmployeeNo"
 }
 const state = {
     employee_list: {},
-    create_result: null
+    create_result: null,
+    employee_detail: null,
+    new_employee: null,
 }
 const getters = {
 
@@ -16,14 +20,28 @@ const actions = {
         let res = await employee.list(payload);
         commit(mutations_types.employee_list, { res })
     },
-    async createEmployee({ commit,dispatch, state, getters }, payload) {
+    async createEmployee({ commit, dispatch, state, getters }, payload) {
         let res = await employee.create(payload);
         commit(mutations_types.employee_create, { res })
+    },
+    async getEmployee({ commit, dispatch, state, getters }, payload) {
+        let res = await employee.show(payload);
+        commit(mutations_types.employee_create, { res })
+    },
+    async generateEmployeeNo({ commit, dispatch, state, getters }, payload) {
+        let res = await employee.generateEmployeeNo(payload);
+        commit(mutations_types.generateEmployeeNo, { res })
     }
 }
 const mutations = {
     [mutations_types.employee_list](state, { res }) {
         state.employee_list = res;
+    },
+    [mutations_types.employee_detail](state, { res }) {
+        state.employee_detail = res;
+    },
+    [mutations_types.generateEmployeeNo](state, { res }) {
+        state.new_employee = res;
     },
     [mutations_types.employee_create](state, { res }) {
         state.create_result = res;
