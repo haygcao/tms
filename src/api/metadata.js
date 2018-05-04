@@ -17,6 +17,10 @@ const _educations = [
     { name: '研究生/硕士', key: 'master' },
     { name: '博士', key: 'doctor' }
 ]
+
+async function classroomTypes() {
+    return [{ name: '思维', key: 1 }, { name: '体能', key: 2 }, { name: '情商', key: 3 }]
+}
 async function educations() {
     return _educations;
 }

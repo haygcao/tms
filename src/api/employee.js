@@ -21,7 +21,7 @@ async function create(payload) {
 }
 async function show(payload) {
     try {
-        const response = await axios.post('/api/employee/show', payload);
+        const response = await axios.get('/api/employee/show', { params: payload });
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '获取失败' }

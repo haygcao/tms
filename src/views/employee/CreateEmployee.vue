@@ -204,7 +204,9 @@ export default {
         this.createForm.employee_number = val.data.employee_number;
       }
     },
-    createResult: function(val, old) {}
+    createResult: function(val, old) {
+      this.afterCreated(val);
+    }
   },
   mounted() {
     this.getJobTitles();
@@ -246,9 +248,9 @@ export default {
         this.resetForm();
       }
     },
-    resetForm(){
-        this.$refs['createForm'].resetFields();
-        this.generateEmployeeNo();
+    resetForm() {
+      this.$refs["createForm"].resetFields();
+      this.generateEmployeeNo();
     }
   }
 };

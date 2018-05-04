@@ -25,6 +25,9 @@ export default {
       isCollapse: false
     };
   },
+  created() {
+    
+  },
   methods: {},
   components: {
     Header,

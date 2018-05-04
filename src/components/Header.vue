@@ -37,35 +37,29 @@ export default {
     msg: String
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState({ current_school: state => state.current_user.current_school }),
     user() {
       return this.$auth.user;
     },
-    schools() {
-      let schools = this.$auth.userInfo().schools || [];
-      return schools;
-    }
+    // schools() {
+    //   let schools = this.$auth.userInfo().schools || [];
+    //   return schools;
+    // }
+  },
+  watch: {
+  
   },
   mounted() {
-    // let schools = this.$auth.userInfo().schools || [];
-    if (this.schools.length > 0) {
-      this.switchSchool(this.schools[0]);
-    }
+    
   },
   methods: {
     ...mapActions(["switchSchool"]),
     logout() {
       this.$auth.logout();
     },
-    switchSchoolCommand(command) {
-      alert(command);
-      let school = this.schools.find(v => v.id == command);
-      this.switchSchool(school);
-    }
   },
   components: {
     SchoolSelect
@@ -76,75 +70,77 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
 .layout-head {
-    position: fixed;
-    width: 100%;
-    left: 0;
-    top: 0;
-    z-index: 1500;
-    height: 80px;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1500;
+  height: 80px;
 }
 
 .header {
-    height: 80px;
-    background-color: #fff;
-    color: #fff;
-    top: 0;
-    left: 0;
-    width: 100%;
-    line-height: 80px;
-    z-index: 100;
-    position: relative;
-    height: 100%;
+  height: 80px;
+  background-color: #fff;
+  color: #fff;
+  top: 0;
+  left: 0;
+  width: 100%;
+  line-height: 80px;
+  z-index: 100;
+  position: relative;
+  height: 100%;
 }
 
 .header h1 {
-    margin: 0;
-    float: left;
-    font-size: 32px;
-    font-weight: 400;
+  margin: 0;
+  float: left;
+  font-size: 32px;
+  font-weight: 400;
 }
 
 .header h1 a {
-    color: #333;
-    text-decoration: none;
-    display: block;
+  color: #333;
+  text-decoration: none;
+  display: block;
 }
 
 .header .container {
-    border-bottom: 1px solid #d2d2d2;
-    height: 100%;
-    box-sizing: border-box;
+  border-bottom: 1px solid #d2d2d2;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .header h1 a span {
-    box-sizing: content-box;
-    font-size: 22px;
-    line-height: 38px;
-    vertical-align: text-top;
+  box-sizing: content-box;
+  font-size: 22px;
+  line-height: 38px;
+  vertical-align: text-top;
 }
 
 .header .nav-logo {
-    height: 44px;
-    vertical-align: sub;
+  height: 44px;
+  vertical-align: sub;
 }
 
 .header .nav {
-    float: right;
-    height: 100%;
-    line-height: 80px;
-    background: transparent;
-    padding: 0;
-    margin: 0;
+  float: right;
+  height: 100%;
+  line-height: 80px;
+  background: transparent;
+  padding: 0;
+  margin: 0;
 }
+
 .header .nav.nav-left {
-    float: left !important;
+  float: left !important;
 }
+
 header .nav-item {
-    margin: 0;
-    float: left;
-    list-style: none;
-    position: relative;
-    cursor: pointer;
-    padding: 0 15px;
+  margin: 0;
+  float: left;
+  list-style: none;
+  position: relative;
+  cursor: pointer;
+  padding: 0 15px;
 }
 </style>

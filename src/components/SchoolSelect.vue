@@ -12,15 +12,13 @@
 import { mapActions, mapState } from "vuex";
 export default {
   name: "SchoolSelect",
-  props: {
-  },
+  props: {},
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState({ current_school: state => state.current_user.current_school }),
-    
+
     schools() {
       let schools = this.$auth.userInfo().schools || [];
       return schools;
@@ -34,10 +32,13 @@ export default {
   },
   methods: {
     ...mapActions(["switchSchool"]),
-    
+
     switchSchoolCommand(command) {
       let school = this.schools.find(v => v.id == command);
       this.switchSchool(school);
+      window.dispatchEvent(
+        new CustomEvent("school-switched", { detail: school })
+      );
     }
   }
 };
