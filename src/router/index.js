@@ -61,7 +61,13 @@ export default new Router({
           name: 'franchisee_add_school',
           path: 'franchisee/:franchisee_id/school/create',
           component: require('@/views/admin/AddSchool.vue').default
+        },
+        {
+          name: 'course_add',
+          path: 'course/create',
+          component: require('@/views/admin/AddCourse.vue').default
         }
+
       ]
     },
     {
@@ -90,11 +96,14 @@ export default new Router({
           component: require('@/views/teaching_manage/Classroom.vue').default
         },
         {
-          // 当 /user/:id/profile 匹配成功，
-          // UserProfile 会被渲染在 User 的 <router-view> 中
-          name: 'classroom_create',
-          path: 'classroom/create',
-          component: require('@/views/teaching_manage/AddClassroom.vue').default
+          name: 'clazz_default',
+          path: 'class',
+          redirect: '/teaching/class/1',
+        },
+        {
+          name: 'clazz',
+          path: 'class/:page(\\d+)',
+          component: require('@/views/teaching_manage/Class.vue').default
         },
         {
           // 当 /user/:id/posts 匹配成功

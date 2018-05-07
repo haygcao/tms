@@ -30,7 +30,7 @@
     </template>
     <el-menu-item index="/teaching/classroom">教室管理</el-menu-item>
     <el-menu-item index="/teaching/schedule">课程表</el-menu-item>
-    <el-menu-item index="/teaching/classes">班级管理</el-menu-item>        
+    <el-menu-item index="/teaching/class">班级管理</el-menu-item>        
   </el-submenu>
   
   <el-menu-item index="2" v-if="school_master">

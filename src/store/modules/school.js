@@ -6,12 +6,14 @@ const mutations_types = {
     updateClassroom: "school/updateClassroom",
     removeClassroom: "school/removeClassroom",
     fetchClassroom: "school/fetchClassroom",
+    getTeachers:"school/getTeachers",
 }
 const state = {
     classroomList: {},
     createClassroomResult: {},
     updateClassroomResult: {},
     selectedClassroom: {},
+    schoolTeachers:{},
 }
 const getters = {
 
@@ -39,6 +41,10 @@ const actions = {
     async fetchClassroom({ commit, dispatch, state, getters }, payload) {
         let res = await school.getClassroom(payload);
         commit(mutations_types.fetchClassroom, { res });
+    },
+    async getTeachers({ commit, dispatch, state, getters }, payload){
+        let res = await school.getTeachers(payload);
+        commit(mutations_types.getTeachers, { res });
     }
 }
 const mutations = {
@@ -53,6 +59,9 @@ const mutations = {
     },
     [mutations_types.fetchClassroom](state, { res }) {
         state.selectedClassroom = res;
+    },
+    [mutations_types.getTeachers](state, { res }) {
+        state.schoolTeachers = res;
     },
 }
 export default {

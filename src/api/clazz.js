@@ -1,7 +1,7 @@
 import axios from 'axios';
 async function list(payload) {
     try {
-        const response = await axios.get('/api/school/list', {
+        const response = await axios.get('/api/clazz/list', {
             params: payload
         });
         return response.data;
@@ -10,9 +10,9 @@ async function list(payload) {
     }
 
 }
-async function createClassroom(payload) {
+async function create(payload) {
     try {
-        const response = await axios.post('/api/classroom/create', payload);
+        const response = await axios.post('/api/clazz/create', payload);
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
@@ -54,21 +54,11 @@ async function getClassroom(payload) {
     }
 
 }
-async function getTeachers(payload) {
-    try {
-        const response = await axios.get('/api/employee/teachers', { params: payload });
-        return response.data;
-    } catch (err) {
-        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
-    }
-
-}
 export default {
     list,
-    createClassroom,
-    getClassroomList,
-    removeClassroom,
-    updateClassroom,
-    getClassroom,
-    getTeachers
+    // createClassroom,
+    // getClassroomList,
+    // removeClassroom,
+    // updateClassroom,
+    // getClassroom,
 }

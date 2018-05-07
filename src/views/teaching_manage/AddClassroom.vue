@@ -6,7 +6,7 @@
             <el-input :maxlength="8" v-model="form.name" placeholder="教室名称(8个字符以内)"></el-input>
         </el-form-item>
         <el-form-item label="教室面积" prop="space">
-            <el-input type="number" :max="999" :min="1" v-model="form.space" placeholder="教室名称"><template slot="append">平米</template></el-input>
+            <el-input type="number" :max="999" :min="1" v-model="form.space" placeholder="教室面积"><template slot="append">平米</template></el-input>
         </el-form-item>
         <el-form-item label="教室类型" prop="types">
         <el-checkbox-group v-model="form.types">
