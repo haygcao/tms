@@ -4,6 +4,7 @@ const mutations_types = {
     clazz_list: "clazz/list",
     clazz_create: "clazz/create",
     course_fetched: "clazz/course_fetched",
+    clear_state: "clazz/clear_state",
 }
 const state = {
     clazzList: {},
@@ -22,9 +23,12 @@ const actions = {
         let res = await course.fetch(payload);
         commit(mutations_types.course_fetched, { res })
     },
-    async create({ commit, state, getters }, payload) {
+    async createClazz({ commit, state, getters }, payload) {
         let res = await clazz.create(payload);
         commit(mutations_types.clazz_create, { res })
+    },
+    async clearClazzCreateStates({ commit, state, getters }) {
+        commit(mutations_types.clear_state)
     }
 }
 const mutations = {
@@ -35,7 +39,11 @@ const mutations = {
         state.course = res;
     },
     [mutations_types.clazz_create](state, { res }) {
-        state.course = res;
+        state.createResult = res;
+    },
+    [mutations_types.clear_state](state) {
+        state.course = {};
+        state.createResult = {}
     },
 }
 export default {

@@ -56,6 +56,7 @@ async function getClassroom(payload) {
 }
 export default {
     list,
+    create,
     // createClassroom,
     // getClassroomList,
     // removeClassroom,

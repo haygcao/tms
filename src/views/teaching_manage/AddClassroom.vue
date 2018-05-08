@@ -6,7 +6,7 @@
             <el-input :maxlength="8" v-model="form.name" placeholder="教室名称(8个字符以内)"></el-input>
         </el-form-item>
         <el-form-item label="教室面积" prop="space">
-            <el-input type="number" :max="999" :min="1" v-model="form.space" placeholder="教室面积"><template slot="append">平米</template></el-input>
+            <el-input type="number" v-model="form.space" placeholder="教室面积"><template slot="append">平米</template></el-input>
         </el-form-item>
         <el-form-item label="教室类型" prop="types">
         <el-checkbox-group v-model="form.types">
@@ -82,6 +82,7 @@ export default {
       if (val && val.code == 0) {
         this.$message.success("保存成功");
         this.$emit("created-success");
+        this.resetForm();
       } else {
         this.$message.error("保存失败");
       }
@@ -121,6 +122,9 @@ export default {
             payload.room_types = room_types.map(v => v.key);
           }
           payload.school_id = this.current_school.id;
+          if(typeof payload.space=='string'){
+            payload.space=parseFloat(payload.space);
+          }
           if (this.mode == "create") {
             this.createClassroom(payload);
             return;
@@ -132,17 +136,7 @@ export default {
         }
       });
     },
-    afterCreated(result) {
-      if (result.code > 0) {
-        this.$message({
-          message: result.message || "保存失败",
-          type: "error"
-        });
-      } else {
-        this.$message.success("保存成功");
-        this.resetForm();
-      }
-    },
+    
     resetForm() {
       this.$refs["form"].resetFields();
     }

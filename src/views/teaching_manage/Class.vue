@@ -199,6 +199,7 @@ export default {
       let payload = this.searchForm;
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
+      payload.school_id=this.current_school.id;
       this.getClazzList(payload);
     },
     handleCurrentChange(val) {

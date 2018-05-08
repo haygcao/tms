@@ -1,98 +1,121 @@
 <template>
-<div class="classroom">
-    <el-row>
-        <el-form ref="searchForm" size="small" :model="searchForm" :rules="searchRules" label-width="180px" class="form">
-            <el-form-item label="学科" prop="subject">
-                <el-radio-group v-model="searchForm.subject">
-                    <el-radio v-for="item in subjects" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="年级" prop="grade">
-                <el-radio-group v-model="searchForm.grade">
-                    <el-radio v-for="item in grades" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="学期" prop="term">
-                <el-radio-group v-model="searchForm.term">
-                    <el-radio v-for="item in terms" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="班型" prop="class_type">
-                <el-radio-group v-model="searchForm.class_type">
-                    <el-radio v-for="item in class_types" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
-                </el-radio-group>
-            </el-form-item>
-        </el-form>
-    </el-row>
-    <el-row>
-        <el-form :disabled="!course.id" ref="form" size="small" label-position="right" :model="form" :rules="rules" label-width="180px" class="form">
-            <el-col :span="12">
-                <el-form-item label="总课次">
-                    <label>{{course.total_lesson_number}}</label>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="当前课次">
-                    <label>1</label>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="开课日期" prop="beigin_date">
-                    <el-date-picker type="date" v-model="form.beigin_date" value-format="yyyy-MM-dd" placeholder="开课日期"></el-date-picker>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="结课日期" prop="">
-                    <label>{{form.finish_date|formatDate}}</label>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="上课时间" prop="class_begin_time">
-                    <el-time-select v-model="form.class_begin_time" :picker-options="{
+<div class="clazz-modal">
+    <el-container class="clazz-modal-container">
+
+        <div style="width:150px">
+            <el-steps direction="vertical" finish-status="success" :active="current_step">
+                <el-step title="" description="选择课程"></el-step>
+                <el-step title="" description="排课"></el-step>
+                <el-step title="" description="完成"></el-step>
+            </el-steps>
+        </div>
+        <div>
+            <el-row>
+                <el-form ref="searchForm" size="small" :model="searchForm" :rules="searchRules" :label-position="lalel_position" :label-width="lalel_width" class="form">
+                    <el-form-item label="学科" prop="subject">
+                        <el-radio-group v-model="searchForm.subject">
+                            <el-radio v-for="item in subjects" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="年级" prop="grade">
+                        <el-radio-group v-model="searchForm.grade">
+                            <el-radio v-for="item in grades" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="学期" prop="term">
+                        <el-radio-group v-model="searchForm.term">
+                            <el-radio v-for="item in terms" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="班型" prop="class_type">
+                        <el-radio-group v-model="searchForm.class_type">
+                            <el-radio v-for="item in class_types" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-form>
+            </el-row>
+            <el-row>
+                <el-form :disabled="!course.id" ref="form" size="small" :label-position="lalel_position" :model="form" :rules="rules" :label-width="lalel_width" class="form">
+                    <el-col :span="12">
+                        <el-form-item label="总课次">
+                            <label>{{course.total_lesson_number}}</label>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="当前课次">
+                            <label>1</label>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="开课日期" prop="beigin_date">
+                            <el-date-picker type="date"  :picker-options="pickerOptions" v-model="form.beigin_date" value-format="yyyy-MM-dd" placeholder="开课日期"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="结课日期" prop="">
+                            <label>{{form.finish_date|formatDate}}</label>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="上课时间" prop="class_begin_time">
+                            <el-time-select v-model="form.class_begin_time" :picker-options="{
                             start: '08:30',
                             step: '00:15',
                             end: '20:30'
                         }" placeholder="选择时间">
-                    </el-time-select>
+                            </el-time-select>
 
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="下课时间" prop="class_finish_time">
-                    <label>{{form.class_finish_time}}</label>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="授课老师" prop="teacher_id">
-                    <el-select v-model="form.teacher_id" filterable placeholder="请选择">
-                        <el-option v-for="item in schoolTeachers" :key="item.id" :label="item.name" :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="班级限额(人)" prop="student_limit">
-                    <el-input-number v-model="form.student_limit" :min="1" :max="30" label="班级限额"></el-input-number>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12" v-if="class_types[course.class_type]=='短期班'">
-                <el-form-item label="班级名称" prop="name">
-                    <el-input :maxlength="100" type="text" v-model="form.name" placeholder="班级名称..."></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="显示状态" prop="visible">
-                    <el-switch v-model="form.visible" active-text="公开" inactive-text="隐藏">
-                    </el-switch>
-                </el-form-item>
-            </el-col>
-            <el-col :span="24">
-                <el-form-item>
-                    <el-button type="primary" @click="onSubmit" :disabled="!course.id">保存</el-button>
-                </el-form-item>
-            </el-col>
-        </el-form>
-    </el-row>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="下课时间" prop="class_finish_time">
+                            <label>{{form.class_finish_time}}</label>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="授课老师" prop="teacher">
+                            <el-select v-model="form.teacher" filterable placeholder="请选择">
+                                <el-option v-for="item in schoolTeachers" :key="item.id" :label="item.name" :value="item" :value-key="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="班级限额(人)" prop="student_limit">
+                            <el-input-number v-model="form.student_limit" :min="1" :max="30" label="班级限额"></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12" v-if="class_types[course.class_type]=='短期班'">
+                        <el-form-item label="班级名称" prop="name">
+                            <el-input :maxlength="100" type="text" v-model="form.name" placeholder="班级名称..."></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="教室" prop="classroom">
+                           <el-select v-model="form.classroom" filterable placeholder="请选择">
+                                <el-option v-for="item in classroomList" :key="item.id" :label="item.name" :value="item" :value-key="item.id"	>
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="显示状态" prop="visible">
+                            <el-switch v-model="form.visible" active-text="公开" inactive-text="隐藏">
+                            </el-switch>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit" :disabled="!course.id">保存</el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-form>
+            </el-row>
+
+        </div>
+
+    </el-container>
+
 </div>
 </template>
 
@@ -114,6 +137,14 @@ export default {
   },
   data() {
     return {
+      pickerOptions: {
+        disabledDate: function(current) {
+          if (current.getTime() < Date.now()) {
+            return true;
+          }
+          return false;
+        }
+      },
       searchForm: {
         term: undefined,
         subject: undefined,
@@ -151,29 +182,77 @@ export default {
         ]
       },
       form: {
-        term: undefined,
-        subject: undefined,
-        grade: undefined,
-        class_type: undefined,
-        total_lesson_number: undefined,
+        year: new Date().getFullYear(),
         name: undefined,
         beigin_date: undefined,
         finish_date: undefined,
         class_begin_time: undefined,
         class_finish_time: undefined,
         visible: true,
-        student_limit: undefined,
-        teacher_id: undefined
+        student_limit: 12,
+        teacher: undefined,
+        classroom: undefined
       },
-      rules: {}
+      rules: {
+        beigin_date: [
+          {
+            required: true,
+            message: "请选择开课日期",
+            trigger: "blur"
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error("请选择开课日期"));
+              }
+              if (this.course) {
+                let day = new Date(value).getDay();
+                if (this.course.class_type == "1" && !(day == 0 || day == 6)) {
+                  return callback(new Error("请选择周六或周日时间"));
+                }
+                if (this.course.class_type == "2" && (day == 0 || day == 6)) {
+                  return callback(new Error("请选择非周六或周日时间"));
+                }
+              }
+              return callback();
+            }
+          }
+        ],
+        class_begin_time: [
+          {
+            required: true,
+            message: "请选择上课时间",
+            trigger: "blur"
+          }
+        ],
+        student_limit: [
+          {
+            required: true,
+            message: "请填写学生限额",
+            trigger: "blur"
+          }
+        ],
+        teacher: [
+          {
+            required: true,
+            message: "请选择授课老师",
+            trigger: "blur"
+          }
+        ]
+      },
+      current_step: 0,
+      lalel_width: "120px",
+      lalel_position: "right"
     };
   },
   computed: {
     ...mapState({
       selectedClassroom: state => state.school.selectedClassroom.data,
+      classroomList: state => state.school.classroomList.data || [],
       current_school: state => state.current_user.current_school,
       course: state => state.clazz.course.data || {},
-      schoolTeachers: state => state.school.schoolTeachers.data || []
+      schoolTeachers: state => state.school.schoolTeachers.data || [],
+      clazzCreateResult: state => state.clazz.createResult
     }),
     ...mapGetters([
       "terms",
@@ -194,13 +273,10 @@ export default {
           .map(v => Classroom_Type[v]);
       }
     },
-    // course(val, old) {
-    //   if (!val) return;
-    //   this.searchForm.term = val.term;
-    //   this.searchForm.grade = val.grade;
-    //   this.searchForm.subject = val.subject;
-    //   this.searchForm.class_type = val.class_type;
-    // },
+    course(val, old) {
+      if (!val) return;
+      this.current_step = 1;
+    },
     searchForm: {
       handler: function(val, old) {
         if (
@@ -247,53 +323,66 @@ export default {
         this.form.class_finish_time = helper.caluFinishTime(val);
       },
       deep: true
+    },
+    clazzCreateResult(val) {
+      this.afterCreated(val);
     }
   },
   filters: {
     formatDate(val) {
       if (!val) return "";
       let ds = moment(val).format("YYYY-MM-DD");
-      console.warn(ds);
       return ds;
     }
   },
   mounted() {
-    if (this.mode == "update") {
-      this.fetchClassroom({
-        classroom_id: this.classroom,
-        school_id: this.current_school.id
-      });
-    }
-    if (!this.schoolTeachers || this.schoolTeachers.length == 0) {
-      this.getTeachers();
-    }
+    // if (this.mode == "update") {
+    //   this.fetchClassroom({
+    //     classroom_id: this.classroom,
+    //     school_id: this.current_school.id
+    //   });
+    // }
+    this.getClassroomList({ school_id: this.current_school.id });
+    this.getTeachers({ school_id: this.current_school.id });
+    // if (!this.schoolTeachers || this.schoolTeachers.length == 0) {
+    //   this.getTeachers({teacher_id:this.current_school.id});
+    // }
+  },
+  beforeDestroy() {
+    this.destroyedSelf();
   },
   methods: {
     ...mapActions({
       fetchClassroom: "fetchClassroom",
+      getClassroomList: "getClassroomList",
       fetchCourse: "fetchCourse",
-      updateClassroom: "updateClassroom",
-      getTeachers: "getTeachers"
+      destroyedSelf: "clearClazzCreateStates",
+      getTeachers: "getTeachers",
+      createClazz: "createClazz"
     }),
+
     onSubmit() {
       let self = this;
       this.$refs["form"].validate(valid => {
         if (valid) {
           let payload = self.form;
-          let room_types = self.classroom_types.filter(v =>
-            self.form.types.includes(v.label)
-          );
-          if (room_types) {
-            payload.room_types = room_types.map(v => v.key);
-          }
-          payload.school_id = this.current_school.id;
+          payload.school_id = self.current_school.id;
+          payload.school_name = self.current_school.name;
+          let teacher = payload.teacher;
+          payload.teacher_id = teacher.id;
+          payload.teacher_name = teacher.name;
+          let classroom = payload.classroom;
+          payload.classroom_id = classroom.id;
+          payload.classroom_name = classroom.name;
+          payload.course_id = self.course.id;
+
           if (this.mode == "create") {
-            this.createClassroom(payload);
+            this.createClazz(payload);
             return;
           }
           if (this.mode == "update") {
-            payload.id = this.classroom;
-            this.updateClassroom(payload);
+            // payload.id = this.classroom;
+            // this.updateClassroom(payload);
           }
         }
       });
@@ -311,28 +400,27 @@ export default {
     },
     resetForm() {
       this.$refs["form"].resetFields();
-    },
-    calculateClazzFinishDate() {}
+    }
   }
 };
 class ClazzDate {
   constructor(course) {
     /**
-        ◇ 周末班：每周六或周日上课，1次课/周
-        ◇ 平时班：周一到周五的任意一天上课，1次课/周
-        ◇ 短期班：连续每天上课，班级名称可自定义（如：幼升小冲刺班）
-        ◇ 连续班：连续每天上课
-        ◇ 试听班：短期试听 （1讲）
-         1: '周末班',
-        2: '平时班',
-        3: '短期班',
-        4: '连续班',
-        5: '试听班',
-        */
+            ◇ 周末班：每周六或周日上课，1次课/周
+            ◇ 平时班：周一到周五的任意一天上课，1次课/周
+            ◇ 短期班：连续每天上课，班级名称可自定义（如：幼升小冲刺班）
+            ◇ 连续班：连续每天上课
+            ◇ 试听班：短期试听 （1讲）
+             1: '周末班',
+            2: '平时班',
+            3: '短期班',
+            4: '连续班',
+            5: '试听班',
+            */
     this._course = course;
   }
   validate(startDate) {
-    let clazz_type = this._course.class_type;
+    let clazz_type = parseInt(this._course.class_type);
     let start = startDate;
     if (typeof startDate == "string") {
       start = new Date(startDate);
@@ -367,7 +455,7 @@ class ClazzDate {
   }
   caluFinishDate(startDate) {
     if (!this._course) return "";
-    let clazz_type = this._course.class_type;
+    let clazz_type = parseInt(this._course.class_type);
     let total = this._course.total_lesson_number;
     let start = startDate;
     if (typeof startDate == "string") {
@@ -394,5 +482,9 @@ class ClazzDate {
 .form {
   margin: 0 auto;
   max-width: 900px;
+}
+.clazz-modal-container {
+  margin: 0 auto;
+  max-width: 1024px;
 }
 </style>
