@@ -3,13 +3,10 @@
     <el-row>
         <div class="page-breadcrumb clearfix">
             <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/teaching' }">教学管理</el-breadcrumb-item>
-                <el-breadcrumb-item>班级管理</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ path: '/school' }">校区管理</el-breadcrumb-item>
+                <el-breadcrumb-item>报名管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-    </el-row>
-    <el-row>
-        <el-button type="danger" @click="onAddClass" size="small" icon="el-icon-circle-plus-outline">新建班级</el-button>
     </el-row>
     <el-row>
         <el-form :inline="true" :model="searchForm" class="demo-form-inline">

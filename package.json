@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build --target=app",
-    "build:test": "vue-cli-service build --mode test --target=app",
+    "build:prod": "vue-cli-service build --mode production --target=app",
     "test": "vue-cli-service test",
     "lint": "vue-cli-service lint",
     "build:docker": "npm run build && docker build -t really_edu/tms-web ."

@@ -2,13 +2,13 @@ export const Classroom_Type = {
     1: "思维",
     2: "情商",
     3: "体能",
-    
+
 };
 export const SubjectName = {
     1: '思维',
     2: '情商',
     3: '体能',
-    
+
 }
 /**
 ◇ 周末班：每周六或周日上课，1次课/周
@@ -39,4 +39,10 @@ export const Grade = {
     A3: '4-5岁',
     H1: 'H1',
     H2: 'H2',
+}
+export const ClazzState = {
+    0: '未开课',
+    1: '开课中',
+    2: '已结课',
+    3: '已关闭',
 }

@@ -55,103 +55,99 @@
 </template>
 
 <script>
-import {
-    mapGetters,
-    mapState,
-    mapActions
-} from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 export default {
-    name: "create_franchisee",
-    data() {
-        return {
-            region_options: [],
-            props: {
-                label: "label",
-                value: "value",
-                children: "cities"
-            },
-            form: {
-                name: "",
-                name_en: "",
-                region: [],
-                signed_date: "",
-                signed_expire_date: "",
-                investor: "",
-                mobile: null,
-                email: undefined
-            }
-        };
+  name: "create_franchisee",
+  data() {
+    return {
+      region_options: [],
+      props: {
+        label: "label",
+        value: "value",
+        children: "cities"
+      },
+      form: {
+        name: "",
+        name_en: "",
+        region: [],
+        signed_date: "",
+        signed_expire_date: "",
+        investor: "",
+        mobile: null,
+        email: undefined
+      }
+    };
+  },
+  computed: {
+    ...mapState({
+      createResult: state => state.franchisee.createResult
+    }),
+    ...mapGetters(["provinceList"])
+  },
+  created() {
+    this.getRegions();
+  },
+  watch: {
+    provinceList() {
+      this.region_options = this.provinceList.slice();
     },
-    computed: {
-        ...mapState({
-            createResult: state => state.franchisee.createResult
-        }),
-        ...mapGetters(["provinceList"])
-    },
-    created() {
-        this.getRegions();
-    },
-    watch: {
-        provinceList() {
-            this.region_options = this.provinceList.slice();
-        },
-        createResult(c, o) {
-            // debugger;
-            if (c.code == 0) {
-                this.$message({
-                    message: "恭喜你，创建成功",
-                    type: "success"
-                });
-            } else {
-                this.$message.error("创建失败");
-            }
-        }
-    },
-    mounted() {},
-    methods: {
-        ...mapActions({
-            getRegions: "getRegions",
-            createFranchisee: "createFranchisee"
-        }),
-
-        handleRegionItemChange(val) {
-            console.log(val);
-        },
-        toolTip(type, msg) {
-            this.$message({
-                message: msg || "恭喜你，创建成功",
-                type: type || "success"
-            });
-        },
-        onSubmit() {
-            this.$refs["form"].validate(valid => {
-                if (valid) {
-                    let payload = this.form;
-                    payload.province_code = this.form.region[0];
-                    payload.city_code = this.form.region[1];
-                    this.createFranchisee(payload);
-                } else {
-                    //   console.log("error submit!!");
-                    return false;
-                }
-            });
-        }
+    createResult(c, o) {
+      // debugger;
+      if (c.code == 0) {
+        this.$message({
+          message: "恭喜你，创建成功",
+          type: "success"
+        });
+      } else {
+        this.$message.error(c.message || "创建失败");
+      }
     }
+  },
+  mounted() {},
+  methods: {
+    ...mapActions({
+      getRegions: "getRegions",
+      createFranchisee: "createFranchisee"
+    }),
+
+    handleRegionItemChange(val) {
+      console.log(val);
+    },
+    toolTip(type, msg) {
+      this.$message({
+        message: msg || "恭喜你，创建成功",
+        type: type || "success"
+      });
+    },
+    onSubmit() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          let payload = this.form;
+          payload.province_code = this.form.region[0];
+          payload.city_code = this.form.region[1];
+          this.createFranchisee(payload);
+        } else {
+          //   console.log("error submit!!");
+          return false;
+        }
+      });
+    }
+  }
 };
 </script>
 
 <style>
 .horization-line {
-    border-bottom: 1px solid #dcdcdc;
-    margin-top: 5px;
-    margin-bottom: 5px;
+  border-bottom: 1px solid #dcdcdc;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .admin-form .el-form {
-    max-width: 600px;
+  max-width: 600px;
 }
 
 .admin-form .create-form .el-cascader {
-    width: 100%;
+  width: 100%;
 }
 </style>

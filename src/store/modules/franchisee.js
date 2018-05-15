@@ -12,6 +12,7 @@ const mutations_types = {
     detail: "franchisee/detail",
     create_school: "franchisee/school_created",
     remove_school: "franchisee/remove_school",
+    getAdminList: "franchisee/getAdminList",
 }
 
 
@@ -20,7 +21,8 @@ const state = {
     franchiseeList: {},
     schools: {},
     current_franchisee: {},
-    createSchoolResult: null
+    createSchoolResult: null,
+    adminList: {},
 }
 
 const getters = {
@@ -29,18 +31,11 @@ const getters = {
 const actions = {
 
     async createFranchisee({ commit, state }, payload) {
-        try {
-            let res = await franchisee.create(payload);
-            commit(mutations_types.created, { res })
-
-        } catch (err) {
-            let res = err.response.data;
-            commit(mutations_types.created, { res })
-        }
-        // await this.dispatch('provinces');
+        let res = await franchisee.create(payload);
+        commit(mutations_types.created, { res })
 
     },
-    async removeFranchisee({ commit, state, getters,dispatch }, payload) {
+    async removeFranchisee({ commit, state, getters, dispatch }, payload) {
         let res = await franchisee.remove(payload);
         await dispatch('getFranchiseeList', payload)
 
@@ -53,6 +48,11 @@ const actions = {
         } catch (err) {
             commit(mutations_types.list, { payload })
         }
+
+    },
+    async getFranchiseeAdminList({ commit, state, getters }, payload) {
+        let res = await franchisee.list(payload);
+        commit(mutations_types.getAdminList, { res })
 
     },
     async getFranchisee({ commit, state, getters }, payload) {
@@ -99,6 +99,9 @@ const mutations = {
     },
     [mutations_types.create_school](state, { res }) {
         state.createSchoolResult = res;
+    },
+    [mutations_types.getAdminList](state, { res }) {
+        state.adminList = res;
     },
 }
 export default {

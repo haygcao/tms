@@ -11,7 +11,10 @@ import { sync } from 'vuex-router-sync'
 import * as filters from '@/filters'
 
 // 实例化Vue的filter
-Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
+Object.keys(filters).forEach(k => {
+  // console.log('filter', k)
+  Vue.filter(k, filters[k])
+});
 
 function importAll(r) {
   r.keys().forEach(r);
@@ -21,7 +24,7 @@ importAll(require.context('@/assets/css/', false, /\.css$/));
 Vue.router = router;
 sync(store, router);//use vuex-router-sync to sync store and router state
 Vue.use(VueAxios, axios)
-axios.defaults.baseURL =process.env.VUE_APP_TMSAPI||'http://localhost:7001/';
+axios.defaults.baseURL = process.env.VUE_APP_TMSAPI || 'http://localhost:7001/';
 Vue.use(Auth, { router: router, store: store })
 // Vue.use(require('@websanova/vue-auth'), {
 //   auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),

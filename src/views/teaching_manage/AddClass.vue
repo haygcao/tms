@@ -2,13 +2,13 @@
 <div class="clazz-modal">
     <el-container class="clazz-modal-container">
 
-        <div style="width:150px">
+        <!-- <div style="width:150px">
             <el-steps direction="vertical" finish-status="success" :active="current_step">
                 <el-step title="" description="选择课程"></el-step>
                 <el-step title="" description="排课"></el-step>
                 <el-step title="" description="完成"></el-step>
             </el-steps>
-        </div>
+        </div> -->
         <div>
             <el-row>
                 <el-form ref="searchForm" size="small" :model="searchForm" :rules="searchRules" :label-position="lalel_position" :label-width="lalel_width" class="form">

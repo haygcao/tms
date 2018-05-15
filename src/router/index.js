@@ -72,7 +72,7 @@ export default new Router({
     },
     {
       path: '/',
-      name: 'default',
+      name: 'home',
       component: Home,
       meta: { auth: true },
       children: [
@@ -80,6 +80,22 @@ export default new Router({
           path: 'dashboard',
           component: require('@/views/Dashboard.vue').default
         },
+      ]
+    },
+    {
+      path: '/school',
+      name: 'school',
+      component: Home,
+      meta: { auth: true },
+      children: [
+        {
+          path: 'classes/:page(\\d+)',
+          component: require('@/views/school/classList.vue').default
+        },
+        // {
+        //   path: 'purchase/orders',
+        //   component: require('@/views/school/orderList.vue').default
+        // },
       ]
     },
     {

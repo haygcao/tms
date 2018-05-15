@@ -3,8 +3,13 @@ import qs from 'qs';
 
 
 async function create(payload) {
-    const response = await axios.post('/api/franchisee/create', payload);
-    return response.data;
+
+    try {
+        const response = await axios.post('/api/franchisee/create', payload);
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
 }
 /**
  * 
@@ -19,7 +24,19 @@ async function list(payload) {
     });
     return response.data.data;
 }
+async function getAdminList(payload) {
+    try {
+        const response = await axios.get('/api/franchisee/investor', {
+            params: {
+                franchisee_id: payload.franchisee_id,
+            }
+        });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
 
+}
 async function getSchools(payload) {
     try {
         const response = await axios.get('/api/franchisee/schools', {
@@ -102,5 +119,6 @@ export default {
     getSchools,
     addSchool,
     removeSchool,
-    show
+    show,
+    getAdminList
 }

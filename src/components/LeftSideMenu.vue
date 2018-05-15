@@ -4,7 +4,7 @@
     <i class="el-icon-menu"></i>
     <span slot="title">校区概况</span>
   </el-menu-item>
-  <el-submenu index="2">
+  <el-submenu index="/home/employee">
     <template slot="title">
       <i class="el-icon-location"></i>
       <span slot="title">业务管理</span>
@@ -15,10 +15,10 @@
       <el-menu-item index="/home/employee/create">新增员工</el-menu-item>
       <el-menu-item index="/home/employee/update">新增员工</el-menu-item>
     </el-menu-item-group>
-    <el-menu-item-group title="价格管理">
+    <el-menu-item-group title="价格管理" v-if="business_master">
       <el-menu-item index="1-3">课次单价</el-menu-item>
     </el-menu-item-group>
-    <el-submenu index="1-4">
+    <el-submenu index="1-4" v-if="business_master">
       <span slot="title">连报折扣</span>
       <el-menu-item index="1-4-1">选项1</el-menu-item>
     </el-submenu>
@@ -33,17 +33,17 @@
     <el-menu-item index="/teaching/class">班级管理</el-menu-item>        
   </el-submenu>
   
-  <el-menu-item index="2" v-if="school_master">
+  <el-menu-item index="/school/classes/1" v-if="school_master||student_master">
     <i class="el-icon-menu"></i>
-    <span slot="title">导航二</span>
+    <span slot="title">选课报名</span>
   </el-menu-item>
-  <el-menu-item index="3" disabled>
+  <el-menu-item index="/school/purchase/orders/1" v-if="school_master||student_master">
     <i class="el-icon-document"></i>
-    <span slot="title">导航三</span>
+    <span slot="title">订单管理</span>
   </el-menu-item>
   <el-menu-item index="4">
     <i class="el-icon-setting"></i>
-    <span slot="title">导航四</span>
+    <span slot="title">学员管理</span>
   </el-menu-item>
 </el-menu>
 </template>
