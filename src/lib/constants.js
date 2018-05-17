@@ -36,7 +36,7 @@ export const Terms = {
 export const Grade = {
     A1: '3-4岁',
     A2: '4-5岁',
-    A3: '4-5岁',
+    A3: '5-6岁',
     H1: 'H1',
     H2: 'H2',
 }

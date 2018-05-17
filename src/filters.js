@@ -122,4 +122,7 @@ export const grade = (val) => {
 export const classState = (val) => {
     return ClazzState[val] || '--'
 }
+export const gender = (val) => {
+    return val == 0 ? '女' : '男'
+}
 

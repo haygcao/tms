@@ -42,6 +42,18 @@ const getters = {
   },
   lesson_times() {
     return [{ key: 60, name: '1h' }, { key: 90, name: '1.5h' }]
+  },
+  genders() {
+    return [
+      {
+        value: 1,
+        label: "男"
+      },
+      {
+        value: 0,
+        label: "女"
+      }
+    ]
   }
 }
 const mutations = {}

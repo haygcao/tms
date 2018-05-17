@@ -89,13 +89,15 @@ export default new Router({
       meta: { auth: true },
       children: [
         {
+          name:'products',
           path: 'classes/:page(\\d+)',
-          component: require('@/views/school/classList.vue').default
+          component: require('@/views/school/ClassList.vue').default
         },
-        // {
-        //   path: 'purchase/orders',
-        //   component: require('@/views/school/orderList.vue').default
-        // },
+        {
+          name:'create_order',
+          path: 'purchase/order/create',
+          component: require('@/views/school/CreateOrder.vue').default
+        },
       ]
     },
     {

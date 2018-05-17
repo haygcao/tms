@@ -74,8 +74,8 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="授课老师" prop="teacher">
-                            <el-select v-model="form.teacher" filterable placeholder="请选择">
-                                <el-option v-for="item in schoolTeachers" :key="item.id" :label="item.name" :value="item" :value-key="item.id">
+                            <el-select v-model="form.teacher" filterable :value-key="'id'" placeholder="请选择">
+                                <el-option v-for="item in schoolTeachers" :key="item.id" :label="item.name" :value="item" >
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -92,8 +92,8 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="教室" prop="classroom">
-                           <el-select v-model="form.classroom" filterable placeholder="请选择">
-                                <el-option v-for="item in classroomList" :key="item.id" :label="item.name" :value="item" :value-key="item.id"	>
+                           <el-select v-model="form.classroom" :value-key="'id'" filterable placeholder="请选择" >
+                                <el-option v-for="item in classroomList" :key="item.id" :label="item.name" :value="item" 	>
                                 </el-option>
                             </el-select>
                         </el-form-item>

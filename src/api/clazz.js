@@ -19,6 +19,17 @@ async function create(payload) {
     }
 
 }
+async function findById(payload) {
+    try {
+        const response = await axios.get('/api/clazz/show', {
+            params: payload
+        });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
+
+}
 async function updateClassroom(payload) {
     try {
         const response = await axios.post('/api/classroom/update', payload);
@@ -57,7 +68,7 @@ async function getClassroom(payload) {
 export default {
     list,
     create,
-    // createClassroom,
+    findById,
     // getClassroomList,
     // removeClassroom,
     // updateClassroom,

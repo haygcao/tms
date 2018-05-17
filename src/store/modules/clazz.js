@@ -2,6 +2,7 @@ import api from '@/api'
 const { clazz, course } = api;
 const mutations_types = {
     clazz_list: "clazz/list",
+    clazz_fetch: "clazz/fetchedById",
     clazz_create: "clazz/create",
     course_fetched: "clazz/course_fetched",
     clear_state: "clazz/clear_state",
@@ -9,12 +10,18 @@ const mutations_types = {
 const state = {
     clazzList: {},
     course: {},
-    createResult: {}
+    createResult: {},
+    selectedClazz: {}
+
 }
 const getters = {
 
 }
 const actions = {
+    async getClazzById({ commit, state, getters }, payload) {
+        let res = await clazz.findById(payload);
+        commit(mutations_types.clazz_fetch, { res })
+    },
     async getClazzList({ commit, state, getters }, payload) {
         let res = await clazz.list(payload);
         commit(mutations_types.clazz_list, { res })
@@ -34,6 +41,9 @@ const actions = {
 const mutations = {
     [mutations_types.clazz_list](state, { res }) {
         state.clazzList = res;
+    },
+    [mutations_types.clazz_fetch](state, { res }) {
+        state.selectedClazz = res;
     },
     [mutations_types.course_fetched](state, { res }) {
         state.course = res;
