@@ -5,7 +5,7 @@
     </el-row>
     <el-row>
         <h3>所报班级</h3>
-        <el-table :data="currentClazz" border style="width: 100%">
+        <el-table :data="currentClazz" border style="max-width: 1100px">
             <el-table-column label="班级">
                 <template slot-scope="scope">
               {{scope.row.year}}{{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
@@ -166,14 +166,14 @@
                             <el-button type="default" v-if="index>0" icon="el-icon-minus" @click="onRemoveParent()"></el-button>
                         </el-form-item>
                     </el-form>
-                    <el-button type="primary" @click="onSubmitCreateStudent()">保存</el-button>
+                    <!-- <el-button type="primary" @click="onSubmitCreateStudent()">保存</el-button> -->
                 </div>
             </el-card>
         </div>
     </el-row>
     <el-row>
         <h3>其他信息</h3>
-        <el-form>
+        <div>
             <el-form size="small" :inline="true" :model="orderInfoForm" ref="orderInfoForm">
                 <el-form-item prop="consultant_id" label="顾问">
                     <el-input v-model="orderInfoForm.consultant_id" placeholder="姓名"></el-input>
@@ -191,31 +191,54 @@
                     <el-input type="textarea" v-model="orderInfoForm.note" style="width:340px;" placeholder="备注信息"></el-input>
                 </el-form-item>
             </el-form>
-        </el-form>
+        </div>
     </el-row>
     <el-row>
-        <h3>
-            <el-switch v-model="payment_by_year" active-text="按年缴费" inactive-text="仅缴这学期">
-            </el-switch>
-        </h3>
-        <div>
+        <h3>是否年缴</h3>
+        <el-switch disabled v-model="payment_by_year" active-text="按年缴费" inactive-text="仅这学期">
+        </el-switch>
+
+        <div class="mt-15">
             <el-radio-group v-if="payment_by_year" v-model="order_length">
-                <el-radio label="1">缴1年</el-radio>
-                <el-radio label="2" v-if="currentClazz[0].grade=='A1'||currentClazz[0].grade=='A2'||currentClazz[0].grade=='H1'">缴2年</el-radio>
-                <el-radio label="3" v-if="currentClazz[0].grade=='A1'||currentClazz[0].grade=='H1'">缴3年</el-radio>
+                <el-radio :label="1">缴1年</el-radio>
+                <el-radio :label="2" v-if="currentClazz[0].grade=='A1'||currentClazz[0].grade=='A2'||currentClazz[0].grade=='H1'">缴2年</el-radio>
+                <el-radio :label="3" v-if="currentClazz[0].grade=='A1'||currentClazz[0].grade=='H1'">缴3年</el-radio>
             </el-radio-group>
         </div>
     </el-row>
     <el-row>
+        <h3>缴费明细</h3>
+        <el-table :data="order_charges" :span-method="objectSpanMethod" border style="max-width: 850px; margin-top: 20px">
+            <el-table-column prop="category" label="类目" width="">
+            </el-table-column>
+            <el-table-column prop="total_lesson_number" label="课次数">
+            </el-table-column>
+            <el-table-column prop="unit_price" label="单价/元">
+            </el-table-column>
+            <el-table-column prop="amount" label="原价合计/元">
+            </el-table-column>
+            <el-table-column prop="discount" label="折扣">
+            </el-table-column>
+            <el-table-column prop="discount_amount" label="优惠金额/元">
+            </el-table-column>
+            <el-table-column prop="amount_payable" label="应付/元">
+            </el-table-column>
+            <el-table-column prop="total" label="合计/元">
+            </el-table-column>
+        </el-table>
+    </el-row>
+    <el-row>
         <h3>支付方式</h3>
         <el-radio-group v-model="payment_type">
-            <el-radio disabled="" :label="0">微信</el-radio>
-            <el-radio disabled :label="1">支付宝</el-radio>
-            <el-radio :label="2">现金</el-radio>
-            <el-radio :label="3">刷卡</el-radio>
+            <el-radio disabled="" :label="0" border><i class="iconfont icon-wxpay"></i>微信</el-radio>
+            <el-radio disabled :label="1" border><i class="iconfont icon-alipay"></i>支付宝</el-radio>
+            <el-radio :label="2" border><i class="iconfont icon-rmb"></i>现金</el-radio>
+            <el-radio :label="3" border><i class="iconfont icon-yinlian"></i>刷卡</el-radio>
         </el-radio-group>
-          <h3><el-button type="danger" @click="createStudentAndSubmitOrder(false)">暂存订单</el-button>
-        <el-button type="primary" @click="createStudentAndSubmitOrder(true)">确认支付</el-button></h3>
+        <h3>
+            <el-button type="danger" disabled="" @click="createStudentAndSubmitOrder(false)">暂存订单</el-button>
+            <el-button type="primary" @click="createStudentAndSubmitOrder(true)">确认提交</el-button>
+        </h3>
     </el-row>
 </div>
 </template>
@@ -230,8 +253,8 @@ export default {
         mobile: undefined
       },
       hover: false,
-      payment_by_year: true,
-      order_length: "1",
+      payment_by_year: false,
+      order_length: 1,
       payment_type: 2,
       orderOriginOptions: [
         "Call in",
@@ -317,7 +340,8 @@ export default {
         consultant_id: undefined,
         consultant_name: undefined,
         note: undefined
-      }
+      },
+      order_charges: []
     };
   },
   computed: {
@@ -343,7 +367,22 @@ export default {
       clazz_id: this.$route.query.clazz_id
     });
   },
-
+  watch: {
+    currentClazz(val, old) {
+      if (val && val[0]) {
+        console.log(val);
+        this.culcOrderCharges(val[0]);
+      }
+    },
+    createOrderResult(val, old) {
+      if (val && val.code == 0) {
+        this.$router.replace({
+          name: "cashier",
+          query: { order_id: val.data.order_id, sign: val.data.sign }
+        });
+      }
+    }
+  },
   methods: {
     ...mapActions({
       getClazzById: "getClazzById",
@@ -416,13 +455,13 @@ export default {
             payload.order = self.createOrderInfo();
           } else {
             if (self.student.data == null) {
-                self.$message.error('缺少学员信息！');
-                return false;
+              self.$message.error("缺少学员信息！");
+              return false;
             }
             payload.student = false;
             payload.order = self.createOrderInfo();
           }
-          self.createOrder(payload)
+          self.createOrder(payload);
         })
         .catch(err => {
           console.error("error when submit order:", err);
@@ -455,9 +494,9 @@ export default {
       let orderInfoForm = this.orderInfoForm;
 
       //   order.student_id = this.student.data.student_id;
-      order.subject = `${clazz.year}${SubjectName[clazz.subject]}${
-        Grade[clazz.grade]
-      }${Terms[clazz.term]}${ClassType[clazz.class_type]}`;
+      order.subject = `${SubjectName[clazz.subject]}${Grade[clazz.grade]}${
+        Terms[clazz.term]
+      }${ClassType[clazz.class_type]}`;
       order.payment_type = this.payment_type;
       order.total_lesson = clazz.total_lesson_number;
       order.origin = orderInfoForm.origin;
@@ -470,8 +509,12 @@ export default {
       order.school_id = clazz.school_id;
       order.franchisee_id = clazz.franchisee_id;
       order.clazz_id = clazz.id;
+      order.order_type = this.payment_by_year ? this.order_length : 0;
       order.course = [
         {
+          title: `${SubjectName[clazz.subject]}${Grade[clazz.grade]}${
+            Terms[clazz.term]
+          }${ClassType[clazz.class_type]}`,
           term: clazz.term,
           grade: clazz.grade,
           subject: clazz.subject,
@@ -483,6 +526,34 @@ export default {
       ];
 
       return order;
+    },
+    culcOrderCharges(clazz) {
+      clazz = clazz || this.currentClazz[0];
+      let price = 200.0;
+      this.order_charges.push({
+        category: "学费",
+        unit_price: price,
+        total_lesson_number: clazz.total_lesson_number,
+        discount: "--",
+        discount_amount: 0.0,
+        amount: price * clazz.total_lesson_number,
+        total: price * clazz.total_lesson_number
+      });
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        if (rowIndex % 2 === 0) {
+          return {
+            rowspan: 2,
+            colspan: 1
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+        }
+      }
     }
   },
   destroyed() {
@@ -512,6 +583,10 @@ export default {
         border-top: none;
         padding-top: 0;
     }
+}
+
+.mt-15 {
+    margin-top: 15px;
 }
 
 .student-form .el-input {

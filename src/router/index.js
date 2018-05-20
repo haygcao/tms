@@ -98,6 +98,16 @@ export default new Router({
           path: 'purchase/order/create',
           component: require('@/views/school/CreateOrder.vue').default
         },
+        {
+          name:'order_list',
+          path: 'purchase/order/list/:page(\\d+)',
+          component: require('@/views/school/OrderList.vue').default
+        },
+        {
+          name:'cashier',
+          path: 'purchase/cashier',
+          component: require('@/views/school/Cashier.vue').default
+        },
       ]
     },
     {

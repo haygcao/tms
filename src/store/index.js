@@ -6,7 +6,7 @@ import createLogger from 'vuex/dist/logger'
 import createPersistedState from 'vuex-persistedstate'
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
 Vue.use(Vuex)
-let plugins = [createPersistedState()];
+let plugins = [createPersistedState({ paths: ["login", "region", "current_user", "school"] })];
 if (process.env.NODE_ENV !== 'production') {
   plugins = plugins.concat([createLogger()]);
 

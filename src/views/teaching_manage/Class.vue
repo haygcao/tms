@@ -12,7 +12,7 @@
         <el-button type="danger" @click="onAddClass" size="small" icon="el-icon-circle-plus-outline">新建班级</el-button>
     </el-row>
     <el-row>
-        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+        <el-form :inline="true" :model="searchForm" size="small" class="demo-form-inline">
             <el-form-item>
                 <el-select v-model="searchForm.state" placeholder="班级状态" clearable>
                     <el-option label="未开课" value="0"></el-option>

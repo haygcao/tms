@@ -20,7 +20,7 @@ function importAll(r) {
   r.keys().forEach(r);
 }
 
-importAll(require.context('@/assets/css/', false, /\.css$/));
+importAll(require.context('@/assets/css/', true, /\.css$/));
 Vue.router = router;
 sync(store, router);//use vuex-router-sync to sync store and router state
 Vue.use(VueAxios, axios)

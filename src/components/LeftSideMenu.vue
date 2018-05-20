@@ -37,7 +37,7 @@
     <i class="el-icon-menu"></i>
     <span slot="title">选课报名</span>
   </el-menu-item>
-  <el-menu-item index="/school/purchase/orders/1" v-if="school_master||student_master">
+  <el-menu-item index="/school/purchase/order/list/1" v-if="school_master||student_master">
     <i class="el-icon-document"></i>
     <span slot="title">订单管理</span>
   </el-menu-item>

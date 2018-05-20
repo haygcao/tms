@@ -5,7 +5,20 @@ export const capitalize = function (value) {
     value = value.toString()
     return value.charAt(0).toUpperCase() + value.slice(1)
 }
-
+function formatMoney(number, places, symbol, thousand, decimal) {
+    number = number || 0;
+    places = !isNaN(places = Math.abs(places)) ? places : 2;
+    symbol = symbol !== undefined ? symbol : "$";
+    thousand = thousand || ",";
+    decimal = decimal || ".";
+    var negative = number < 0 ? "-" : "",
+        i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+}
+export const money = (val) => {
+    return formatMoney(val, 2, '¥', '');
+}
 export const numberToCn = function (number) {
     var SYMBOLS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
     var UNIT_MAP = {
@@ -66,16 +79,22 @@ export const numberToCn = function (number) {
 
 export const toDateTimeString = (time) => {
     // console.log('^^^^^^^^^^^',time);
+    if (!time) return '';
     return new Date(time).Format("yyyy-MM-dd hh:mm")
 }
+export const toTimeString = (time) => {
+    if (!time) return '';
+    return new Date(time).Format("MM月dd日 hh时mm分ss秒")
+}
 export const toShortTimeString = (time) => {
+    if (!time) return '';
     if (typeof time === 'string') {
         time = '1900-01-01 ' + time;
     }
     return new Date(time).Format("hh:mm")
 }
 export const toDateString = (time) => {
-    // console.log('^^^^^^^^^^^',time);
+    if (!time) return '';
     return new Date(time).Format("yyyy/MM/dd")
 }
 export const weekDay = (date) => {
@@ -124,5 +143,26 @@ export const classState = (val) => {
 }
 export const gender = (val) => {
     return val == 0 ? '女' : '男'
+}
+const payType = {
+    0: '微信',
+    1: '支付宝',
+    2: '现金',
+    3: '刷卡'
+}
+export const payment_type = (val) => {
+
+    return payType[val] || '其他'
+}
+const OrderStatus = {
+    0: '已提交',
+    1: '待支付',
+    2: '已支付',
+    3: '已完成',
+    11: '已取消',
+    12: '已关闭',
+}
+export const orderState = (val = 0) => {
+    return OrderStatus[val] || '--'
 }
 
