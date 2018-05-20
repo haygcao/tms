@@ -36,9 +36,9 @@
             <el-menu-item index="/admin/franchisee/create">新建加盟校</el-menu-item>
             
         </el-submenu>
-        <el-menu-item index="2">
+        <el-menu-item index="/admin/course/create">
             <i class="el-icon-menu"></i>
-            <span slot="title">导航二</span>
+            <span slot="title">课程管理</span>
         </el-menu-item>
 
     </el-menu>
