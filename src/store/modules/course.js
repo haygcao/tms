@@ -1,5 +1,6 @@
 import api from '@/api'
 const { course } = api;
+import { CLEAR_STATE } from '../mutation_types';
 const mutations_types = {
     course_list: "course/list",
     create: "course/create",
@@ -27,6 +28,13 @@ const mutations = {
     },
     [mutations_types.create](state, { res }) {
         state.createResult = res;
+    },
+    [CLEAR_STATE](state) {
+        state = {
+            courseList: {},
+            createResult: {},
+        }
+
     },
 }
 export default {

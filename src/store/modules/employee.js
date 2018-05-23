@@ -1,5 +1,6 @@
 import api from '@/api'
 const { employee } = api;
+import { CLEAR_STATE } from '../mutation_types';
 const mutations_types = {
     employee_list: "employee/list",
     employee_create: "employee/create",
@@ -45,6 +46,12 @@ const mutations = {
     },
     [mutations_types.employee_create](state, { res }) {
         state.create_result = res;
+    },
+    [CLEAR_STATE](state) {
+        state.employee_list = {};
+        state.create_result = null;
+        state.employee_detail = null;
+        state.new_employee = null;
     },
 }
 export default {

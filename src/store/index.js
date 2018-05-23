@@ -5,6 +5,7 @@ import modules from './modules'
 import createLogger from 'vuex/dist/logger'
 import createPersistedState from 'vuex-persistedstate'
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
+import * as mutation_types from './mutation_types';
 Vue.use(Vuex)
 let plugins = [createPersistedState({ paths: ["login", "region", "current_user", "school"] })];
 if (process.env.NODE_ENV !== 'production') {
@@ -56,8 +57,15 @@ const getters = {
     ]
   }
 }
-const mutations = {}
-const actions = {}
+const mutations = {
+
+}
+const actions = {
+  async clearState({ commit, state, getters }, payload) {
+
+    commit(mutation_types.CLEAR_STATE);
+  },
+}
 export default new Vuex.Store({
   state,
   mutations,

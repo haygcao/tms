@@ -1,5 +1,6 @@
 import api from '@/api'
 const { clazz, course, student, purchase } = api;
+import { CLEAR_STATE } from '../mutation_types';
 const mutations_types = {
     order_student: "order/fetch_student",
     create_student: 'order/create_student',
@@ -119,6 +120,18 @@ const mutations = {
         state.student = {};
         state.createStudentResult = {};
         state.addStudentParentResult = {}
+
+    },
+    [CLEAR_STATE](state) {
+        state.course = {};
+        state.student = {};
+        state.createStudentResult = {};
+        state.addStudentParentResult = {};
+        state.createOrderResult = {};
+        state.orderSummaryInfo = {};
+        state.payOfflineResult = {};
+        state.orderList = {};
+        state.cancelOrderResult = {};
 
     },
 }

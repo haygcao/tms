@@ -1,5 +1,6 @@
 import api from '@/api'
 const { clazz, course } = api;
+import {CLEAR_STATE} from '../mutation_types';
 const mutations_types = {
     clazz_list: "clazz/list",
     clazz_fetch: "clazz/fetchedById",
@@ -55,6 +56,11 @@ const mutations = {
         state.course = {};
         state.createResult = {}
     },
+    [CLEAR_STATE](state) {
+        state.course = {};
+        state.createResult = {};
+        state.clazzList={};
+    }
 }
 export default {
     state,

@@ -1,5 +1,5 @@
 <template>
-   <el-dropdown size="small" trigger="click" @command="switchSchoolCommand">
+   <el-dropdown v-if="schools.length>0" size="small" trigger="click" @command="switchSchoolCommand">
         <el-button type="danger" plain size="small">
             {{current_school.name}}<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
@@ -31,7 +31,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["switchSchool"]),
+    ...mapActions(["switchSchool", "clearState"]),
 
     switchSchoolCommand(command) {
       let school = this.schools.find(v => v.id == command);
@@ -40,6 +40,9 @@ export default {
         new CustomEvent("school-switched", { detail: school })
       );
     }
+  },
+  destroyed() {
+    this.clearState();
   }
 };
 </script>

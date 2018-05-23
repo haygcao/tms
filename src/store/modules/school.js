@@ -1,19 +1,20 @@
 import api from '@/api'
 const { school } = api;
+import { CLEAR_STATE } from '../mutation_types';
 const mutations_types = {
     classroomList: "school/classroomList",
     createClassroom: "school/createClassroom",
     updateClassroom: "school/updateClassroom",
     removeClassroom: "school/removeClassroom",
     fetchClassroom: "school/fetchClassroom",
-    getTeachers:"school/getTeachers",
+    getTeachers: "school/getTeachers",
 }
 const state = {
     classroomList: {},
     createClassroomResult: {},
     updateClassroomResult: {},
     selectedClassroom: {},
-    schoolTeachers:{},
+    schoolTeachers: {},
 }
 const getters = {
 
@@ -42,7 +43,7 @@ const actions = {
         let res = await school.getClassroom(payload);
         commit(mutations_types.fetchClassroom, { res });
     },
-    async getTeachers({ commit, dispatch, state, getters }, payload){
+    async getTeachers({ commit, dispatch, state, getters }, payload) {
         let res = await school.getTeachers(payload);
         commit(mutations_types.getTeachers, { res });
     }
@@ -62,6 +63,16 @@ const mutations = {
     },
     [mutations_types.getTeachers](state, { res }) {
         state.schoolTeachers = res;
+    },
+    [CLEAR_STATE](state) {
+        state = {
+            classroomList: {},
+            createClassroomResult: {},
+            updateClassroomResult: {},
+            selectedClassroom: {},
+            schoolTeachers: {},
+        }
+
     },
 }
 export default {
