@@ -91,7 +91,7 @@ export default new Router({
         {
           name:'products',
           path: 'classes/:page(\\d+)',
-          component: require('@/views/school/ClassList.vue').default
+          component: require('@/views/school/ClazzList.vue').default
         },
         {
           name:'create_order',
