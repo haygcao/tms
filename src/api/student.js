@@ -18,9 +18,28 @@ async function create(payload) {
     }
 
 }
+async function update(payload) {
+    try {
+        const response = await axios.post('/api/student/update', payload);
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
+    }
+
+}
 async function findByMobile(payload) {
     try {
         const response = await axios.get('/api/student/find', {
+            params: payload
+        });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
+}
+async function findById(payload) {
+    try {
+        const response = await axios.get('/api/student/fetch', {
             params: payload
         });
         return response.data;
@@ -41,6 +60,8 @@ export default {
     list,
     create,
     findByMobile,
-    addParent
+    findById,
+    addParent,
+    update
    
 }

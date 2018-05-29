@@ -63,6 +63,14 @@ async function getTeachers(payload) {
     }
 
 }
+async function getConsultants(payload) {
+    try {
+        const response = await axios.get('/api/employee/consultant_list', { params: payload });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
+}
 export default {
     list,
     createClassroom,
@@ -70,5 +78,6 @@ export default {
     removeClassroom,
     updateClassroom,
     getClassroom,
-    getTeachers
+    getTeachers,
+    getConsultants
 }

@@ -56,7 +56,7 @@
                 <el-input v-model="searchForm.teacher_name" placeholder="输入老师姓名"></el-input>
             </el-form-item>
             <el-form-item >
-               <el-button type="primary" @click="onSearch" icon="el-icon-search">查询</el-button>
+               <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
                 <el-button v-if="showResetButton" type="text" @click="onResetSearchForm" icon="el-icon-circle-close-outline">清除查询条件</el-button>
             </el-form-item>
         </el-form>
@@ -65,43 +65,17 @@
     <el-row>
         <el-table :data="clazzList.rows" stripe border="" style="width: 100%">
 
-            <el-table-column type="index" label="#" width="60">
+            <el-table-column type="index" label="#" width="40">
             </el-table-column>
-            <el-table-column prop="year" width="80" label="年份">
-            </el-table-column>
-            <el-table-column width="80" label="学科">
+            <el-table-column  label="班级">
                 <template slot-scope="scope">
-            {{scope.row.subject|subjectName}}
+              {{scope.row.year}}{{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
           </template>
             </el-table-column>
-            <el-table-column width="80" label="年级">
+            <el-table-column width="200" label="上课时间">
                 <template slot-scope="scope">
-            {{scope.row.grade|grade}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="学期">
-                <template slot-scope="scope">
-            {{scope.row.term|terms}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="班型">
-                <template slot-scope="scope">
-            {{scope.row.class_type|classType}}
-          </template>
-            </el-table-column>
-            <el-table-column  label="名称">
-                <template slot-scope="scope">
-              {{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
-          </template>
-            </el-table-column>
-            <el-table-column width="200" label="开课日期">
-                <template slot-scope="scope">
-            {{scope.row.begin_date|toDateString}}-{{scope.row.finish_date|toDateString}}
-          </template>
-            </el-table-column>
-            <el-table-column width="160" label="上课时间">
-                <template slot-scope="scope">
-           <span v-if="scope.row.class_type=='0'||scope.row.class_type=='1'">{{scope.row.begin_date|weekDay}}</span> {{scope.row.class_begin_time|toShortTimeString}}-{{scope.row.class_finish_time|toShortTimeString}}
+             <p>{{scope.row.begin_date|toDateString}}-{{scope.row.finish_date|toDateString}}</p>
+            <p><span v-if="scope.row.class_type=='0'||scope.row.class_type=='1'">{{scope.row.begin_date|weekDay}}</span> {{scope.row.class_begin_time|toShortTimeString}}-{{scope.row.class_finish_time|toShortTimeString}}</p>
           </template>
             </el-table-column>
             <el-table-column width="120" label="上课地点">
@@ -111,27 +85,27 @@
             </el-table-column>
             <el-table-column width="120" label="授课老师">
                 <template slot-scope="scope">
-            {{scope.row.teacher_name}}
+            <el-button @click="onShowTeacherInfo(scope.row)" type="text">{{scope.row.teacher_name}}</el-button>
           </template>
             </el-table-column>
-            <el-table-column width="50" label="总课次">
+            <el-table-column width="70" label="总课次">
                 <template slot-scope="scope">
             {{scope.row.total_lesson_number||0}}
           </template>
             </el-table-column>
-            <el-table-column width="50" label="剩余课次">
+            <el-table-column width="80" label="剩余课次">
                 <template slot-scope="scope">
              {{scope.row.total_lesson_number - (scope.row.current_lesson_number||0)}}
           </template>
             </el-table-column>
-            <el-table-column width="50" label="报名人数">
+            <el-table-column width="80" label="剩余名额">
                 <template slot-scope="scope">
-            {{scope.row.student_count}}
+             <span :class="{'text-danger':(scope.row.student_limit-scope.row.student_count)<4}">{{scope.row.student_limit-scope.row.student_count}}</span>
           </template>
             </el-table-column>
             <el-table-column width="80" label="班级状态">
                 <template slot-scope="scope">
-            {{scope.row.state|classState}}
+             <span :class="{'text-danger':scope.row.state>0}">{{scope.row.state|classState}}</span>
           </template>
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
@@ -147,10 +121,24 @@
             </el-pagination>
         </div>
     </el-row>
-    <el-dialog :visible.sync="dialogFormVisible" fullscreen center>
-      <h1 slot="title">{{operate_mode=='create'?'新建':'修改'}}班级</h1>
-      <add-class v-if="dialogFormVisible" v-bind:mode="operate_mode" @updated-success="onUpdated"
-        @created-success="onCreated"></add-class>
+    <el-dialog :visible.sync="dialogFormVisible" center >
+      <h1 slot="title">老师介绍</h1>
+      <div class="teacher-info" v-if="dialogFormVisible">
+      <div class="text-center"><img class="img-circle" :src="teacher_info.avatar_url?teacher_info.avatar_url:require('@/assets/img/default_teacher_avatar.png')"  :alt="teacher_info.name"></div>
+      <p class="text-center">{{teacher_info.name}}</p>
+     <div class="info-element">
+       <h4>毕业院校</h4>
+       <div>{{teacher_info.graduated_from}}</div>
+     </div>
+      <div class="info-element">
+       <h4>教学特点</h4>
+       <div>{{teacher_info.teaching_features}}</div>
+     </div>
+      <div class="info-element">
+       <h4>教学成果</h4>
+       <div>{{teacher_info.teaching_achievement}}</div>
+     </div>
+     </div>
     </el-dialog>
 </div>
 </template>
@@ -198,7 +186,8 @@ export default {
   computed: {
     ...mapState({
       clazzList: state => state.clazz.clazzList.data || {},
-      current_school: state => state.current_user.current_school
+      current_school: state => state.current_user.current_school,
+      teacher_info: state => state.clazz.teacherInfo.data || {}
     }),
     ...mapGetters(["terms", "subjects", "class_types", "grades"]),
 
@@ -234,7 +223,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      getClazzList: "getClazzList"
+      getClazzList: "getClazzList",
+      getTeacherInfo: "getTeacherInfo"
     }),
     handleEnrollmentClick(data) {
       this.$router.push({ name: "create_order", query: { clazz_id: data.id } });
@@ -260,26 +250,20 @@ export default {
       this.currentPage = val;
       this.search();
     },
-    onUpdated() {
-      //   this.dialogFormVisible = false;
-      this.getClassroomList({
-        school_id: this.current_school.id
-      });
-    },
-    onCreated() {
-      //   this.dialogFormVisible = false;
-      this.getClassroomList({
-        school_id: this.current_school.id
-      });
-    },
-    onAddClass() {
-      this.operate_mode = "create";
+    onShowTeacherInfo(val) {
       this.dialogFormVisible = true;
+      if (
+        this.teacher_info &&
+        this.teacher_info.employee_id == val.teacher_id
+      ) {
+        return;
+      }
+      this.getTeacherInfo({
+        teacher_id: val.teacher_id
+      });
     }
   },
-  components: {
-    AddClass
-  }
+  components: {}
 };
 </script>
 
@@ -301,5 +285,27 @@ export default {
 
 .el-input {
   max-width: 120px;
+}
+
+.img-circle {
+  background-color: #EBEEF5;
+  border: 1px solid #E4E7ED;
+  width: 60px;
+  heigth: 60px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.info-element {
+  border-top: 1px solid #EBEEF5;
+  padding: 5px auto;
+}
+
+.info-element h4 {
+  margin: 8px auto;
+}
+
+.teacher-info {
+  max-width: 640px;
 }
 </style>

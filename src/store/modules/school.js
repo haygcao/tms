@@ -8,6 +8,7 @@ const mutations_types = {
     removeClassroom: "school/removeClassroom",
     fetchClassroom: "school/fetchClassroom",
     getTeachers: "school/getTeachers",
+    getConsultants:"school/getConsultants"
 }
 const state = {
     classroomList: {},
@@ -15,6 +16,7 @@ const state = {
     updateClassroomResult: {},
     selectedClassroom: {},
     schoolTeachers: {},
+    schoolConsultants:{},
 }
 const getters = {
 
@@ -46,6 +48,10 @@ const actions = {
     async getTeachers({ commit, dispatch, state, getters }, payload) {
         let res = await school.getTeachers(payload);
         commit(mutations_types.getTeachers, { res });
+    },
+    async getConsultants({ commit, dispatch, state, getters }, payload) {
+        let res = await school.getConsultants(payload);
+        commit(mutations_types.getConsultants, { res });
     }
 }
 const mutations = {
@@ -64,6 +70,9 @@ const mutations = {
     [mutations_types.getTeachers](state, { res }) {
         state.schoolTeachers = res;
     },
+    [mutations_types.getConsultants](state, { res }) {
+        state.schoolTeachers = res;
+    },
     [CLEAR_STATE](state) {
         state = {
             classroomList: {},
@@ -71,6 +80,7 @@ const mutations = {
             updateClassroomResult: {},
             selectedClassroom: {},
             schoolTeachers: {},
+            getConsultants:{}
         }
 
     },

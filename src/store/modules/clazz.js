@@ -1,19 +1,20 @@
 import api from '@/api'
 const { clazz, course } = api;
-import {CLEAR_STATE} from '../mutation_types';
+import { CLEAR_STATE } from '../mutation_types';
 const mutations_types = {
     clazz_list: "clazz/list",
     clazz_fetch: "clazz/fetchedById",
     clazz_create: "clazz/create",
     course_fetched: "clazz/course_fetched",
     clear_state: "clazz/clear_state",
+    teacher_info: "clazz/fetch_teacher_info"
 }
 const state = {
     clazzList: {},
     course: {},
     createResult: {},
-    selectedClazz: {}
-
+    selectedClazz: {},
+    teacherInfo: {}
 }
 const getters = {
 
@@ -26,6 +27,10 @@ const actions = {
     async getClazzList({ commit, state, getters }, payload) {
         let res = await clazz.list(payload);
         commit(mutations_types.clazz_list, { res })
+    },
+    async getTeacherInfo({ commit, state, getters }, payload) {
+        let res = await clazz.getTeacherInfo(payload);
+        commit(mutations_types.teacher_info, { res })
     },
     async fetchCourse({ commit, state, getters }, payload) {
         let res = await course.fetch(payload);
@@ -52,6 +57,9 @@ const mutations = {
     [mutations_types.clazz_create](state, { res }) {
         state.createResult = res;
     },
+    [mutations_types.teacher_info](state, { res }) {
+        state.teacherInfo = res;
+    },
     [mutations_types.clear_state](state) {
         state.course = {};
         state.createResult = {}
@@ -59,7 +67,8 @@ const mutations = {
     [CLEAR_STATE](state) {
         state.course = {};
         state.createResult = {};
-        state.clazzList={};
+        state.clazzList = {};
+        state.teacherInfo = {};
     }
 }
 export default {

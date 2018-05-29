@@ -97,6 +97,25 @@ export const toDateString = (time) => {
     if (!time) return '';
     return new Date(time).Format("yyyy/MM/dd")
 }
+export const age = (birthday) => {
+    if (!birthday) return '';
+    birthday = new Date(birthday);
+    var ageDifMs = Date.now() - birthday.getTime();
+    if (ageDifMs < 0) {
+        return ''
+    }
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    let year = Math.abs(ageDate.getUTCFullYear() - 1970);
+    let month = ageDate.getUTCMonth();
+    let ret = '';
+    if (year > 0) {
+        ret += year + '岁'
+    }
+    if (month > 0) {
+        ret += month + '个月'
+    }
+    return ret;
+}
 export const weekDay = (date) => {
     let day = new Date(date).getDay();
     return '周' + ['日', '一', '二', '三', '四', '五', '六'][day];
