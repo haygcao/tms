@@ -39,9 +39,9 @@
     <el-row>
         <el-table :data="clazzList.rows" stripe border="" style="width: 100%">
 
-            <el-table-column type="index" label="#" width="60">
+            <el-table-column type="index" label="#" width="40">
             </el-table-column>
-            <el-table-column prop="year" width="80" label="年份">
+            <!-- <el-table-column prop="year" width="80" label="年份">
             </el-table-column>
             <el-table-column width="80" label="学科">
                 <template slot-scope="scope">
@@ -62,20 +62,16 @@
                 <template slot-scope="scope">
             {{scope.row.class_type|classType}}
           </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column  label="名称">
                 <template slot-scope="scope">
-              {{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
+              {{scope.row.year}}{{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
           </template>
             </el-table-column>
             <el-table-column width="200" label="开课日期">
                 <template slot-scope="scope">
-            {{scope.row.begin_date|toDateString}}-{{scope.row.finish_date|toDateString}}
-          </template>
-            </el-table-column>
-            <el-table-column width="160" label="上课时间">
-                <template slot-scope="scope">
-           <span v-if="scope.row.class_type=='0'||scope.row.class_type=='1'">{{scope.row.begin_date|weekDay}}</span> {{scope.row.class_begin_time|toShortTimeString}}-{{scope.row.class_finish_time|toShortTimeString}}
+            <p>{{scope.row.begin_date|toDateString}}-{{scope.row.finish_date|toDateString}}</p>
+            <p> <span v-if="scope.row.class_type=='0'||scope.row.class_type=='1'">{{scope.row.begin_date|weekDay}}</span> {{scope.row.class_begin_time|toShortTimeString}}-{{scope.row.class_finish_time|toShortTimeString}}</p>
           </template>
             </el-table-column>
             <el-table-column width="120" label="上课地点">
@@ -88,17 +84,17 @@
             {{scope.row.teacher_name}}
           </template>
             </el-table-column>
-            <el-table-column width="50" label="总课次">
+            <el-table-column width="70" label="总课次">
                 <template slot-scope="scope">
             {{scope.row.total_lesson_number||0}}
           </template>
             </el-table-column>
-            <el-table-column width="50" label="剩余课次">
+            <el-table-column width="80" label="剩余课次">
                 <template slot-scope="scope">
              {{scope.row.total_lesson_number - (scope.row.current_lesson_number||0)}}
           </template>
             </el-table-column>
-            <el-table-column width="50" label="报名人数">
+            <el-table-column width="80" label="报名人数">
                 <template slot-scope="scope">
             {{scope.row.student_count}}
           </template>
@@ -108,9 +104,9 @@
             {{scope.row.state|classState}}
           </template>
             </el-table-column>
-            <el-table-column width="80" label="显示">
+            <el-table-column width="80" label="显示状态">
                 <template slot-scope="scope">
-            <el-button @click="handleVisibleClick(scope.row)" type="text" size="small">{{scope.row.visible}}</el-button>
+            <el-button @click="handleVisibleClick(scope.row)" type="text" size="small">{{scope.row.visible?"公开":"隐藏"}}</el-button>
           </template>
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
@@ -123,7 +119,7 @@
     </el-row>
     <el-row>
         <div class="text-center">
-            <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :total="clazzList.count">
+            <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :current-page.sync="currentPage" :total="clazzList.count">
             </el-pagination>
         </div>
     </el-row>
@@ -151,7 +147,7 @@ export default {
         class_type: undefined,
         state: undefined
       },
-      pageSize: 20,
+      pageSize: 10,
       currentPage: 1,
 
       operate_mode: "create",
@@ -166,6 +162,13 @@ export default {
     ...mapGetters(["class_types"])
   },
   watch: {
+    $route(val, old) {
+      // console.warn("route change---->",val,old)
+      let query = val.query;
+      this.currentPage = parseInt(val.params.page);
+      this.searchForm = Object.assign({}, query);
+      this.search();
+    },
     current_school(val, old) {
       if (val.id != old.id) {
         this.search();
@@ -173,6 +176,9 @@ export default {
     }
   },
   mounted() {
+    let query = this.$route.query;
+    this.searchForm = Object.assign({}, query);
+    this.currentPage = parseInt(this.$route.params.page);
     this.search();
   },
   methods: {
@@ -193,6 +199,12 @@ export default {
         .catch(_ => {});
     },
     onSearch() {
+      this.currentPage = 1;
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: this.searchForm
+      });
       this.search();
     },
     search() {
@@ -204,7 +216,11 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.search();
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: this.searchForm
+      });
     },
     onUpdated() {
       //   this.dialogFormVisible = false;

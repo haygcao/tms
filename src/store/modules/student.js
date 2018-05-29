@@ -12,6 +12,7 @@ const mutations_types = {
 const state = {
     // clazzList: {},
     current: {},
+    studentList:{},
     createStudentResult: {},
     updateStudentResult: {},
     addStudentParentResult: {},

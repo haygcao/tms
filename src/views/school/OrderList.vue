@@ -214,6 +214,7 @@ export default {
         params: { page: this.currentPage },
         query: this.searchForm
       });
+      this.search();
     },
     search() {
       let payload = Object.assign({}, this.searchForm);

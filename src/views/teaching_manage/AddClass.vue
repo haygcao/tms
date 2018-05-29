@@ -47,8 +47,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="开课日期" prop="beigin_date">
-                            <el-date-picker type="date"  :picker-options="pickerOptions" v-model="form.beigin_date" value-format="yyyy-MM-dd" placeholder="开课日期"></el-date-picker>
+                        <el-form-item label="开课日期" prop="begin_date">
+                            <el-date-picker type="date"  :picker-options="pickerOptions" v-model="form.begin_date" value-format="yyyy-MM-dd" placeholder="开课日期"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -184,7 +184,7 @@ export default {
       form: {
         year: new Date().getFullYear(),
         name: undefined,
-        beigin_date: undefined,
+        begin_date: undefined,
         finish_date: undefined,
         class_begin_time: undefined,
         class_finish_time: undefined,
@@ -194,7 +194,7 @@ export default {
         classroom: undefined
       },
       rules: {
-        beigin_date: [
+        begin_date: [
           {
             required: true,
             message: "请选择开课日期",
@@ -290,7 +290,7 @@ export default {
       },
       deep: true
     },
-    "form.beigin_date": {
+    "form.begin_date": {
       handler: function(val, old) {
         if (val == old) {
           return;

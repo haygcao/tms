@@ -89,6 +89,11 @@ export default new Router({
       meta: { auth: true },
       children: [
         {
+          name:'students',
+          path: 'students/:page(\\d+)',
+          component: require('@/views/school/StudentList.vue').default
+        },
+        {
           name:'products',
           path: 'classes/:page(\\d+)',
           component: require('@/views/school/ClazzList.vue').default
