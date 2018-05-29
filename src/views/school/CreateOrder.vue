@@ -83,7 +83,7 @@
                     <el-input v-model="student.data.nickname"></el-input>
                 </el-form-item>
                 <el-form-item label="性别">
-                    <el-select v-model="student.data.gender" placeholder="性别">
+                    <el-select v-model="student.data.gender" style="width:178px;" placeholder="性别">
                         <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
@@ -91,7 +91,7 @@
                 <el-form-item prop="birthday" label="生日">
                         <el-date-picker value-format="yyyy-MM-dd" type="date" placeholder="生日" v-model="student.data.birthday"></el-date-picker>
                 </el-form-item>
-                <el-form-item> <span class="text-danger">{{student.data.birthday|age}}</span></el-form-item>
+                <el-form-item> <span class="text-info">年龄:{{student.data.birthday|age}}</span></el-form-item>
             </el-form>
             <p>家长信息</p>
             <el-form v-for="(parentForm ,index) in student.data.parents" :key="index" size="small" class="parent-form" :inline="true" disabled :model="parentForm">
@@ -110,7 +110,12 @@
             </el-form>
         </div>
         <div v-if="loadedStudent&&(!student||!student.data||!student.data.mobile)">
-          <p>学员不存在，<el-button type="text"  @click="onCreateStudent" icon="el-icon-edit-outline">创建新学员</el-button></p>
+          <el-alert
+              title="学员不存在,请先创建新学员"
+              type="warning"
+              :closable="false"
+              show-icon>
+          </el-alert>
         </div>
     </el-row>
     <el-row>
@@ -181,8 +186,7 @@
             <el-radio :label="3" border><i class="iconfont icon-yinlian"></i>刷卡</el-radio>
         </el-radio-group>
         <h3>
-            <el-button type="danger" disabled="" @click="createStudentAndSubmitOrder(false)">暂存订单</el-button>
-            <el-button type="primary" @click="createStudentAndSubmitOrder(true)">确认提交</el-button>
+            <el-button type="primary" @click="onSubmitOrder()">确认提交</el-button>
         </h3>
     </el-row>
     </div>
@@ -301,6 +305,9 @@ export default {
       });
     },
     onSearch() {
+      if(this.searchForm.mobile==null){
+        return false;
+      }
       this.$refs["searchForm"].validate(valid => {
         if (valid) {
           this.loading = true;
@@ -331,50 +338,18 @@ export default {
         alert(1);
       }
     },
-
-    createStudentAndSubmitOrder(payment) {
-      let self = this;
-      this.validateOrderInfo()
-        .then(() => {
+    onSubmitOrder() {
+      let self=this;
+      self.$refs["orderInfoForm"].validate(valid => {
+        if (valid) {
+          if (self.student.data == null) {
+            self.$message.error("缺少学员信息！");
+            return false;
+          }
           let payload = {};
-          if (self.createStudentForm.mobile != undefined) {
-            let student = self.createStudentForm;
-            student.school_id = self.currentClazz[0].school_id;
-            payload.student = student;
-            payload.order = self.createOrderInfo();
-          } else {
-            if (self.student.data == null) {
-              self.$message.error("缺少学员信息！");
-              return false;
-            }
-            payload.student = false;
-            payload.order = self.createOrderInfo();
-          }
+          payload.order = self.createOrderInfo();
           self.createOrder(payload);
-        })
-        .catch(err => {
-          console.error("error when submit order:", err);
-        });
-    },
-    validateOrderInfo() {
-      let self = this;
-      return new Promise((resolve, reject) => {
-        self.$refs["orderInfoForm"].validate(valid => {
-          if (valid) {
-            if (!self.$refs["createStudentForm"]) {
-              return resolve(true);
-            }
-            self.$refs["createStudentForm"].validate(ok => {
-              if (ok) {
-                return resolve(true);
-              } else {
-                return reject(false);
-              }
-            });
-          } else {
-            return reject(false);
-          }
-        });
+        }
       });
     },
     createOrderInfo() {
@@ -391,7 +366,7 @@ export default {
       order.origin = orderInfoForm.origin;
       order.references = orderInfoForm.references;
       order.note = orderInfoForm.note;
-      let consultant = orderInfoForm.consultant;
+      let consultant = orderInfoForm.consultant||{};
       order.consultant_id = consultant.id;
       order.consultant_name = consultant.name;
       order.payment_state = 0; //未支付
@@ -480,6 +455,6 @@ export default {
 }
 
 .student-info-form .el-input {
-  width: 178px;
+  width: 178px!important;
 }
 </style>

@@ -35,23 +35,51 @@
     </el-row>
 
     <el-row>
-        <el-table :data="orderList.rows" stripe border="" style="width: 100%">
+        <div class="block">
+        <el-table :data="orderList.rows" stripe style="width: 100%;">
 
-            <el-table-column type="index" label="#" width="60">
+            <el-table-column type="expand" width="40">
+              <template slot-scope="scope">
+                        <el-form label-position="left" inline class="order-table-expand">
+                          <el-form-item label="课程顾问">
+                            <span>{{ scope.row.consultant_name }}</span>
+                          </el-form-item>
+                          <el-form-item label="来源">
+                            <span>{{scope.row.origin}}</span>
+                          </el-form-item>
+                          <el-form-item label="是否年缴">
+                            <span>{{scope.row.order_type==0?'否':('缴'+scope.row.order_type+'年')}}</span>
+                          </el-form-item>
+                          <el-form-item label="创建时间">
+                            <span>{{scope.row.created_at|toDateTimeString}}</span>
+                          </el-form-item>
+                          <el-form-item label="支付时间">
+                            <span> {{scope.row.payment_time|toDateTimeString}}</span>
+                          </el-form-item>
+                          <el-form-item label="支付方式">
+                            <span> {{scope.row.payment_type|payment_type}}</span>
+                          </el-form-item>
+                          <el-form-item label="收款人">
+                            <span>{{scope.row.payee}}</span>
+                          </el-form-item>
+                        </el-form>
+              </template>
+            </el-table-column>
+            <el-table-column type="index" label="#" width="40">
             </el-table-column>
             <el-table-column prop="order_no" width="160" label="订单编号">
             </el-table-column>
-            <el-table-column width="180" label="班级">
+            <el-table-column width="" label="班级">
                 <template slot-scope="scope">
             {{scope.row.subject}}
           </template>
             </el-table-column>
-            <el-table-column width="80" label="孩子姓名">
+            <el-table-column label="孩子姓名">
                 <template slot-scope="scope">
             {{scope.row.student_name}}
           </template>
             </el-table-column>
-            <el-table-column width="80" label="课程顾问">
+            <!-- <el-table-column width="80" label="课程顾问">
                 <template slot-scope="scope">
             {{scope.row.consultant_name}}
           </template>
@@ -65,7 +93,7 @@
                 <template slot-scope="scope">
               {{scope.row.order_type==0?'否':('缴'+scope.row.order_type+'年')}}
           </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column width="100" label="购买课次">
                 <template slot-scope="scope">
             {{scope.row.total_lesson_number}}
@@ -85,8 +113,8 @@
                 <template slot-scope="scope">
             {{scope.row.created_at|toDateTimeString}}
           </template>
-            </el-table-column>
-            <el-table-column width="150" label="支付时间">
+             </el-table-column>
+            <!--<el-table-column width="150" label="支付时间">
                 <template slot-scope="scope">
             {{scope.row.payment_time|toDateTimeString}}
           </template>
@@ -100,8 +128,8 @@
                 <template slot-scope="scope">
             {{scope.row.payee}}
           </template>
-            </el-table-column>
-            <el-table-column fixed="right" label="操作" width="100">
+            </el-table-column> -->
+            <el-table-column fixed="right" label="操作" width="150">
                 <template slot-scope="scope">
             <el-button @click="onShowDetail(scope.row)" type="text" size="small">查看</el-button>
             <el-button v-if="scope.row.state<=1" @click="onCancelOrder(scope.row)" type="text" size="small">取消</el-button>
@@ -109,10 +137,11 @@
           </template>
             </el-table-column>
         </el-table>
+        </div>
     </el-row>
     <el-row>
         <div class="text-center">
-            <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :total="orderList.count">
+            <el-pagination background @current-change="handleCurrentChange" :current-page.sync="currentPage" layout="prev, pager, next" :page-size="pageSize" :total="orderList.count">
             </el-pagination>
         </div>
     </el-row>
@@ -134,7 +163,7 @@ export default {
         student: undefined,
         order_no: undefined
       },
-      pageSize: 20,
+      pageSize: 10,
       currentPage: 1
     };
   },
@@ -147,6 +176,12 @@ export default {
     ...mapGetters(["terms", "subjects", "class_types", "grades"])
   },
   watch: {
+    $route(val, old) {
+      let query = val.query;
+      this.currentPage = parseInt(val.params.page);
+      this.searchForm = Object.assign({}, query);
+      this.search();
+    },
     current_school(val, old) {
       if (val.id != old.id) {
         this.search();
@@ -161,6 +196,9 @@ export default {
     }
   },
   mounted() {
+    let query = this.$route.query;
+    this.searchForm = Object.assign({}, query);
+    this.currentPage = parseInt(this.$route.params.page);
     this.search();
   },
   methods: {
@@ -171,7 +209,11 @@ export default {
 
     onSearch() {
       this.currentPage = 1;
-      this.search();
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: this.searchForm
+      });
     },
     search() {
       let payload = Object.assign({}, this.searchForm);
@@ -189,7 +231,11 @@ export default {
       this.searchForm.begin = moment(this.searchForm.end)
         .add(-7, "days")
         .format("YYYY-MM-DD");
-      this.search();
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: this.searchForm
+      });
     },
     onSearchLatstMonth() {
       this.currentPage = 1;
@@ -199,12 +245,19 @@ export default {
       this.searchForm.begin = moment(this.searchForm.end)
         .add(-1, "months")
         .format("YYYY-MM-DD");
-
-      this.search();
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: this.searchForm
+      });
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.search();
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: this.searchForm
+      });
     },
     onCancelOrder(payload) {
       // this.searchForm = Object.assign(this.searchForm, this.defaultSearchForm);
@@ -214,17 +267,30 @@ export default {
         })
         .catch(_ => {});
     },
-    onRefundOrder(payload){
-        
-    }
+    onRefundOrder(payload) {}
   },
   filters: {},
   components: {}
 };
 </script>
 
-<style lang="stylus" scoped>
+<style>
 .order-search-form .el-input {
-    max-width: 180px;
+  max-width: 180px;
+}
+.order-table-expand {
+  font-size: 0;
+}
+
+.order-table-expand label {
+  width: 90px;
+  color: #909399;
+}
+
+.order-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
 }
 </style>
+
