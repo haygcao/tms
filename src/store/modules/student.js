@@ -8,6 +8,7 @@ const mutations_types = {
     create_student_parent: "student/create_student_parent",
     clear_state: "student/clear_state",
     fetched_student: "student/fetched_student",
+    list_students: "student/list_students",
 }
 const state = {
     // clazzList: {},
@@ -21,6 +22,11 @@ const getters = {
 
 }
 const actions = {
+    async getStudentListBySchool({ commit, state, getters }, payload) {
+        let res = await student.list(payload);
+        commit(mutations_types.list_students, { res })
+        return Promise.resolve(res);
+    },
     async getStudentByMobile({ commit, state, getters }, payload) {
         let res = await student.findByMobile(payload);
         commit(mutations_types.fetched_student, { res })
@@ -54,6 +60,9 @@ const actions = {
     }
 }
 const mutations = {
+    [mutations_types.list_students](state, { res }) {
+        state.studentList = res;
+    },
     [mutations_types.create_student](state, { res }) {
         state.createStudentResult = res;
     },
@@ -69,14 +78,15 @@ const mutations = {
     [mutations_types.clear_state](state) {
         state.current = {};
         state.createStudentResult = {};
-        state.addStudentParentResult = {}
+        state.addStudentParentResult = {};
+        state.studentList={};
 
     },
     [CLEAR_STATE](state) {
         state.current = {};
         state.createStudentResult = {};
         state.addStudentParentResult = {};
-
+        state.studentList={};
     },
 }
 export default {

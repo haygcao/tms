@@ -219,6 +219,9 @@ export default {
     }
   },
   mounted() {
+    let query = this.$route.query;
+    this.searchForm = Object.assign({}, query);
+    this.currentPage = parseInt(this.$route.params.page);
     this.search();
   },
   methods: {

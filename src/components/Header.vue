@@ -12,7 +12,7 @@
     <li class="nav-item">
     <router-link v-if="user==null" to="/login"><span>登录</span>
     </router-link>
-    <el-dropdown v-if="user&&user.id" trigger="click">
+    <el-dropdown v-if="user&&user.id" szie="" trigger="click">
       <span class="el-dropdown-link">
         {{user.user_name}}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>

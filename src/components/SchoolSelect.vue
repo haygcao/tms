@@ -1,5 +1,5 @@
 <template>
-   <el-dropdown v-if="schools.length>0" size="small" trigger="click" @command="switchSchoolCommand">
+   <el-dropdown v-if="schools.length>0" size="" trigger="click" @command="switchSchoolCommand">
         <el-button type="danger" plain size="small">
             {{current_school.name}}<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
