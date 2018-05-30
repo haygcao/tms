@@ -9,6 +9,7 @@ const mutations_types = {
     clear_state: "student/clear_state",
     fetched_student: "student/fetched_student",
     list_students: "student/list_students",
+    reset_password:"student/reset_password",
 }
 const state = {
     // clazzList: {},
@@ -44,6 +45,11 @@ const actions = {
     async createStudent({ commit, state, getters }, payload) {
         let res = await student.create(payload);
         commit(mutations_types.create_student, { res });
+        return Promise.resolve(res);
+    },
+    async resetStudentPassword({ commit, state, getters }, payload) {
+        let res = await student.resetPassword(payload);
+        // commit(mutations_types.reset_password, { res });
         return Promise.resolve(res);
     },
     async updateStudent({ commit, state, getters }, payload) {

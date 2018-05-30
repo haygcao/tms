@@ -55,13 +55,21 @@ async function addParent(payload) {
         return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
     }
 }
-
+async function resetPassword(payload) {
+    try {
+        const response = await axios.post('/api/student/resetpassword', payload);
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '提交失败' }
+    }
+}
 export default {
     list,
     create,
     findByMobile,
     findById,
     addParent,
-    update
+    update,
+    resetPassword
    
 }

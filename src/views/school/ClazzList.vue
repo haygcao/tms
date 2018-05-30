@@ -239,6 +239,12 @@ export default {
       this.$refs["searchForm"].resetFields();
     },
     onSearch() {
+      this.currentPage = 1;
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: this.searchForm
+      });
       this.search();
     },
     search() {
