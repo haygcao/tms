@@ -21,6 +21,12 @@ export default new Router({
       name: 'default',
       component: Home,
       meta: { auth: true },
+      children: [
+        {
+          path: 'dashboard',
+          component: require('@/views/Dashboard.vue').default
+        },
+      ]
     },
     {
       path: '/admin',
@@ -71,45 +77,33 @@ export default new Router({
       ]
     },
     {
-      path: '/',
-      name: 'home',
-      component: Home,
-      meta: { auth: true },
-      children: [
-        {
-          path: 'dashboard',
-          component: require('@/views/Dashboard.vue').default
-        },
-      ]
-    },
-    {
       path: '/school',
       name: 'school',
       component: Home,
       meta: { auth: true },
       children: [
         {
-          name:'students',
+          name: 'students',
           path: 'students/:page(\\d+)',
           component: require('@/views/school/StudentList.vue').default
         },
         {
-          name:'products',
+          name: 'products',
           path: 'classes/:page(\\d+)',
           component: require('@/views/school/ClazzList.vue').default
         },
         {
-          name:'create_order',
+          name: 'create_order',
           path: 'purchase/order/create',
           component: require('@/views/school/CreateOrder.vue').default
         },
         {
-          name:'order_list',
+          name: 'order_list',
           path: 'purchase/order/list/:page(\\d+)',
           component: require('@/views/school/OrderList.vue').default
         },
         {
-          name:'cashier',
+          name: 'cashier',
           path: 'purchase/cashier',
           component: require('@/views/school/Cashier.vue').default
         },
@@ -150,13 +144,17 @@ export default new Router({
       path: '/home',
       component: Home,
       name: 'employee',
-      redirect: '/employee',
+      redirect:'/home/employee',
       meta: { auth: { roles: ['administrator', 'franchisee_admin', 'investor'] } },
       children: [
         {
-          // 当 /user/:id/profile 匹配成功，
-          name: 'employee_list',
+          name: 'employee_default',
           path: 'employee',
+          redirect: '/home/employee/1',
+        },
+        {
+          name: 'employee_list',
+          path: 'employee/:page(\\d+)',
           component: require('@/views/employee/Employee.vue').default
         },
         {

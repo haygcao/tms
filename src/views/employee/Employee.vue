@@ -10,18 +10,18 @@
     
   </el-row>
   <el-row>
-    <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+    <el-form :inline="true" size="small" :model="searchForm" class="search-form-inline">
       <el-form-item>
-        <el-input v-model="searchForm.query" placeholder="员工姓名、编号或手机号" style="min-width:220px"></el-input>
+        <el-input v-model="searchForm.query" placeholder="员工姓名、编号或手机号" style="min-width:220px" clearable></el-input>
       </el-form-item>
       <el-form-item >
-        <el-select v-model="searchForm.state" placeholder="状态">
+        <el-select v-model="searchForm.state" placeholder="状态" clearable>
           <el-option label="在职" value="1"></el-option>
           <el-option label="离职" value="0"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item >
-        <el-select v-model="searchForm.job_title" placeholder="职位">
+        <el-select v-model="searchForm.job_title" placeholder="职位" clearable>
           <el-option
             v-for="item in jobTitles"
             :key="item.key"
@@ -31,8 +31,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSearch" icon="el-icon-search">查询</el-button>
-        <el-button type="danger" @click="onAddEmployee" icon="el-icon-circle-plus-outline">新增员工</el-button>
+        <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
+        <el-button type="primary" @click="onAddEmployee" icon="el-icon-circle-plus-outline">新增员工</el-button>
       </el-form-item>
     </el-form>
   </el-row>
@@ -40,19 +40,28 @@
 
   </el-row>
   <el-row v-loading="loading">
-    <el-card class="box-card" v-for="item in employeeList.rows" :key="item.id">
-      <div slot="header" class="clearfix">
-        <span>{{item.name}}</span>
-        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+    <el-card class="box-card  clearfix" v-for="item in employeeList.rows" :key="item.id">
+      <div class="employee-item">
+      <div  class="left">
+        <div class="emp-fileds text-center "><img class="circle" :src="item.avatar_url?item.avatar_url:require('@/assets/img/default_teacher_avatar.png')"  :alt="item.name"></div>
+        <div class="emp-fileds text-center emp-fileds-name">{{item.name}}<i style="float:right" :class="[item.gender==1 ? 'icon-gender-male emp-gender-male' : 'icon-gender-female emp-gender-female']" class="emp-gender icon iconfont "></i></div>
+        <div class="emp-fileds text-center emp-fileds-name-en">{{item.first_name_en}}&nbsp;{{item.last_name_en}}</div>
+        <div class="emp-fileds text-center"><el-tag :type="employe_title_tags[item.job_title]" size="mini">{{item.job_title|jobTitle}}</el-tag></div>
       </div>
-      <div  class="text item">
-        列表内容
+      <div class="right">
+        <div class="emp-fileds"><i class="icon iconfont icon-id-card"></i><span>{{item.employee_no}}</span></div>
+        <div class="emp-fileds"><i class="icon el-icon-date"></i><span>{{item.hire_date}}</span></div>
+        <div class="emp-fileds"><i class="icon iconfont icon-birthdaycake"></i><span>{{item.birthday}}</span></div>
+        <div class="emp-fileds"><i class="icon el-icon-mobile-phone"></i><span>{{item.mobile}}</span></div>
+        <div class="emp-fileds"><i class="icon  iconfont icon-email"></i><span :title="item.email">{{item.email}}</span></div>
+      </div>
       </div>
     </el-card>
   </el-row>
   <el-row>
-    <div class="text-center">
+    <div class="text-center" v-if="employeeList.count>0">
       <el-pagination
+        background
         @current-change="handleCurrentChange"
         layout="prev, pager, next"
         :page-size="pageSize"
@@ -74,17 +83,29 @@ export default {
       },
       pageSize: 12,
       currentPage: 1,
-      loading: false
+      loading: false,
+      employe_title_tags: {
+        investor: "danger",
+        teacher: "success",
+        consultant: "primary",
+        teaching_manager: "warning",
+        school_manager: "danger"
+      }
     };
   },
   computed: {
     ...mapState({
       jobTitles: state => state.metadata.jobTitles,
       educations: state => state.metadata.educations,
-      employeeList: state => state.employee.employee_list.data
+      employeeList: state => state.employee.employee_list.data || {}
     })
   },
   watch: {
+    current_school(val, old) {
+      if (val.id != old.id) {
+        this.search();
+      }
+    },
     employeeList: function(val) {
       if (val) {
         this.loading = false;
@@ -94,7 +115,10 @@ export default {
   mounted() {
     this.getJobTitles();
     this.getEducations();
-    this.getEmployeeList({ state: 1 });
+    let query = this.$route.query;
+    this.searchForm = Object.assign({}, query);
+    this.currentPage = parseInt(this.$route.params.page);
+    this.search();
   },
   methods: {
     ...mapActions([
@@ -104,7 +128,8 @@ export default {
       "createEmployee"
     ]),
     onSearch() {
-      if (this.loading == true) return;
+      this.currentPage = 1;
+      this.refreshRouter();
       this.search();
     },
     onAddEmployee() {
@@ -112,25 +137,111 @@ export default {
     },
     search() {
       this.loading = true;
-      let payload = this.searchForm;
+      let payload = Object.assign({}, this.searchForm);
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
       this.getEmployeeList(payload);
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.search();
+      this.refreshRouter();
+    },
+    refreshRouter() {
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: Object.assign({}, this.searchForm)
+      });
     }
   }
 };
 </script>
 
 
-<style lang="stylus">
+<style lang="stylus" scoped>
+.search-form-inline .el-input {
+  max-width: 120px;
+}
+
 .box-card {
-  width: 300px;
+  width: 320px;
   display: inline-block;
-  margin-right: 20px;
-  margin-bottom: 20px;
+  margin-right: 30px;
+  margin-bottom: 30px;
+}
+
+.el-card__body {
+  padding: 12px;
+}
+
+.employee-item img.circle {
+  border: 1px solid #E4E7ED;
+  overflow: hidden;
+  border-radius: 50%;
+  display: inline-block;
+  height: 60px;
+  width: 60px;
+  background-color: rgb(121, 199, 183);
+}
+
+.employee-item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  color: #909399;
+  font-size: 12px;
+}
+
+.employee-item .left {
+  padding-right: 10px;
+  width: 120px;
+}
+
+.employee-item .right {
+  padding-left: 10px;
+}
+
+.employee-item .emp-fileds i[class^=icon], [class*='icon'] {
+  margin-right: 10px;
+  font-size: 14px;
+  color: #C0C4CC;
+}
+
+.employee-item .emp-fileds .emp-gender {
+  font-size: 16px;
+  margin-left: 10px;
+  position: absolute;
+}
+
+.employee-item .right .emp-fileds {
+  padding: 8px 0px;
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: normal;
+  text-overflow: ellipsis;
+}
+
+.employee-item .left .emp-fileds {
+  width: 110px;
+  line-height: 30px;
+}
+
+.employee-item .right .emp-fileds {
+  font-size: 12px;
+  width: 140px;
+}
+
+.emp-gender-male {
+  color: #409EFF;
+}
+
+.emp-gender-female {
+  color: #F56C6C;
+}
+
+.employee-item .emp-fileds-name {
+  font-size: 16px;
 }
 </style>

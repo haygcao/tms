@@ -38,6 +38,7 @@ export default {
 <style lang="stylus">
 .home {
   height: 100%;
+  background-color: #fdfdfd
 }
 
 .layout-main {

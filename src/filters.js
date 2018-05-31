@@ -185,3 +185,15 @@ export const orderState = (val = 0) => {
     return OrderStatus[val] || '--'
 }
 
+const JobTitles = {
+    investor: '投资人',
+    teacher: '教师',
+    consultant: '顾问',
+    teaching_manager: '教学管理',
+    school_manager: '校区管理',
+}
+
+export const jobTitle = (val) => {
+    return JobTitles[val] || ''
+}
+

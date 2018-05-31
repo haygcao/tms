@@ -52,7 +52,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-input v-model="searchForm.teacher" placeholder="输入老师姓名" style="min-width:220px"></el-input>
+                <el-input form="no" v-model="searchForm.teacher_name" placeholder="输入老师姓名" clearable style="min-width:220px"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
@@ -62,7 +62,6 @@
 
     <el-row class="block" >
         <el-table v-loading="loading" :data="clazzList.rows" stripe size="medium">
-
             <el-table-column type="index" label="#" width="40">
             </el-table-column>
             <el-table-column  label="名称">
@@ -123,7 +122,7 @@
         </el-table>
     </el-row>
     <el-row>
-        <div class="text-center">
+        <div class="text-center" v-if="clazzList.count>0">
             <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :current-page.sync="currentPage" :total="clazzList.count">
             </el-pagination>
         </div>
@@ -157,8 +156,7 @@ export default {
         new Date().getFullYear(),
         new Date().getFullYear() - 1,
         new Date().getFullYear() - 2,
-        new Date().getFullYear() - 3,
-
+        new Date().getFullYear() - 3
       ],
       pageSize: 10,
       currentPage: 1,
@@ -172,7 +170,7 @@ export default {
       clazzList: state => state.clazz.clazzList.data || {},
       current_school: state => state.current_user.current_school
     }),
-     ...mapGetters(["terms", "subjects", "class_types", "grades"]),
+    ...mapGetters(["terms", "subjects", "class_types", "grades"])
   },
   watch: {
     $route(val, old) {
@@ -300,19 +298,18 @@ export default {
       this.$router.push({
         name: this.$route.name,
         params: { page: this.currentPage },
-        query: this.searchForm
+        query: Object.assign({}, this.searchForm)
       });
       this.search();
     },
     search() {
       this.loading = true;
-      let payload = this.searchForm;
+      let payload =Object.assign({},this.searchForm) ;
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
       payload.school_id = this.current_school.id;
       this.getClazzList(payload).then(res => {
         this.loading = false;
-        console.warn(res);
         this.clazzListTracker = res.data.rows.map(v => {
           return { id: v.id, visible: v.visible };
         });
@@ -357,7 +354,7 @@ export default {
   text-overflow: ellipsis;
 }
 
-.clazz .search-form-inline .el-input{
+.clazz .search-form-inline .el-input {
   max-width: 120px;
 }
 .visible-link {

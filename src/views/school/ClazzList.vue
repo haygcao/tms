@@ -53,7 +53,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item prop="teacher_name">
-                <el-input v-model="searchForm.teacher_name" placeholder="输入老师姓名"></el-input>
+                <el-input v-model="searchForm.teacher_name" placeholder="输入老师姓名" clearable></el-input>
             </el-form-item>
             <el-form-item >
                <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
@@ -117,7 +117,7 @@
     </el-row>
     <el-row>
         <div class="text-center">
-            <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :total="clazzList.count">
+            <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :total="clazzList.count">
             </el-pagination>
         </div>
     </el-row>
@@ -257,7 +257,11 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.search();
+      this.$router.push({
+        name: this.$route.name,
+        params: { page: this.currentPage },
+        query: this.searchForm
+      });
     },
     onShowTeacherInfo(val) {
       this.dialogFormVisible = true;
