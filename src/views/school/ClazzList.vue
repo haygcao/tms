@@ -175,7 +175,7 @@ export default {
         new Date().getFullYear(),
         new Date().getFullYear() + 1
       ],
-      pageSize: 20,
+      pageSize: 10,
       currentPage: 1,
       showResetButton: false,
 

@@ -3,7 +3,7 @@
     <Header></Header>
     <el-container class="layout-main">
       <el-aside width="200px">
-        <left-side-menu></left-side-menu>
+      <left-side-menu></left-side-menu>
       </el-aside>
       <el-main>
         <transition name="el-fade-in" mode="out-in">
@@ -42,7 +42,7 @@ export default {
 
 .layout-main {
   height: 100%;
-  padding-top: 80px;
+  padding-top: 50px;
 }
 
 .home .el-row {

@@ -12,7 +12,37 @@
         <el-button type="danger" @click="onAddClass" size="small" icon="el-icon-circle-plus-outline">新建班级</el-button>
     </el-row>
     <el-row>
-        <el-form :inline="true" :model="searchForm" size="small" class="demo-form-inline">
+        <el-form :inline="true" :model="searchForm" size="small" class="search-form-inline">
+          <el-form-item prop="year">
+                <el-select v-model="searchForm.year" placeholder="年份" clearable>
+                    <el-option v-for="item in yearOptions" :key="item" :label="item" :value="item">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+             <el-form-item prop="subject">
+                <el-select v-model="searchForm.subject" placeholder="学科" clearable>
+                    <el-option v-for="item in subjects" :key="item.key" :label="item.name" :value="item.key">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+             <el-form-item prop="grade">
+                <el-select v-model="searchForm.grade" placeholder="年级" clearable>
+                    <el-option v-for="item in grades" :key="item.key" :label="item.name" :value="item.key">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+             <el-form-item prop="term">
+                <el-select v-model="searchForm.term" placeholder="学期" clearable>
+                    <el-option v-for="item in terms" :key="item.key" :label="item.name" :value="item.key">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item prop="class_type">
+                <el-select v-model="searchForm.class_type" placeholder="选择班型" clearable>
+                    <el-option v-for="item in class_types" :key="item.key" :label="item.name" :value="item.key">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item>
                 <el-select v-model="searchForm.state" placeholder="班级状态" clearable>
                     <el-option label="未开课" value="0"></el-option>
@@ -22,16 +52,10 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-select v-model="searchForm.class_type" placeholder="选择班型" clearable>
-                    <el-option v-for="item in class_types" :key="item.key" :label="item.name" :value="item.key">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
                 <el-input v-model="searchForm.teacher" placeholder="输入老师姓名" style="min-width:220px"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSearch" icon="el-icon-search">查询</el-button>
+                <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -128,6 +152,14 @@ export default {
         class_type: undefined,
         state: undefined
       },
+      yearOptions: [
+        new Date().getFullYear() + 1,
+        new Date().getFullYear(),
+        new Date().getFullYear() - 1,
+        new Date().getFullYear() - 2,
+        new Date().getFullYear() - 3,
+
+      ],
       pageSize: 10,
       currentPage: 1,
       loading: false,
@@ -140,7 +172,7 @@ export default {
       clazzList: state => state.clazz.clazzList.data || {},
       current_school: state => state.current_user.current_school
     }),
-    ...mapGetters(["class_types"])
+     ...mapGetters(["terms", "subjects", "class_types", "grades"]),
   },
   watch: {
     $route(val, old) {
@@ -325,8 +357,8 @@ export default {
   text-overflow: ellipsis;
 }
 
-.classroom .el-row:not(:first-child) {
-  max-width: 900px;
+.clazz .search-form-inline .el-input{
+  max-width: 120px;
 }
 .visible-link {
   text-decoration: none;

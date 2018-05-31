@@ -2,7 +2,7 @@
 <div class="layout-head">
 <header  class="header">
     <div  class="container">
-    <h1><router-link to="/"><img src="../assets/logo.png" alt="element-logo" class="nav-logo"><span>睿乐盟</span>
+    <h1><router-link to="/"><img src="../assets/logo.png" alt="element-logo" class="nav-logo">
     </router-link></h1>
     <ul class="nav nav-left"><li class="nav-item"><school-select></school-select></li></ul>
    <ul class="nav">
@@ -43,23 +43,19 @@ export default {
     ...mapState({ current_school: state => state.current_user.current_school }),
     user() {
       return this.$auth.user;
-    },
+    }
     // schools() {
     //   let schools = this.$auth.userInfo().schools || [];
     //   return schools;
     // }
   },
-  watch: {
-  
-  },
-  mounted() {
-    
-  },
+  watch: {},
+  mounted() {},
   methods: {
     ...mapActions(["switchSchool"]),
     logout() {
       this.$auth.logout();
-    },
+    }
   },
   components: {
     SchoolSelect
@@ -75,17 +71,17 @@ export default {
   left: 0;
   top: 0;
   z-index: 1500;
-  height: 80px;
+  height: 50px;
 }
 
 .header {
-  height: 80px;
+  height: 50px;
   background-color: #fff;
   color: #fff;
   top: 0;
   left: 0;
   width: 100%;
-  line-height: 80px;
+  line-height: 50px;
   z-index: 100;
   position: relative;
   height: 100%;
@@ -101,7 +97,8 @@ export default {
 .header h1 a {
   color: #333;
   text-decoration: none;
-  display: block;
+  display: inline-block;
+  padding-left :15px;
 }
 
 .header .container {
@@ -118,14 +115,15 @@ export default {
 }
 
 .header .nav-logo {
-  height: 44px;
+  height: 38px;
   vertical-align: sub;
+  display: inline-block;
 }
 
 .header .nav {
   float: right;
   height: 100%;
-  line-height: 80px;
+  line-height: 50px;
   background: transparent;
   padding: 0;
   margin: 0;
