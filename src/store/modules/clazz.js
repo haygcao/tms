@@ -7,7 +7,10 @@ const mutations_types = {
     clazz_create: "clazz/create",
     course_fetched: "clazz/course_fetched",
     clear_state: "clazz/clear_state",
-    teacher_info: "clazz/fetch_teacher_info"
+    teacher_info: "clazz/fetch_teacher_info",
+    clazz_close:"clazz/clazz_close",
+    clazz_remove:"clazz/clazz_remove",
+    clazz_set_visible_state:"clazz/clazz_set_visible_state",
 }
 const state = {
     clazzList: {},
@@ -27,6 +30,7 @@ const actions = {
     async getClazzList({ commit, state, getters }, payload) {
         let res = await clazz.list(payload);
         commit(mutations_types.clazz_list, { res })
+        return Promise.resolve(res);
     },
     async getTeacherInfo({ commit, state, getters }, payload) {
         let res = await clazz.getTeacherInfo(payload);
@@ -36,6 +40,25 @@ const actions = {
         let res = await course.fetch(payload);
         commit(mutations_types.course_fetched, { res })
     },
+    //关闭班级
+    async closeClazz({ commit, state, getters }, payload) {
+        let res = await clazz.close(payload);
+        commit(mutations_types.clazz_close, { res, payload })
+        return Promise.resolve(res)
+    },
+    //删除班级
+    async removeClazz({ commit, state, getters }, payload) {
+        let res = await clazz.remove(payload);
+        commit(mutations_types.clazz_remove, { res })
+        return Promise.resolve(res)
+    },
+    //设置班级显示状态
+    async setClazzVisibleState({ commit, state, getters }, payload) {
+        let res = await clazz.setClazzVisibleState(payload);
+        commit(mutations_types.clazz_set_visible_state, { res, payload })
+        return Promise.resolve(res)
+    },
+    //新建班级
     async createClazz({ commit, state, getters }, payload) {
         let res = await clazz.create(payload);
         commit(mutations_types.clazz_create, { res })
@@ -56,6 +79,18 @@ const mutations = {
     },
     [mutations_types.clazz_create](state, { res }) {
         state.createResult = res;
+    },
+    [mutations_types.clazz_close](state, { res, payload }) {
+
+        let cls = state.clazzList.data.rows.find(v => v.id == payload.clazz_id);
+        cls.state = 99;
+    },
+    [mutations_types.clazz_set_visible_state](state, { res, payload }) {
+        let cls = state.clazzList.data.rows.find(v => v.id == payload.clazz_id);
+        cls.visible = payload.visible;
+    },
+    [mutations_types.clazz_remove](state, { res }) {
+        // state.createResult = res;
     },
     [mutations_types.teacher_info](state, { res }) {
         state.teacherInfo = res;

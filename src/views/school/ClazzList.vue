@@ -62,8 +62,8 @@
         </el-form>
     </el-row>
 
-    <el-row>
-        <el-table :data="clazzList.rows" stripe border="" style="width: 100%">
+    <el-row class="block">
+        <el-table :data="clazzList.rows" stripe size="medium">
 
             <el-table-column type="index" label="#" width="40">
             </el-table-column>

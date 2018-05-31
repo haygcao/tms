@@ -36,33 +36,11 @@
         </el-form>
     </el-row>
 
-    <el-row>
-        <el-table :data="clazzList.rows" stripe border="" style="width: 100%">
+    <el-row class="block" >
+        <el-table v-loading="loading" :data="clazzList.rows" stripe size="medium">
 
             <el-table-column type="index" label="#" width="40">
             </el-table-column>
-            <!-- <el-table-column prop="year" width="80" label="年份">
-            </el-table-column>
-            <el-table-column width="80" label="学科">
-                <template slot-scope="scope">
-            {{scope.row.subject|subjectName}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="年级">
-                <template slot-scope="scope">
-            {{scope.row.grade|grade}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="学期">
-                <template slot-scope="scope">
-            {{scope.row.term|terms}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="班型">
-                <template slot-scope="scope">
-            {{scope.row.class_type|classType}}
-          </template>
-            </el-table-column> -->
             <el-table-column  label="名称">
                 <template slot-scope="scope">
               {{scope.row.year}}{{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
@@ -101,13 +79,16 @@
             </el-table-column>
             <el-table-column width="80" label="班级状态">
                 <template slot-scope="scope">
-            {{scope.row.state|classState}}
+            <span :class="{'text-success':scope.row.state==1}">{{scope.row.state|classState}}</span>
           </template>
             </el-table-column>
-            <el-table-column width="80" label="显示状态">
+            <el-table-column width="80" label="显示状态" >
                 <template slot-scope="scope">
-            <el-button @click="handleVisibleClick(scope.row)" type="text" size="small">{{scope.row.visible?"公开":"隐藏"}}</el-button>
-          </template>
+                  <div v-if="(scope.row.state==0&&scope.row.student_count==0)">
+                    <a :class="{'el-button--success':scope.row.visible,'el-button--info':!scope.row.visible}" class="visible-link el-button  el-button--mini is-plain" @click="handleVisibleClick(scope.row)"  @mouseover="handleMouseEnter($event,scope.row)" @mouseout="handleMouseLeve($event,scope.row)">{{scope.row.visible?"公开":"隐藏"}}</a>
+                  </div>
+                  <div v-else><el-button disabled=""  plain size="small" :type="scope.row.visible?'success':'info'">{{scope.row.visible?"公开":"隐藏"}}</el-button> </div>
+                </template>
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
                 <template slot-scope="scope">
@@ -149,7 +130,7 @@ export default {
       },
       pageSize: 10,
       currentPage: 1,
-
+      loading: false,
       operate_mode: "create",
       dialogFormVisible: false
     };
@@ -183,17 +164,101 @@ export default {
   },
   methods: {
     ...mapActions({
-      getClazzList: "getClazzList"
+      getClazzList: "getClazzList",
+      setClazzVisibleState: "setClazzVisibleState",
+      removeClazz: "removeClazz"
     }),
-    handleVisibleClick(data) {},
-    handleCloseClick(data) {},
+    handleMouseEnter(event, data) {
+      this.$nextTick(() => {
+        event.target.innerText = data.visible ? "隐藏" : "显示";
+      });
+    },
+    handleMouseLeve(event, data) {
+      this.$nextTick(() => {
+        event.target.innerText = data.visible ? "显示" : "隐藏";
+      });
+    },
+    handleVisibleClick(data) {
+      if (data.state > 0) {
+        this.$alert("已开课班级无法隐藏");
+        return false;
+      }
+      if (data.student_count > 0) {
+        this.$alert("已报名班级无法隐藏");
+        return false;
+      }
+      let msg = `确定要公开该班级？公开后班级信息将无法修改`;
+      if (data.visible) {
+        msg = `确定要隐藏该班级？隐藏后班级将无法报名`;
+      }
+      this.$confirm(msg, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(_ => {
+          this.setClazzVisibleState({
+            clazz_id: data.id,
+            visible: !data.visible
+          }).then(res => {
+            if (res.code == 0) {
+              this.$message.success("设置成功");
+              this.$forceUpdate();
+            } else {
+              this.$message.error(res.message || "设置失败");
+            }
+          });
+        })
+        .catch(_ => {});
+    },
+    handleCloseClick(data) {
+      if (data.state == 1 || (data.state == 0 && data.student_count > 0)) {
+        this.$alert("开课中班级或已报名的班级无法关闭");
+        return false;
+      }
+      if (data.state == 0 && data.student_count > 0) {
+        this.$alert("该班级已有学生报名，无法关闭");
+        return false;
+      }
+      // if (data.state == 0 && data.student_count > 0) {
+      //   this.$alert("该班级已有学生报名，无法关闭");
+      //   return false;
+      // }
+      this.$confirm("确认关闭班级？", "警告", { type: "error" })
+        .then(_ => {
+          this.removeClazz({
+            clazz_id: data.id
+          }).then(res => {
+            if (res.code > 0) {
+              this.$message.error(res.message || "关闭失败");
+            } else {
+              this.$message.success("关闭成功");
+            }
+          });
+        })
+        .catch(_ => {});
+    },
     handleDelClick(data) {
       let self = this;
-      this.$confirm("确认删除？")
+
+      if (data.state == 1 || (data.state == 0 && data.student_count > 0)) {
+        this.$alert("开课中班级或已报名的班级无法删除");
+        return false;
+      }
+      if (data.visible) {
+        this.$alert("公开状态的班级无法删除，请先设置成隐藏状态");
+        return false;
+      }
+      this.$confirm("确认删除？", "警告", { type: "error" })
         .then(_ => {
-          this.removeClassroom({
-            classroom_id: data.id,
-            school_id: data.school_id
+          this.removeClazz({
+            clazz_id: data.id
+          }).then(res => {
+            if (res.code > 0) {
+              this.$message.error(res.message || "删除失败");
+            } else {
+              this.search();
+            }
           });
         })
         .catch(_ => {});
@@ -208,11 +273,18 @@ export default {
       this.search();
     },
     search() {
+      this.loading = true;
       let payload = this.searchForm;
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
       payload.school_id = this.current_school.id;
-      this.getClazzList(payload);
+      this.getClazzList(payload).then(res => {
+        this.loading = false;
+        console.warn(res);
+        this.clazzListTracker = res.data.rows.map(v => {
+          return { id: v.id, visible: v.visible };
+        });
+      });
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -245,7 +317,7 @@ export default {
 };
 </script>
 
-<style lang="stylus" scoped>
+<style>
 .text-classroom-desc {
   overflow: hidden;
   white-space: nowrap;
@@ -255,5 +327,9 @@ export default {
 
 .classroom .el-row:not(:first-child) {
   max-width: 900px;
+}
+.visible-link {
+  text-decoration: none;
+  cursor: pointer;
 }
 </style>

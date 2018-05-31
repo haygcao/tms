@@ -19,46 +19,38 @@ async function create(payload) {
     }
 
 }
+async function remove(payload) {
+    try {
+        const response = await axios.post('/api/clazz/remove', payload);
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '提交失败' }
+    }
+
+}
+async function close(payload) {
+    try {
+        const response = await axios.post('/api/clazz/close', payload);
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '提交失败' }
+    }
+
+}
+async function setClazzVisibleState(payload) {
+    try {
+        const response = await axios.post('/api/clazz/set_visible_state', payload);
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '提交失败' }
+    }
+
+}
 async function findById(payload) {
     try {
         const response = await axios.get('/api/clazz/show', {
             params: payload
         });
-        return response.data;
-    } catch (err) {
-        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
-    }
-
-}
-async function updateClassroom(payload) {
-    try {
-        const response = await axios.post('/api/classroom/update', payload);
-        return response.data;
-    } catch (err) {
-        return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
-    }
-
-}
-async function removeClassroom(payload) {
-    try {
-        const response = await axios.post('/api/classroom/remove', payload);
-        return response.data;
-    } catch (err) {
-        return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
-    }
-}
-async function getClassroomList(payload) {
-    try {
-        const response = await axios.get('/api/classroom/list', { params: payload });
-        return response.data;
-    } catch (err) {
-        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
-    }
-
-}
-async function getClassroom(payload) {
-    try {
-        const response = await axios.get('/api/classroom/show', { params: payload });
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
@@ -78,9 +70,9 @@ export default {
     list,
     create,
     findById,
-    getTeacherInfo
-    // getClassroomList,
-    // removeClassroom,
-    // updateClassroom,
-    // getClassroom,
+    getTeacherInfo,
+    remove,
+    close,
+    setClazzVisibleState,
+
 }

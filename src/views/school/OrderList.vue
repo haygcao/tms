@@ -36,7 +36,7 @@
 
     <el-row>
         <div class="block">
-        <el-table :data="orderList.rows" stripe style="width: 100%;">
+        <el-table :data="orderList.rows" stripe size="medium">
 
             <el-table-column type="expand" width="40">
               <template slot-scope="scope">
