@@ -1,5 +1,14 @@
 <template>
-  <el-menu default-active="/dashboard" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+<div class="menu-wrap" :class="{'menu-collapsed':isCollapse}">
+ <div class="clearfix menu-expand"><a class="menu-switch primary" @click="handleMenuCollapse"><i class="el-icon-more"></i></a></div>
+  <!-- #545c64 -->
+  <el-menu :router="true" 
+      background-color="#00509F"
+      text-color="#fff"
+      active-text-color="#f56c6c"
+      :unique-opened="true"
+      :collapse-transition="true"
+      class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
   <el-menu-item index="/dashboard">
     <i class="el-icon-menu"></i>
     <span slot="title">校区概况</span>
@@ -11,7 +20,7 @@
     </template>
     <el-menu-item-group v-if="business_master">
       <span slot="title">员工</span>
-      <el-menu-item index="/home/employee">员工管理</el-menu-item>
+      <el-menu-item index="/home/employee" :route="{name:'employee_default'}">员工管理</el-menu-item>
       <el-menu-item index="/home/employee/create">新增员工</el-menu-item>
       <el-menu-item index="/home/employee/update">新增员工</el-menu-item>
     </el-menu-item-group>
@@ -25,7 +34,7 @@
   </el-submenu>
   <el-submenu index="/teaching" v-if="school_master">
     <template slot="title">
-    <i class="el-icon-menu"></i>
+    <i class="iconfont icon-classroom"></i>
       <span slot="title">教学管理</span>
     </template>
     <el-menu-item index="/teaching/classroom">教室管理</el-menu-item>
@@ -34,18 +43,19 @@
   </el-submenu>
   
   <el-menu-item index="/school/classes/1" v-if="school_master||student_master">
-    <i class="el-icon-menu"></i>
+    <i class="iconfont icon-sign"></i>
     <span slot="title">选课报名</span>
   </el-menu-item>
   <el-menu-item index="/school/purchase/order/list/1" v-if="school_master||student_master">
-    <i class="el-icon-document"></i>
+    <i class="iconfont icon-order"></i>
     <span slot="title">订单管理</span>
   </el-menu-item>
   <el-menu-item index="/school/students/1">
-    <i class="el-icon-setting"></i>
+    <i class="iconfont icon-class-setting"></i>
     <span slot="title">学员管理</span>
   </el-menu-item>
 </el-menu>
+</div>
 </template>
 <script>
 const _roles = [
@@ -91,6 +101,10 @@ export default {
     }
   },
   methods: {
+    handleMenuCollapse() {
+      this.isCollapse = !this.isCollapse;
+      this.$emit("menuCollapse", this.isCollapse);
+    },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -103,6 +117,97 @@ export default {
 <style lang="stylus">
 .el-menu-vertical:not(.el-menu--collapse) {
   min-height: 400px;
+}
+
+.el-menu {
+  border-right: none;
+}
+
+.menu-wrap {
   height: 100%;
+  background-color: #00509F; // #545c64;
+  // border-right: solid 1px #e6e6e6;
+}
+
+.menu-switch {
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #dcdfe6;
+  color: #606266;
+  text-align: center;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  transition: 0.1s;
+  padding: 15px 12px;
+  font-size: 12px;
+  border-radius: 0px;
+  width: 100%;
+}
+
+.menu-switch.primary {
+  color: #fff;
+  background-color: #00509F; // #409EFF;
+  border-color: #00509F; // #409EFF;
+}
+
+.menu-switch:focus, .menu-switch:hover {
+  color: #409EFF;
+  border-color: #c6e2ff;
+  background-color: #ecf5ff;
+}
+
+.menu-switch:active {
+  color: #3a8ee6;
+  border-color: #3a8ee6;
+  outline: 0;
+}
+
+.menu-switch.primary.is-active, .menu-switch.primary:active {
+  background: #3a8ee6;
+  border-color: #3a8ee6;
+  color: #fff;
+}
+
+.menu-switch.primary:focus, .menu-switch.primary:hover {
+  background: rgb(0, 64, 127); // #66b1ff;
+  border-color: rgb(0, 64, 127); // #66b1ff;
+  color: #fff;
+}
+
+.menu-expand {
+  padding: 0; // 10px 20px;
+  text-align: center;
+  transition: padding 0.3s, float 0.3s;
+}
+
+.menu-collapsed .menu-expand .menu-switch {
+  // padding: 12px 12px;
+  text-align: center;
+}
+
+.menu-switch {
+  transition: all 0.3s;
+}
+
+.el-menu-item [class^=el-icon-], .el-menu-item [class*='icon-'] {
+  margin-right: 5px;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+  vertical-align: middle;
+}
+.el-submenu [class*='icon-'] {
+    vertical-align: middle;
+    margin-right: 5px;
+    width: 24px;
+    text-align: center;
+    font-size: 18px;
+}
+.iconfont {
+  display: inline-block;
 }
 </style>

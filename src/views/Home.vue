@@ -2,9 +2,11 @@
   <div class="home">
     <Header></Header>
     <el-container class="layout-main">
-      <el-aside width="200px">
-      <left-side-menu></left-side-menu>
+       <transition name="el-fade-in-linear">
+      <el-aside :width="memuWidth">
+      <left-side-menu @menuCollapse="handleCollapse"></left-side-menu>
       </el-aside>
+       </transition>
       <el-main>
         <transition name="el-fade-in" mode="out-in">
           <router-view/>
@@ -22,13 +24,17 @@ export default {
   name: "home",
   data() {
     return {
-      isCollapse: false
+      isCollapse: false,
+      memuWidth: "200px"
     };
   },
-  created() {
-    
+  created() {},
+  methods: {
+    handleCollapse(collapse) {
+      this.isCollapse = collapse;
+      this.memuWidth = collapse ? "66px" : "200px";
+    }
   },
-  methods: {},
   components: {
     Header,
     LeftSideMenu
@@ -38,12 +44,16 @@ export default {
 <style lang="stylus">
 .home {
   height: 100%;
-  background-color: #fdfdfd
+  // background-color: #F2F6FC;
 }
 
 .layout-main {
   height: 100%;
   padding-top: 50px;
+}
+
+.el-aside {
+  transition: width 0.35s linear 0.1s;
 }
 
 .home .el-row {

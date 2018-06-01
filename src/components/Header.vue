@@ -85,6 +85,7 @@ export default {
   z-index: 100;
   position: relative;
   height: 100%;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
 }
 
 .header h1 {
@@ -98,7 +99,7 @@ export default {
   color: #333;
   text-decoration: none;
   display: inline-block;
-  padding-left :15px;
+  padding-left: 15px;
 }
 
 .header .container {

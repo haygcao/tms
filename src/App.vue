@@ -14,12 +14,13 @@ body, html {
   padding: 0;
   height: 100%;
   -webkit-font-smoothing: antialiased;
+  color: #303133;
 }
 
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-   height: 100%;
-   overflow: hidden;
+  height: 100%;
+  overflow: hidden;
 }
 </style>

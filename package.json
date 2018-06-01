@@ -11,9 +11,8 @@
     "build:docker": "npm run build && docker build -t really_edu/tms-web ."
   },
   "dependencies": {
-    "@websanova/vue-auth": "^2.21.8-beta",
     "axios": "^0.18.0",
-    "element-ui": "^2.2.2",
+    "element-ui": "^2.4",
     "moment": "^2.22.1",
     "qs": "^6.5.1",
     "vue": "^2.5.13",

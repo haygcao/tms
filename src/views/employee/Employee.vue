@@ -40,8 +40,9 @@
 
   </el-row>
   <el-row v-loading="loading">
-    <el-card class="box-card  clearfix" v-for="item in employeeList.rows" :key="item.id">
+    <el-card class="box-card  clearfix" shadow="always" v-for="item in employeeList.rows" :key="item.id">
       <div class="employee-item">
+        <div v-if="item.id===current_user.employee_id" class="tag-is-me">我</div>
       <div  class="left">
         <div class="emp-fileds text-center "><img class="circle" :src="item.avatar_url?item.avatar_url:require('@/assets/img/default_teacher_avatar.png')"  :alt="item.name"></div>
         <div class="emp-fileds text-center emp-fileds-name">{{item.name}}<i style="float:right" :class="[item.gender==1 ? 'icon-gender-male emp-gender-male' : 'icon-gender-female emp-gender-female']" class="emp-gender icon iconfont "></i></div>
@@ -98,7 +99,10 @@ export default {
       jobTitles: state => state.metadata.jobTitles,
       educations: state => state.metadata.educations,
       employeeList: state => state.employee.employee_list.data || {}
-    })
+    }),
+    current_user(){
+      return this.$auth.user;
+    }
   },
   watch: {
     current_school(val, old) {
@@ -164,13 +168,14 @@ export default {
 }
 
 .box-card {
-  width: 320px;
+  width: 340px;
   display: inline-block;
   margin-right: 30px;
   margin-bottom: 30px;
+  position: relative;
 }
 
-.el-card__body {
+.box-card .el-card__body {
   padding: 12px;
 }
 
@@ -189,8 +194,8 @@ export default {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  align-items: flex-start;
-  color: #909399;
+  align-items: stretch;
+  color: #606266;
   font-size: 12px;
 }
 
@@ -200,7 +205,7 @@ export default {
 }
 
 .employee-item .right {
-  padding-left: 10px;
+  flex: 1;
 }
 
 .employee-item .emp-fileds i[class^=icon], [class*='icon'] {
@@ -213,6 +218,7 @@ export default {
   font-size: 16px;
   margin-left: 10px;
   position: absolute;
+  right: -5px;
 }
 
 .employee-item .right .emp-fileds {
@@ -226,11 +232,14 @@ export default {
 .employee-item .left .emp-fileds {
   width: 110px;
   line-height: 30px;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: normal;
+  text-overflow: ellipsis;
 }
 
 .employee-item .right .emp-fileds {
-  font-size: 12px;
-  width: 140px;
 }
 
 .emp-gender-male {
@@ -243,5 +252,14 @@ export default {
 
 .employee-item .emp-fileds-name {
   font-size: 16px;
+}
+
+.tag-is-me {
+  position: absolute;
+  left: 0px;
+  top: 5px;
+  background-color:rgba(245,108,108,.6);
+  color: #ffffff;
+  padding: 3px 8px;
 }
 </style>
