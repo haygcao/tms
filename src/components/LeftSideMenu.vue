@@ -127,6 +127,7 @@ export default {
   height: 100%;
   background-color: #00509F; // #545c64;
   // border-right: solid 1px #e6e6e6;
+  overflow-x :hidden;
 }
 
 .menu-switch {
