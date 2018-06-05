@@ -46,3 +46,22 @@ export const ClazzState = {
     2: '已结课',
     3: '已关闭',
 }
+export const JobTitles = [
+    { key: 'investor', name: '投资人', show: false },
+    { key: 'teacher', name: '教师', show: true },
+    { key: 'consultant', name: '顾问', show: true },
+    { key: 'teaching_manager', name: '教学管理', show: true },
+    { key: 'school_manager', name: '校区管理', show: true }
+]
+export const JobTypes = [
+    { value: 0, label: "全职" },
+    { value: 1, label: "专职" },
+    { value: 2, label: "兼职" }
+]
+export const Educations = [
+    { name: '大专以下', key: 'secondary' },
+    { name: '大专', key: 'college' },
+    { name: '本科/学士', key: 'bachelor' },
+    { name: '研究生/硕士', key: 'master' },
+    { name: '博士', key: 'doctor' }
+]

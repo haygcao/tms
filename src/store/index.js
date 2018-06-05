@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import modules from './modules'
 import createLogger from 'vuex/dist/logger'
 import createPersistedState from 'vuex-persistedstate'
-import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
+import { ClassType, SubjectName, Terms, Grade, JobTitles, JobTypes, Educations } from "@/lib/constants";
 import * as mutation_types from './mutation_types';
 Vue.use(Vuex)
 let plugins = [createPersistedState({ paths: ["login", "region", "current_user", "school"] })];
@@ -55,8 +55,24 @@ const getters = {
         label: "女"
       }
     ]
-  }
+  },
+  jobTitles() {
+    return JobTitles.filter(p => p.show)
+  },
+  educations() {
+    return Educations;
+  },
+  job_types() {
+    return JobTypes;
+  },
+  marital_status() {
+    return [
+      { value: 1, label: "已婚" },
+      { value: 0, label: "未婚" }
+    ]
+  },
 }
+
 const mutations = {
 
 }

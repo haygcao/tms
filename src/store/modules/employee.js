@@ -5,13 +5,16 @@ const mutations_types = {
     employee_list: "employee/list",
     employee_create: "employee/create",
     employee_detail: "employee/employee_detail",
-    generateEmployeeNo: "employee/generateEmployeeNo"
+    generateEmployeeNo: "employee/generateEmployeeNo",
+    updateEmployee: "employee/updateEmployee",
+    countEmployees: "employee/countEmployees",
 }
 const state = {
     employee_list: {},
-    create_result: null,
-    employee_detail: null,
-    new_employee: null,
+    create_result: {},
+    employee_detail: {},
+    new_employee: {},
+    employeeCountSummary: {},
 }
 const getters = {
 
@@ -27,12 +30,32 @@ const actions = {
     },
     async getEmployee({ commit, dispatch, state, getters }, payload) {
         let res = await employee.show(payload);
-        commit(mutations_types.employee_create, { res })
+        commit(mutations_types.employee_detail, { res })
+        return Promise.resolve(res);
     },
     async generateEmployeeNo({ commit, dispatch, state, getters }, payload) {
         let res = await employee.generateEmployeeNo(payload);
         commit(mutations_types.generateEmployeeNo, { res })
-    }
+    },
+    async updateEmployee({ commit, dispatch, state, getters }, payload) {
+        let res = await employee.update(payload);
+        commit(mutations_types.updateEmployee, { res })
+        return Promise.resolve(res);
+    },
+    async countEmployees({ commit, dispatch, state, getters }, payload) {
+        let res = await employee.countEmployees();
+        commit(mutations_types.countEmployees, { res })
+        return Promise.resolve(res);
+    },
+    async setEmployeeStateLeaved({ commit, dispatch, state, getters }, payload) {
+        let res = await employee.setEmployeeStateLeaved(payload);
+        // commit(mutations_types.updateEmployee, { res })
+        return Promise.resolve(res);
+    },
+    async checkAccountExist({ commit, dispatch, state, getters }, payload) {
+        let res = await employee.existAccount(payload);
+        return Promise.resolve(res)
+    },
 }
 const mutations = {
     [mutations_types.employee_list](state, { res }) {
@@ -46,6 +69,11 @@ const mutations = {
     },
     [mutations_types.employee_create](state, { res }) {
         state.create_result = res;
+    },
+    [mutations_types.countEmployees](state, { res }) {
+        state.employeeCountSummary = res;
+    },
+    [mutations_types.updateEmployee](state, { res }) {
     },
     [CLEAR_STATE](state) {
         state.employee_list = {};

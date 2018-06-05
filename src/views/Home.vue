@@ -53,7 +53,7 @@ export default {
 }
 
 .el-aside {
-  transition: width 0.35s linear 0.1s;
+  transition: width 0.3s cubic-bezier(0.39, 0.58, 0.51, 0.93) 0s;
 }
 
 .home .el-row {

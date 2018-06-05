@@ -37,12 +37,37 @@
     </el-form>
   </el-row>
   <el-row>
-
+    <div class="employee-summary-block">
+      <div>在职员工<span class="count-number">{{employeeCountSummary.total}}</span>人</div>
+      <div>教师<span class="count-number">{{employeeCountSummary.teacher}}</span>人</div>
+      <div>顾问<span class="count-number">{{employeeCountSummary.consultant}}</span>人</div>
+      <div>教学管理<span class="count-number">{{employeeCountSummary.teaching_manager}}</span>人</div>
+      <div>校区管理<span class="count-number">{{employeeCountSummary.school_manager}}</span>人</div>
+    </div>
   </el-row>
   <el-row v-loading="loading">
     <el-card class="box-card  clearfix" shadow="always" v-for="item in employeeList.rows" :key="item.id">
-      <div class="employee-item">
-        <div v-if="item.id===current_user.employee_id" class="tag-is-me">我</div>
+
+      <div class="employee-item" :class="{'disabled':item.state!=1}">
+
+        <div v-if="item.state==1" class="tool-bar"><a @click="onEditEmployee(item)" class="bar">编辑</a>
+        |<el-popover
+          placement="bottom"
+          width="400"
+          trigger="click">
+          <el-form size="small" :model="employeeStateForm" label-position="top" :ref="item.id">
+            <el-form-item prop="leave_date" :rules="[{required:true,message:'请填写离职日期'}]">
+                  <p name="label">填写 "{{employeeStateForm.name}}" 离职日期</p>
+                  <el-date-picker value-format="yyyy-MM-dd" type="date" placeholder="" v-model="employeeStateForm.leave_date"></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="danger" @click="submitEmployeeState">确定</el-button>
+              </el-form-item>
+          </el-form>
+          <a class="bar" @click="onSetEmployeeState(item)" slot="reference" >离职</a>
+        </el-popover></div>
+        <div v-if="item.id==current_user.employee_id" class="tag-is-me">我</div>
+         <div class="tag-emp-state" :class="{'active':item.state==1}"><span class="emp-state-text">{{item.state==1?'在职':'离职'}}</span></div>
       <div  class="left">
         <div class="emp-fileds text-center "><img class="circle" :src="item.avatar_url?item.avatar_url:require('@/assets/img/default_teacher_avatar.png')"  :alt="item.name"></div>
         <div class="emp-fileds text-center emp-fileds-name">{{item.name}}<i style="float:right" :class="[item.gender==1 ? 'icon-gender-male emp-gender-male' : 'icon-gender-female emp-gender-female']" class="emp-gender icon iconfont "></i></div>
@@ -50,11 +75,11 @@
         <div class="emp-fileds text-center"><el-tag :type="employe_title_tags[item.job_title]" size="mini">{{item.job_title|jobTitle}}</el-tag></div>
       </div>
       <div class="right">
-        <div class="emp-fileds"><i class="icon iconfont icon-id-card"></i><span>{{item.employee_no}}</span></div>
-        <div class="emp-fileds"><i class="icon el-icon-date"></i><span>{{item.hire_date}}</span></div>
-        <div class="emp-fileds"><i class="icon iconfont icon-birthdaycake"></i><span>{{item.birthday}}</span></div>
-        <div class="emp-fileds"><i class="icon el-icon-mobile-phone"></i><span>{{item.mobile}}</span></div>
-        <div class="emp-fileds"><i class="icon  iconfont icon-email"></i><span :title="item.email">{{item.email}}</span></div>
+        <div class="emp-fileds"><i class="icon iconfont icon-id-card" title="工号"></i><span>{{item.employee_no}}</span></div>
+        <div class="emp-fileds"><i class="icon el-icon-date" title="入职日期"></i><span>{{item.hire_date}}</span></div>
+        <div class="emp-fileds"><i class="icon iconfont icon-birthdaycake" title="生日"></i><span>{{item.birthday}}</span></div>
+        <div class="emp-fileds"><i class="icon el-icon-mobile-phone"  title="联系电话"></i><span>{{item.mobile}}</span></div>
+        <div class="emp-fileds"><i class="icon  iconfont icon-email" title="邮箱"></i><span :title="item.email">{{item.email}}</span></div>
       </div>
       </div>
     </el-card>
@@ -66,14 +91,31 @@
         @current-change="handleCurrentChange"
         layout="prev, pager, next"
         :page-size="pageSize"
+        :current-page.sync="currentPage"
         :total="employeeList.count">
       </el-pagination>
     </div>
   </el-row>
+  <el-dialog :visible.sync="dialogEditEmployeeVisible" :close-on-click-modal="false" center >
+            <h2 slot="title">修改员工信息</h2>
+            <keep-alive>
+            <edit-employee mode="edit" :employeeId="selectedEmployee.id"  v-if="dialogEditEmployeeVisible" 
+            @success="onEditEmployeeSuccess" @cancel="dialogAddStudentVisible=false"></edit-employee>
+            </keep-alive>
+  </el-dialog>
+  <el-dialog :visible.sync="dialogCreateEmployeeVisible" :close-on-click-modal="false"  center >
+            <h2 slot="title">新建员工信息</h2>
+            <keep-alive>
+            <create-employee mode="create"  v-if="dialogCreateEmployeeVisible" 
+            @success="onCreateEmployeeSuccess" @cancel="dialogCreateEmployeeVisible=false"></create-employee>
+            </keep-alive>
+  </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
+import EditEmployee from "@/views/employee/EditEmployee.vue";
+import CreateEmployee from "@/views/employee/CreateEmployee.vue";
 export default {
   data() {
     return {
@@ -91,16 +133,25 @@ export default {
         consultant: "primary",
         teaching_manager: "warning",
         school_manager: "danger"
-      }
+      },
+      employeeStateForm: {
+        leave_date: undefined,
+        id: undefined,
+        name: undefined
+      },
+      dialogCreateEmployeeVisible: false,
+      dialogEditEmployeeVisible: false,
+      selectedEmployee: {}
     };
   },
   computed: {
     ...mapState({
-      jobTitles: state => state.metadata.jobTitles,
-      educations: state => state.metadata.educations,
-      employeeList: state => state.employee.employee_list.data || {}
+      employeeList: state => state.employee.employee_list.data || {},
+      employeeCountSummary: state =>
+        state.employee.employeeCountSummary.data || {}
     }),
-    current_user(){
+    ...mapGetters(["jobTitles", "job_types", "educations"]),
+    current_user() {
       return this.$auth.user;
     }
   },
@@ -114,33 +165,36 @@ export default {
       if (val) {
         this.loading = false;
       }
+    },
+    $route(val, old) {
+      let query = val.query;
+      this.currentPage = parseInt(val.params.page);
+      this.searchForm.kw = query.kw;
+      this.search();
     }
   },
   mounted() {
-    this.getJobTitles();
-    this.getEducations();
     let query = this.$route.query;
     this.searchForm = Object.assign({}, query);
     this.currentPage = parseInt(this.$route.params.page);
     this.search();
+    this.countEmployees();
   },
   methods: {
     ...mapActions([
-      "getJobTitles",
-      "getEducations",
       "getEmployeeList",
-      "createEmployee"
+      "createEmployee",
+      "setEmployeeStateLeaved",
+      "countEmployees"
     ]),
     onSearch() {
       this.currentPage = 1;
       this.refreshRouter();
+      this.loading = true;
       this.search();
     },
-    onAddEmployee() {
-      this.$router.push({ name: "employee_create" });
-    },
     search() {
-      this.loading = true;
+      
       let payload = Object.assign({}, this.searchForm);
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
@@ -156,7 +210,44 @@ export default {
         params: { page: this.currentPage },
         query: Object.assign({}, this.searchForm)
       });
+    },
+    onAddEmployee() {
+      // this.$router.push({ name: "employee_create" });
+      this.dialogCreateEmployeeVisible = true;
+    },
+    onCreateEmployeeSuccess() {
+      self.search();
+    },
+    onEditEmployeeSuccess() {
+      self.search();
+    },
+    onEditEmployee(data) {
+      if (data.state != 1) {
+        return false;
+      }
+      this.dialogEditEmployeeVisible = true;
+      this.selectedEmployee = Object.assign({}, data);
+    },
+    onSetEmployeeState(data) {
+      this.employeeStateForm.id = data.id;
+      this.employeeStateForm.name = data.name;
+      this.employeeStateForm.leave_date = undefined;
+    },
+    submitEmployeeState() {
+      let self = this;
+      this.$refs[this.employeeStateForm.id][0].validate(valid => {
+        if (valid) {
+          let payload = self.employeeStateForm;
+          self.setEmployeeStateLeaved(payload).then(res => {
+            self.search();
+          });
+        }
+      });
     }
+  },
+  components: {
+    EditEmployee,
+    CreateEmployee
   }
 };
 </script>
@@ -242,11 +333,11 @@ export default {
 .employee-item .right .emp-fileds {
 }
 
-.emp-gender-male {
+.employee-item:not(.disabled) .emp-gender-male {
   color: #409EFF;
 }
 
-.emp-gender-female {
+.employee-item:not(.disabled) .emp-gender-female {
   color: #F56C6C;
 }
 
@@ -258,8 +349,78 @@ export default {
   position: absolute;
   left: 0px;
   top: 5px;
-  background-color:rgba(245,108,108,.6);
+  background-color: rgba(245, 108, 108, 0.6);
   color: #ffffff;
   padding: 3px 8px;
+}
+
+.tag-emp-state {
+  position: absolute;
+  right: 0px;
+  top: 0;
+}
+
+.tag-emp-state.active .emp-state-text {
+  // background-color: #85ce61; // #66b1ff;
+  background-color: rgba(133, 206, 97, 0.7);
+  display: none;
+}
+
+.emp-state-text {
+  transform: rotate(45deg) translateZ(0);
+  color: #fcfcfc;
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  right: -22px;
+  z-index: 1;
+  font-size: 12px;
+  text-transform: uppercase;
+  width: 80px;
+  text-align: center;
+  background-color: #c8c8c8;
+  line-height: 22px;
+}
+
+.employee-item.disabled {
+  color: #C0C4CC;
+}
+
+.employee-item:hover .tool-bar {
+  display: block;
+}
+
+.employee-item .tool-bar {
+  display: none;
+  position: absolute;
+  color: #909399;
+  top: 2px;
+  right: 10px;
+  transition: all 0.3s;
+}
+
+.employee-item .tool-bar .bar {
+  padding: 5px;
+  margin: 2px;
+  display: inline-block;
+  line-height: 14px;
+  cursor: pointer;
+}
+
+.employee-item .tool-bar .bar:hover {
+  color: #409EFF;
+}
+
+.employee-summary-block div {
+  display: inline-block;
+  margin-right: 30px;
+  font-size: 12px;
+  color: #909399;
+}
+
+.employee-summary-block .count-number {
+  font-size: 90%;
+  color: #F56C6C;
+  padding: 0px 5px;
 }
 </style>
