@@ -143,7 +143,7 @@ export default new Router({
     {
       path: '/home',
       component: Home,
-      name: 'employee',
+      name: 'homecenter',
       redirect:'/home/employee',
       meta: { auth: { roles: ['administrator', 'franchisee_admin', 'investor'] } },
       children: [
@@ -161,6 +161,11 @@ export default new Router({
           name: 'employee_create',
           path: 'employee/create',
           component: require('@/views/employee/CreateEmployee.vue').default
+        },
+        {
+          name: 'promotion_uprice',
+          path: 'promotion/unitprice',
+          component: require('@/views/promotion/UnitPrice.vue').default
         }
       ]
     },

@@ -9,7 +9,7 @@ import VueAxios from '@/plugin/vueAxios'
 import Auth from './plugin/auth'
 import { sync } from 'vuex-router-sync'
 import * as filters from '@/filters'
-
+import vueHeadful from 'vue-headful';
 // 实例化Vue的filter
 Object.keys(filters).forEach(k => {
   // console.log('filter', k)
@@ -26,17 +26,9 @@ sync(store, router);//use vuex-router-sync to sync store and router state
 Vue.use(VueAxios, axios)
 axios.defaults.baseURL = process.env.VUE_APP_TMSAPI || 'http://localhost:7001/';
 Vue.use(Auth, { router: router, store: store })
-// Vue.use(require('@websanova/vue-auth'), {
-//   auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
-//   http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
-//   router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
-//   tokenDefaultName: '_auth',
-//   // loginData: { url: 'account/token', method: 'POST', redirect: '/', fetchUser: true },
-//   // fetchData: { url: 'api/me', method: 'GET', enabled: true },
-//   refreshData: { url: 'api/token/refresh', method: 'GET', enabled: true, interval: 30 },
-// })
 Vue.config.productionTip = false
 Vue.use(ElementUI);
+Vue.component('vue-headful', vueHeadful);
 new Vue({
   router,
   store,

@@ -71,6 +71,10 @@ const getters = {
       { value: 0, label: "未婚" }
     ]
   },
+  time_types() {
+    return [{ label: 'A', value: [["8:00", "12:00"], ["15:00", "18:00"]] },
+    { label: 'B', value: [["8:00", "12:00"], ["15:00", "18:00"]] },]
+  }
 }
 
 const mutations = {

@@ -1,17 +1,130 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
-    <title>睿乐盟-业务管理平台</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but 睿乐盟 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
+  <title>睿乐盟-业务管理平台</title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but [reallyedu.com] doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+  </noscript>
+  <!--[if lt IE 9]>
+<div class="browsehappy">
+    <p>您正在使用<strong>低版本</strong>的浏览器. 为了获得更好的操作体验，请
+        <a href="http://browsehappy.com/">升级您的浏览器</a> .</p>
+    <p>
+        <small>推荐使用最新版本的Chrome,Firefox,Safari浏览器</small>
+    </p>
+</div>
+<![endif]-->
+  <div id="app">
+    <div class="spanner">
+
+      <div>
+        <img class="logo2" src="./logo2.png">
+      </div>
+      <div>
+        <div class="lds-ellipsis">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+    <style>
+      .logo2 {
+        width: 48px;
+      }
+
+      .lds-ellipsis {
+        display: inline-block;
+        position: relative;
+        width: 64px;
+        height: 64px;
+      }
+
+      .lds-ellipsis div {
+        position: absolute;
+        top: 27px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #D4151A;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+      }
+
+      .lds-ellipsis div:nth-child(1) {
+        left: 6px;
+        animation: lds-ellipsis1 0.6s infinite;
+      }
+
+      .lds-ellipsis div:nth-child(2) {
+        left: 6px;
+        animation: lds-ellipsis2 0.6s infinite;
+      }
+
+      .lds-ellipsis div:nth-child(3) {
+        left: 26px;
+        animation: lds-ellipsis2 0.6s infinite;
+      }
+
+      .lds-ellipsis div:nth-child(4) {
+        left: 45px;
+        animation: lds-ellipsis3 0.6s infinite;
+      }
+
+      @keyframes lds-ellipsis1 {
+        0% {
+          transform: scale(0);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes lds-ellipsis3 {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(0);
+        }
+      }
+
+      @keyframes lds-ellipsis2 {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(19px, 0);
+        }
+      }
+
+      .spanner {
+        margin: 150px auto 0;
+        width: 150px;
+        text-align: center;
+      }
+
+      .browsehappy {
+        margin: 50px auto 0;
+        width: 640px;
+        padding: 15px 30px;
+        color: #939393;
+        text-align: left;
+        font-size: 18px;
+        border-radius: 10px;
+        border: 3px dashed #ccc;
+      }
+    </style>
+  </div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>

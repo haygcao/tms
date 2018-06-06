@@ -10,27 +10,20 @@
       :collapse-transition="true"
       class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
   <el-menu-item index="/dashboard">
-    <i class="el-icon-menu"></i>
+    <i class="iconfont icon-home"></i>
     <span slot="title">校区概况</span>
   </el-menu-item>
-  <el-submenu index="/home/employee">
+  <el-submenu index="/home/employee" v-if="business_master">
     <template slot="title">
-      <i class="el-icon-location"></i>
+      <i class="iconfont icon-discount-setting"></i>
       <span slot="title">业务管理</span>
     </template>
-    <el-menu-item-group v-if="business_master">
-      <span slot="title">员工</span>
-      <el-menu-item index="/home/employee" :route="{name:'employee_default'}">员工管理</el-menu-item>
-      <el-menu-item index="/home/employee/create">新增员工</el-menu-item>
-      <el-menu-item index="/home/employee/update">新增员工</el-menu-item>
-    </el-menu-item-group>
+      <el-menu-item index="/home/employee/1" :route="{name:'employee_default'}">员工管理</el-menu-item>
+    
     <el-menu-item-group title="价格管理" v-if="business_master">
-      <el-menu-item index="1-3">课次单价</el-menu-item>
+      <el-menu-item index="/home/promotion/unitprice">课次单价</el-menu-item>
+       <el-menu-item index="1-4-1">连报折扣</el-menu-item>
     </el-menu-item-group>
-    <el-submenu index="1-4" v-if="business_master">
-      <span slot="title">连报折扣</span>
-      <el-menu-item index="1-4-1">选项1</el-menu-item>
-    </el-submenu>
   </el-submenu>
   <el-submenu index="/teaching" v-if="school_master">
     <template slot="title">
@@ -127,7 +120,7 @@ export default {
   height: 100%;
   background-color: #00509F; // #545c64;
   // border-right: solid 1px #e6e6e6;
-  overflow-x :hidden;
+  overflow-x: hidden;
 }
 
 .menu-switch {
@@ -201,13 +194,15 @@ export default {
   font-size: 18px;
   vertical-align: middle;
 }
+
 .el-submenu [class*='icon-'] {
-    vertical-align: middle;
-    margin-right: 5px;
-    width: 24px;
-    text-align: center;
-    font-size: 18px;
+  vertical-align: middle;
+  margin-right: 5px;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
 }
+
 .iconfont {
   display: inline-block;
 }
