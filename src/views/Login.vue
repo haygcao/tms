@@ -49,13 +49,13 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                return callback(new Error("请输入手机号"));
+                return callback(new Error(" "));//请输入手机号
               }
               let pattern = /^1[34578]\d{9}$/;
               if (pattern.test(value)) {
                 callback();
               } else {
-                callback(new Error("只支持中国大陆的手机号码"));
+                callback(new Error(" "));//只支持中国大陆的手机号码
               }
             },
             trigger: ""
@@ -65,7 +65,7 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                return callback(new Error("请输入登录密码"));
+                return callback(new Error(" "));//请输入登录密码
               }
               return callback();
             },

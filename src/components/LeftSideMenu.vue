@@ -10,7 +10,7 @@
       :collapse-transition="true"
       class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
   <el-menu-item index="/dashboard">
-    <i class="iconfont icon-home"></i>
+    <i class="iconfont icon-pie-chart"></i>
     <span slot="title">校区概况</span>
   </el-menu-item>
   <el-submenu index="/home/employee" v-if="business_master">
