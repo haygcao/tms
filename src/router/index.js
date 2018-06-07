@@ -16,6 +16,7 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+    
     {
       path: '/',
       name: 'default',
@@ -23,7 +24,13 @@ export default new Router({
       meta: { auth: true },
       children: [
         {
-          path: 'dashboard',
+          path: '/',
+          name:'index',
+          redirect:'/dashboard',
+          component: require('@/views/Default.vue').default
+        },
+        {
+          path: '/dashboard',
           component: require('@/views/Dashboard.vue').default
         },
       ]
@@ -144,7 +151,7 @@ export default new Router({
       path: '/home',
       component: Home,
       name: 'homecenter',
-      redirect:'/home/employee',
+      redirect: '/home/employee',
       meta: { auth: { roles: ['administrator', 'franchisee_admin', 'investor'] } },
       children: [
         {

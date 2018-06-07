@@ -1,37 +1,56 @@
 <template>
   <div class="dashboard">
         <el-row>
-        <div class="page-breadcrumb clearfix">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/school' }">校区管理</el-breadcrumb-item>
-                <el-breadcrumb-item>{{current_school.name}}</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+       
         </el-row>
         <el-row>
           <el-col :xs="24" :sm="12" :md="8" :lg="8">
-            <ve-ring :data="chartData"></ve-ring>
+            <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>最新公告</span>
+                <el-button style="float: right; padding: 3px 0" type="text">更多<i class="el-icon-d-arrow-right"></i></el-button>
+            </div>
+            <div v-for="o in 4" :key="o" class="text item">
+                {{'列表内容 ' + o }}
+            </div>
+            </el-card>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8">
-            <ve-ring :data="chartData"></ve-ring>
+            <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>最新公告</span>
+                <el-button style="float: right; padding: 3px 0" type="text">更多<i class="el-icon-d-arrow-right"></i></el-button>
+            </div>
+            <div v-for="o in 4" :key="o" class="text item">
+                {{'列表内容 ' + o }}
+            </div>
+            </el-card>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8">
-             <ve-pie :data="chartData"></ve-pie>
+            <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>最新公告</span>
+                <el-button style="float: right; padding: 3px 0" type="text">更多<i class="el-icon-d-arrow-right"></i></el-button>
+            </div>
+            <div v-for="o in 4" :key="o" class="text item">
+                {{'列表内容 ' + o }}
+            </div>
+            </el-card>
           </el-col>
         </el-row>
         <el-row>
            <el-col :xs="24" :sm="12" :md="8" :lg="8">
-             <ve-histogram :data="chartData2"></ve-histogram>
           </el-col>
-           <el-col :xs="24" :sm="12" :md="8" :lg="8"> <ve-histogram :data="chartData2"></ve-histogram></el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8"> <ve-histogram :data="chartData2"></ve-histogram></el-col>
+           <el-col :xs="24" :sm="12" :md="8" :lg="8"> 
+               
+           </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="8"> 
+              
+          </el-col>
         </el-row>
   </div>
 </template>
 <script>
-import VeRing from "v-charts/lib/ring";
-import VeHistogram from "v-charts/lib/histogram";
-import VePie from "v-charts/lib/pie";
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -77,40 +96,12 @@ export default {
   methods: {
     onSchoolChange() {}
   },
-  components: {
-    VeRing,
-    VeHistogram,
-    VePie
-  }
+  components: {}
 };
 </script>
 <style scoped>
-.school-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.school-list li {
-  list-style: none;
-  display: inline-block;
-}
-.school-list li:not(:last-child) {
-  /* border-right: 1px solid #ebeef5; */
-}
-.school-list li a {
-  display: inline-block;
-  font-size: 14px;
-  color: #606266;
-  padding: 8px 10px;
-  cursor: pointer;
-  /* background-color: #F56C6C */
-}
-.school-list li a:hover,
-.school-list li a:focus {
-  color: #f56c6c;
-}
-.school-list li a.active {
-  color: #f56c6c;
+.box-card{
+    max-width: 320px;
 }
 </style>
 
