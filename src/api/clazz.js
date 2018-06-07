@@ -10,6 +10,18 @@ async function list(payload) {
     }
 
 }
+
+async function searchVisibledClazzList(payload) {
+    try {
+        const response = await axios.get('/api/clazz/search', {
+            params: payload
+        });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
+
+}
 async function create(payload) {
     try {
         const response = await axios.post('/api/clazz/create', payload);
@@ -74,5 +86,5 @@ export default {
     remove,
     close,
     setClazzVisibleState,
-
+    searchVisibledClazzList,
 }

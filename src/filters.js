@@ -1,4 +1,5 @@
 import * as constants from "@/lib/constants";
+import moment from 'moment';
 const { ClassType, SubjectName, Terms, Grade, ClazzState } = constants
 export const capitalize = function (value) {
     if (!value) return ''
@@ -96,6 +97,9 @@ export const toShortTimeString = (time) => {
 export const toDateString = (time) => {
     if (!time) return '';
     return new Date(time).Format("yyyy/MM/dd")
+}
+export const formatDateTime = (date, format = 'YYYY/MM/DD') => {
+    return moment(date).format(format);
 }
 export const age = (birthday) => {
     if (!birthday) return '';
