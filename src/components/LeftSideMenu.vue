@@ -112,7 +112,7 @@ export default {
   min-height: 400px;
 }
 
-.el-menu {
+.menu-wrap .el-menu {
   border-right: none;
 }
 

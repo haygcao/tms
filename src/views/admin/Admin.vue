@@ -25,6 +25,7 @@
     </div>
     </header></div>
     <el-container class="layout-main">
+        <el-aside :width="memuWidth">
       <el-menu default-active="/admin/franchisee" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
 
         <el-submenu index="1">
@@ -42,6 +43,7 @@
         </el-menu-item>
 
     </el-menu>
+    </el-aside>
       <el-main>
           <div class="page-container">
         <transition name="el-fade-in" mode="out-in">
@@ -63,7 +65,8 @@ export default {
     return {
       isCollapse: false,
       activeIndex: "1",
-      activeIndex2: "1"
+      activeIndex2: "1",
+      memuWidth:'200px'
     };
   },
   computed: {
@@ -85,8 +88,8 @@ export default {
   }
 };
 </script>
-<style lang="stylus">
-.layout-head {
+<style lang="stylus" scoped>
+.admin .layout-head {
     position: fixed;
     width: 100%;
     left: 0;
@@ -95,7 +98,7 @@ export default {
     height: 80px;
 }
 
-.header {
+.admin .header {
     height: 80px;
     background-color: #fff;
     color: #fff;
@@ -108,38 +111,38 @@ export default {
     height: 100%;
 }
 
-.header h1 {
+.admin .header h1 {
     margin: 0;
     float: left;
     font-size: 32px;
     font-weight: 400;
 }
 
-.header h1 a {
+.admin .header h1 a {
     color: #333;
     text-decoration: none;
     display: block;
 }
 
-.header .container {
+.admin .header .container {
     border-bottom: 1px solid #d2d2d2;
     height: 100%;
     box-sizing: border-box;
 }
 
-.header h1 a span {
+.admin .header h1 a span {
     box-sizing: content-box;
     font-size: 22px;
     line-height: 38px;
     vertical-align: text-top;
 }
 
-.header .nav-logo {
+.admin .header .nav-logo {
     height: 44px;
     vertical-align: sub;
 }
 
-.el-menu-vertical:not(.el-menu--collapse) {
+.admin .el-menu-vertical:not(.el-menu--collapse) {
     min-height: 400px;
     height: 100%;
 }
@@ -148,24 +151,24 @@ export default {
     height: 100%;
 }
 
-.layout-main {
+.admin .layout-main {
     height: 100%;
     padding-top: 80px;
 }
 
-.page-container {
+.admin .page-container {
     max-width: 1000px;
     margin: 0 auto;
 }
 
-.el-row {
+.admin .el-row {
     margin-bottom: 20px;
 
     &:last-child {
         margin-bottom: 0;
     }
 }
-.header .nav {
+.admin .header .nav {
     float: right;
     height: 100%;
     line-height: 80px;
@@ -174,7 +177,7 @@ export default {
     margin: 0;
 }
 
-header .nav-item {
+.admin header .nav-item {
     margin: 0;
     float: left;
     list-style: none;

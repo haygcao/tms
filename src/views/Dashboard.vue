@@ -9,22 +9,39 @@
         </div>
         </el-row>
         <el-row>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="8">
+            <div class="card">
             <ve-ring :data="chartData"></ve-ring>
+            </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="8">
+            <div class="card">
             <ve-ring :data="chartData"></ve-ring>
+            </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="8">
+            <div class="card">
              <ve-pie :data="chartData"></ve-pie>
+            </div>
           </el-col>
         </el-row>
         <el-row>
-           <el-col :xs="24" :sm="12" :md="8" :lg="8">
+           <el-col :xs="24" :sm="24" :md="12" :lg="8">
+             <div class="card">
              <ve-histogram :data="chartData2"></ve-histogram>
+             </div>
           </el-col>
-           <el-col :xs="24" :sm="12" :md="8" :lg="8"> <ve-histogram :data="chartData2"></ve-histogram></el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8"> <ve-histogram :data="chartData2"></ve-histogram></el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="8"> 
+             <div class="card">
+             <ve-histogram :data="chartData2"></ve-histogram>
+             </div>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="8">
+            <div class="card">
+             <ve-histogram :data="chartData2"></ve-histogram>
+            </div>
+          </el-col>
+             
         </el-row>
   </div>
 </template>
@@ -32,6 +49,7 @@
 import VeRing from "v-charts/lib/ring";
 import VeHistogram from "v-charts/lib/histogram";
 import VePie from "v-charts/lib/pie";
+import SchoolSelect from '@/components/SchoolSelect.vue'
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -80,37 +98,17 @@ export default {
   components: {
     VeRing,
     VeHistogram,
-    VePie
+    VePie,
+    SchoolSelect
   }
 };
 </script>
 <style scoped>
-.school-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.school-list li {
-  list-style: none;
-  display: inline-block;
-}
-.school-list li:not(:last-child) {
-  /* border-right: 1px solid #ebeef5; */
-}
-.school-list li a {
-  display: inline-block;
-  font-size: 14px;
-  color: #606266;
-  padding: 8px 10px;
-  cursor: pointer;
-  /* background-color: #F56C6C */
-}
-.school-list li a:hover,
-.school-list li a:focus {
-  color: #f56c6c;
-}
-.school-list li a.active {
-  color: #f56c6c;
+.card{
+  margin: 5px;
+  padding: 5px;
+  background-color: #ffffff;
+  border: 1px solid #EBEEF5;
 }
 </style>
 

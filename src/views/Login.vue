@@ -4,12 +4,12 @@
     <div class="bg-cover" :class="{'fade-in':loaded}"></div>
     <div class="login-container-wrap" :class="{'active':loaded}">
       <div class="login-container login-box-animate">
-        <div class="header">
+        <div class="login-box-header">
           <img class="logo" src="../assets/logo2.png">
         </div>
         <div class="login-box">
           <el-form :model="loginForm" :rules="rules" ref="loginForm">
-            <div>
+            <div style="height:38px">
               <el-alert v-if="loginResult.error" :title="loginResult.message" type="error" show-icon>
               </el-alert>
             </div>
@@ -146,7 +146,7 @@ export default {
 };
 </script>
 <style scoped>
-.header {
+.login-box-header {
   background-color: #d4151a;
   border-bottom: 1px solid #d4151a;
   height: 50px;
@@ -154,7 +154,7 @@ export default {
   text-align: center;
 }
 
-.header .logo {
+.login-box-header .logo {
   height: 60px;
   margin-top: 10px;
 }
@@ -204,7 +204,7 @@ export default {
   right: 0;
   bottom: 0;
   background-color: transparent;
-  background-image: url("../assets/img/login-bg.jpg");
+  background-image: url("../assets/img/login-bg-low.jpg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -214,7 +214,7 @@ export default {
 }
 
 .fade-in {
-  background-image: url("../assets/img/login-bg.jpg");
+  background-image: url("../assets/img/login-bg-low.jpg");
   filter: blur(0px) drop-shadow(0px 0 0);
 }
 
