@@ -51,6 +51,14 @@ export default {
   background-color: #F5F5F6;
 }
 
+.home .el-main {
+  padding: 0px;
+}
+
+.home .el-main >div {
+  padding: 20px;
+}
+
 .layout-main {
   height: 100%;
   padding-top: 50px;

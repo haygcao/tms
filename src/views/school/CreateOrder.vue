@@ -429,6 +429,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.order{
+  background-color:#ffffff;
+}
 .search-form .el-input {
   width: 240px;
 }
