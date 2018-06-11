@@ -8,16 +8,16 @@
           <img class="logo" src="../assets/logo2.png">
         </div>
         <div class="login-box">
-          <el-form :model="loginForm" :rules="rules" ref="loginForm">
+          <el-form class="login-form" :model="loginForm" :rules="rules" ref="loginForm">
             <div style="height:38px">
               <el-alert v-if="loginResult.error" :title="loginResult.message" type="error" show-icon>
               </el-alert>
             </div>
             <el-form-item prop="mobile" label-position="labelPosition">
-              <el-input prefix-icon="iconfont icon-user" auto-complete="off" type="text" clearable="" placeholder="手机号" v-model="loginForm.mobile"></el-input>
+              <el-input prefix-icon="iconfont icon-mobile el-icon-none fs-18" auto-complete="off" type="text" clearable="" placeholder="手机号" v-model="loginForm.mobile"></el-input>
             </el-form-item>
             <el-form-item prop="password" label-position="labelPosition">
-              <el-input prefix-icon="iconfont icon-password" type="password" placeholder="密码" clearable v-model="loginForm.password" auto-complete="off"></el-input>
+              <el-input prefix-icon="iconfont icon-password el-icon-none fs-18" type="password" placeholder="密码" clearable v-model="loginForm.password" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button :loading="logining" type="danger" class="login-button" @click="submitForm('loginForm')">登录</el-button>
@@ -49,13 +49,13 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                return callback(new Error(" "));//请输入手机号
+                return callback(new Error(" ")); //请输入手机号
               }
               let pattern = /^1[34578]\d{9}$/;
               if (pattern.test(value)) {
                 callback();
               } else {
-                callback(new Error(" "));//只支持中国大陆的手机号码
+                callback(new Error(" ")); //只支持中国大陆的手机号码
               }
             },
             trigger: ""
@@ -65,7 +65,7 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                return callback(new Error(" "));//请输入登录密码
+                return callback(new Error(" ")); //请输入登录密码
               }
               return callback();
             },
@@ -74,7 +74,7 @@ export default {
         ]
       },
       loaded: false,
-      logining:false,
+      logining: false
     };
   },
   computed: {
@@ -85,13 +85,13 @@ export default {
   components: {},
   created() {
     this.$nextTick(() => {
-      if(window.login_page_loaded){
+      if (window.__app_tms_loaded) {
         this.loaded = true;
       }
       document.onreadystatechange = () => {
         if (document.readyState == "complete") {
           this.loaded = true;
-          window.login_page_loaded=true;
+          window.__app_tms_loaded = true;
         }
       };
     });
@@ -100,7 +100,6 @@ export default {
     if (this.$auth.isAuthenticated()) {
       this.$auth.logout();
     }
-   
   },
   methods: {
     ...mapActions({
@@ -112,9 +111,8 @@ export default {
       this.loginResult.error = false;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.logining=true;
+          this.logining = true;
           this.login(this.loginForm).then(res => {
-             
             // console.log("login=====>", res);
             if (res.token) {
               let me = {
@@ -129,7 +127,7 @@ export default {
                 this.$router.replace(this.$route.query.redirect || "/");
               });
             } else {
-              this.logining=false;
+              this.logining = false;
               this.loginResult.error = true;
               this.loginResult.message = res.message || "登录失败";
             }
@@ -146,6 +144,9 @@ export default {
 };
 </script>
 <style scoped>
+.fs-18 {
+  font-size: 18px !important;
+}
 .login-box-header {
   background-color: #d4151a;
   border-bottom: 1px solid #d4151a;

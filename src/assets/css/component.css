@@ -69,3 +69,6 @@
 .text-small{
     font-size: 12px;
 }
+.iconfont {
+    font-size: inherit !important;
+}

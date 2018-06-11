@@ -28,7 +28,11 @@ export default {
       memuWidth: "200px"
     };
   },
-  created() {},
+  created() {
+    this.$nextTick(() => {
+      window.__app_tms_loaded = true;
+    });
+  },
   methods: {
     handleCollapse(collapse) {
       this.isCollapse = collapse;
@@ -44,7 +48,7 @@ export default {
 <style lang="stylus">
 .home {
   height: 100%;
-  background-color:#F5F5F6
+  background-color: #F5F5F6;
 }
 
 .layout-main {

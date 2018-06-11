@@ -68,7 +68,8 @@
           <div class="clazz-item-p1">
             <div>{{clazz.begin_date|formatDateTime(' M月D日')}}-{{clazz.finish_date|formatDateTime(' M月D日')}}</div>
             <div>
-              <span v-if="clazz.class_type=='0'||clazz.class_type=='1'">{{clazz.begin_date|weekDay}}</span>
+              <span v-if="clazz.class_type=='1'||clazz.class_type=='2'">{{clazz.begin_date|weekDay}}</span>
+              <span v-if="clazz.class_type=='3'||clazz.class_type=='4'">每天</span>
               {{clazz.class_begin_time|toShortTimeString}}-{{clazz.class_finish_time|toShortTimeString}}</div>
           </div>
           <div class="clazz-item-p2">
@@ -119,7 +120,6 @@
                              </span>
                 </el-popover>
 
-                <!-- <label v-if="scope.row.parents&&scope.row.parents.length>0">{{ scope.row.parents[0].relation }}:{{scope.row.parents[0].mobile}}</label> -->
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@
           </div>
         </div>
       </div>
-      <el-table :data="clazzList.rows" stripe size="medium" v-if="false">
+      <!-- <el-table :data="clazzList.rows" stripe size="medium" v-if="false">
 
         <el-table-column type="index" label="#" width="40">
         </el-table-column>
@@ -188,7 +188,7 @@
             <el-button @click="handleEnrollmentClick(scope.row)" type="text" size="small">报名</el-button>
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> -->
     </el-row>
     <el-row>
       <div class="text-center">
@@ -359,6 +359,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.clazz{
+  min-width:800px;
+}
 .el-select {
   max-width: 110px;
 }
