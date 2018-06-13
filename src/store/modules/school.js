@@ -71,7 +71,7 @@ const mutations = {
         state.schoolTeachers = res;
     },
     [mutations_types.getConsultants](state, { res }) {
-        state.schoolTeachers = res;
+        state.schoolConsultants = res;
     },
     [CLEAR_STATE](state) {
         state = {
@@ -80,7 +80,7 @@ const mutations = {
             updateClassroomResult: {},
             selectedClassroom: {},
             schoolTeachers: {},
-            getConsultants:{}
+            schoolConsultants:{}
         }
 
     },

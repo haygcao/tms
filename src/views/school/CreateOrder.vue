@@ -123,13 +123,13 @@
         <div>
             <el-form size="small" :inline="true" :model="orderInfoForm" ref="orderInfoForm" label-position="left" label-width="">
                 <el-form-item prop="consultant" label="顾问">
-                  <el-select v-model="orderInfoForm.consultant" filterable :value-key="'id'" placeholder="请选择">
+                  <el-select v-model="orderInfoForm.consultant" filterable clearable :value-key="'id'" placeholder="请选择">
                     <el-option v-for="item in schoolConsultants" :key="item.id" :label="item.name" :value="item" >
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item prop="origin" label="来源">
-                    <el-select v-model="orderInfoForm.origin" placeholder="来源">
+                    <el-select v-model="orderInfoForm.origin" clearable placeholder="来源">
                         <el-option v-for="item in orderOriginOptions" :key="item" :label="item" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
@@ -145,7 +145,7 @@
     </el-row>
     <el-row>
         <h3>是否年缴</h3>
-        <el-switch disabled v-model="payment_by_year" active-text="按年缴费" inactive-text="仅这学期">
+        <el-switch v-model="payment_by_year" active-text="按年缴费" inactive-text="仅这学期">
         </el-switch>
 
         <div class="mt-15">
@@ -155,9 +155,66 @@
                 <el-radio :label="3" v-if="currentClazz[0].grade=='A1'||currentClazz[0].grade=='H1'">缴3年</el-radio>
             </el-radio-group>
         </div>
+        <div class="course-detail-block">
+          <table class="title">
+            <tr><td>年级</td><td v-for="grade in courseTable.grades" :key="grade">{{grade|grade}}</td></tr>
+            <!-- <div><td>学期</td><td v-for="grade in courseTable.grades" :key="grade">{{grade|grade}}</td></div> -->
+            <div>年级</div>
+            <div>年级</div>
+          </table>
+          <!-- <div v-if=""></div> -->
+          <div class="grade-row"></div>
+        </div>
     </el-row>
     <el-row>
         <h3>缴费明细</h3>
+        <div class="bill-block">
+          <div class="bill-item">
+            <div><p>学费</p></div>
+            <div><p>课次数:10</p></div>
+            <div><p>单价:<em>&yen;</em><del>200</del><span><em>&yen;</em>198</span></p></div>
+            <div><p>小计:<em>&yen;</em>1980.00</p></div>
+            <!-- <div>优惠合计</div>
+            <div>应付合计</div> -->
+          </div>
+          <div class="bill-item">
+            <div><p>报名费</p></div>
+            <div></div>
+            <div><p>单价:<em>&yen;</em><del>100</del><span><em>&yen;</em>0</span></p></div>
+            <div><p>小计:<em>&yen;</em>0</p></div>
+          </div>
+          <div class="bill-item">
+            <div><p>折扣</p></div>
+            <div><p>7 折</p></div>
+            <div></div>
+            <div><p>单价优惠:-10*10=100.00</p><p>连报折扣:-200.00</p></div>
+          </div>
+          <div class="bill-item">
+            <div><p>总计</p></div>
+            <div></div>
+            <div></div>
+            <div><p>1800.00</p></div>
+          </div>
+        </div>
+        <el-collapse v-model="activeNames" @change="handleChange">
+          <el-collapse-item title="" name="1">
+            <template slot="title">
+              优惠减免<span style="float:right" class="text-primary">点击添加优惠</span>
+            </template>
+            <div>
+              <el-form :model="preferenceForm" ref="preferenceForm" :inline="true" label-position="left" label-width="100px" size="small">
+                    <el-form-item prop="customize_preference"  label="优惠减免(元)">
+                        <el-input type="number" prefix-icon="iconfont icon-rmb" v-model="preferenceForm.customize_preference" placeholder="减免金额"></el-input>
+                    </el-form-item>
+                    <br>
+                    <el-form-item prop="customize_preference_description" label="优惠描述">
+                        <el-input type="textarea" style="width:200px" v-model="preferenceForm.customize_preference_description" placeholder="优惠描述..."></el-input>
+                    </el-form-item>            
+              </el-form>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+
         <el-table :data="order_charges" :span-method="objectSpanMethod" border style="max-width: 850px; margin-top: 20px">
             <el-table-column prop="category" label="类目" width="">
             </el-table-column>
@@ -233,6 +290,10 @@ export default {
       ],
       loadedStudent: false,
       loading: false,
+      preferenceForm: {
+        customize_preference: undefined,
+        customize_preference_description: undefined
+      },
       orderInfoForm: {
         origin: undefined,
         references: undefined,
@@ -251,13 +312,54 @@ export default {
         return [state.clazz.selectedClazz.data || {}];
       },
       current_school: state => state.current_user.current_school,
-      course: state => state.order.course,
+      course: state => state.order.course.data || [],
       student: state => state.order.student || {},
       prePage: state => state.route.from,
       createOrderResult: state => state.order.createOrderResult,
       schoolConsultants: state => state.school.schoolConsultants.data || []
     }),
-    ...mapGetters(["genders"])
+    ...mapGetters(["genders", "grades", "terms"]),
+    courseToBuy() {
+      let list = [];
+      const grade1 = ["A1", "A2", "A3"];
+      const grade2 = ["H1", "H2"];
+      const term1 = [1, 2, 3, 4];
+      const term2 = [5, 6];
+      let term = this.currentClazz[0].term < 5 ? term1 : term2;
+      this.course.forEach(c => {
+        let course = Object.assign({}, c);
+        course.purchase_lesson_number = 0;
+        if (term.includes(course.term)) {
+          list.push(course);
+        }
+      });
+      return list;
+    },
+    courseTable() {
+      const grade1 = ["A1", "A2", "A3"];
+      const grade2 = ["H1", "H2"];
+
+      const term1 = [1, 2, 3, 4];
+      const term2 = [5, 6];
+      let grade = this.currentClazz[0].grade.startsWith("A") ? grade1 : grade2;
+      let term = this.currentClazz[0].term < 5 ? term1 : term2;
+      let table = {};
+      table.count = grade.length;
+      grade.forEach(g => {
+        table[g] = {};
+        table[g].count = term.count;
+        term.forEach(t => {
+          table[g][t] = {};
+          let current = this.course.find(c => c.grade == g && c.term == t);
+          table[g][t].total_lesson_number = current
+            ? current.total_lesson_number
+            : 0;
+          this.current;
+          table[g][t].buy_lesson_number = this.currentClazz[0];
+        });
+      });
+      return { grades: grade, Terms: term };
+    }
   },
   created() {
     this.clearOrderCreateStates();
@@ -274,7 +376,7 @@ export default {
   watch: {
     currentClazz(val, old) {
       if (val && val[0]) {
-        console.log(val);
+        // console.log(val);
         this.culcOrderCharges(val[0]);
       }
     },
@@ -305,7 +407,7 @@ export default {
       });
     },
     onSearch() {
-      if(this.searchForm.mobile==null){
+      if (this.searchForm.mobile == null) {
         return false;
       }
       this.$refs["searchForm"].validate(valid => {
@@ -339,7 +441,7 @@ export default {
       }
     },
     onSubmitOrder() {
-      let self=this;
+      let self = this;
       self.$refs["orderInfoForm"].validate(valid => {
         if (valid) {
           if (self.student.data == null) {
@@ -366,7 +468,7 @@ export default {
       order.origin = orderInfoForm.origin;
       order.references = orderInfoForm.references;
       order.note = orderInfoForm.note;
-      let consultant = orderInfoForm.consultant||{};
+      let consultant = orderInfoForm.consultant || {};
       order.consultant_id = consultant.id;
       order.consultant_name = consultant.name;
       order.payment_state = 0; //未支付
@@ -429,9 +531,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.order{
-  background-color:#ffffff;
+em, i, u {
+  font-style: normal;
 }
+
+.order {
+  background-color: #ffffff;
+}
+
 .search-form .el-input {
   width: 240px;
 }
@@ -458,6 +565,27 @@ export default {
 }
 
 .student-info-form .el-input {
-  width: 178px!important;
+  width: 178px !important;
+}
+
+.bill-block .bill-item {
+  display: flex;
+  border-bottom: 1px solid #E4E7ED;
+  // border-left: 1px solid #E4E7ED;
+  // border-right: 1px solid #E4E7ED;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.bill-block .bill-item:last-child {
+  border-bottom: none;
+  margin-bottom: 20px;
+}
+
+.bill-item > div {
+  padding: 0px 10px;
+  width: 160px;
+  flex: none;
 }
 </style>

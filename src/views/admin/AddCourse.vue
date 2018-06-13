@@ -11,17 +11,17 @@
             </el-form-item>
             <el-form-item label="学科" prop="subject">
                 <el-radio-group v-model="form.subject">
-                    <el-radio v-for="item in subjects" :key="item.key" :label="item.key"  border>{{item.name}}</el-radio>
+                    <el-radio v-for="item in course_settings" :key="item.key" :label="item.key"  border>{{item.name}}</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="年级" prop="grade" >
                 <el-radio-group v-model="form.grade">
-                    <el-radio v-for="item in grades" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
+                    <el-radio v-for="item in subjectGrades" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="学期" prop="term" >
                 <el-radio-group v-model="form.term">
-                    <el-radio v-for="item in terms" :key="item.key" :label="item.key"  border>{{item.name}}</el-radio>
+                    <el-radio v-for="item in subjectTerms" :key="item.key" :label="item.key"  border>{{item.name}}</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="班型" prop="class_type" >
@@ -59,7 +59,7 @@ export default {
       form: {
         name: undefined,
         term: undefined,
-        subject: undefined,
+        subject: 1,
         grade: undefined,
         class_type: undefined,
         price: undefined,
@@ -98,8 +98,23 @@ export default {
       "subjects",
       "class_types",
       "grades",
-      "lesson_times"
+      "lesson_times",
+      "course_settings"
     ]),
+    subjectGrades() {
+      let sub = this.course_settings.find(v => v.key == this.form.subject);
+      return sub.grades;
+    },
+    subjectTerms() {
+      let sub = this.course_settings.find(v => v.key == this.form.subject);
+      let grades = sub.grades;
+      let grade = grades.find(v => v.key == this.form.grade);
+      if (grade) {
+        return grade.terms;
+      }
+      return sub.terms;
+      
+    },
     name_display() {
       return `${SubjectName[this.form.subject] || ""}${Grade[this.form.grade] ||
         ""}${Terms[this.form.term] || ""}${ClassType[this.form.class_type] ||

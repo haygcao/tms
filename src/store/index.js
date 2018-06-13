@@ -5,6 +5,7 @@ import modules from './modules'
 import createLogger from 'vuex/dist/logger'
 import createPersistedState from 'vuex-persistedstate'
 import { ClassType, SubjectName, Terms, Grade, JobTitles, JobTypes, Educations } from "@/lib/constants";
+import { CourseSetting } from "@/lib/constant_course_setting"
 import * as mutation_types from './mutation_types';
 Vue.use(Vuex)
 let plugins = [createPersistedState({ paths: ["login", "region", "current_user", "school"] })];
@@ -74,6 +75,9 @@ const getters = {
   time_types() {
     return [{ label: 'A', value: [["8:00", "12:00"], ["15:00", "18:00"]] },
     { label: 'B', value: [["8:00", "12:00"], ["15:00", "18:00"]] },]
+  },
+  course_settings() {
+    return CourseSetting;
   }
 }
 
