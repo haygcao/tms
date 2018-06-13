@@ -68,7 +68,7 @@ export default {
   computed: {
     business_master: function() {
       return this.$auth.isAuthenticated([
-        "administrator",
+        // "administrator",
         "franchisee_admin",
         "investor"
       ]);
@@ -77,7 +77,7 @@ export default {
       return this.$auth.isAuthenticated([
         "teaching_manager",
         "school_manager",
-        "administrator",
+        // "administrator",
         "franchisee_admin",
         "investor"
       ]);
@@ -87,7 +87,7 @@ export default {
         "consultant",
         "teaching_manager",
         "school_manager",
-        "administrator",
+        // "administrator",
         "franchisee_admin",
         "investor"
       ]);

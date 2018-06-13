@@ -124,7 +124,11 @@ export default {
                 if (user.data) {
                   this.$auth.userInfo(user.data);
                 }
-                this.$router.replace(this.$route.query.redirect || "/");
+                if (this.$auth.isAuthenticated(["administrator"])) {
+                  this.$router.replace("/admin");
+                } else {
+                  this.$router.replace(this.$route.query.redirect || "/");
+                }
               });
             } else {
               this.logining = false;
@@ -186,9 +190,9 @@ export default {
   width: 100%;
   background-color: #d4151a;
   border-color: #d4151a;
-  font-size: 20px;
-  padding-top: 9px;
-  padding-bottom: 9px;
+  font-size: 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   letter-spacing: 5px;
   font-weight: 400;
 }

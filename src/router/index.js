@@ -121,7 +121,7 @@ export default new Router({
       component: Home,
       name: 'teaching',
       redirect: '/classroom',
-      meta: { auth: { roles: ["teaching_manager", "school_manager", "administrator", "franchisee_admin", "investor"] } },
+      meta: { auth: { roles: ["teaching_manager", "school_manager", "franchisee_admin", "investor"] } },
       children: [
         {
           // 当 /user/:id/profile 匹配成功，
@@ -152,7 +152,7 @@ export default new Router({
       component: Home,
       name: 'homecenter',
       redirect: '/home/employee',
-      meta: { auth: { roles: ['administrator', 'franchisee_admin', 'investor'] } },
+      meta: { auth: { roles: ['franchisee_admin', 'investor'] } },
       children: [
         {
           name: 'employee_default',

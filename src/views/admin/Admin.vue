@@ -4,7 +4,7 @@
     <header  class="header">
     <div  class="container">
     <h1>
-        <router-link to="/"><img src="../../assets/logo.png" alt="element-logo" class="nav-logo"><span>睿乐后台管理</span></router-link>
+        <router-link to="/admin"><img src="../../assets/logo.png" alt="element-logo" class="nav-logo"><span></span></router-link>
     </h1>
     <ul class="nav">
     <li class="nav-item">
