@@ -4,18 +4,22 @@
     transition: .2s;
     margin: 0 auto;
 }
-.info-block.hover,.info-block:hover {
-    box-shadow: 0 0 8px 0 rgba(232,237,250,.6),0 2px 4px 0 rgba(232,237,250,.5)
+
+.info-block.hover, .info-block:hover {
+    box-shadow: 0 0 8px 0 rgba(232, 237, 250, .6), 0 2px 4px 0 rgba(232, 237, 250, .5)
 }
-.block{
+
+.block {
     border: 1px solid #E4E7ED;
     border-radius: 2px;
     transition: .2s;
     margin: 0 auto;
 }
-.block.hover,block:hover {
-    box-shadow: 0 0 8px 0 rgba(232,237,250,.6),0 2px 4px 0 rgba(232,237,250,.5)
+
+.block.hover, block:hover {
+    box-shadow: 0 0 8px 0 rgba(232, 237, 250, .6), 0 2px 4px 0 rgba(232, 237, 250, .5)
 }
+
 .text-center {
     text-align: center;
 }
@@ -66,9 +70,28 @@
 .text-info {
     color: #909399;
 }
-.text-small{
+
+.text-small {
     font-size: 12px;
 }
+
 .iconfont {
     font-size: inherit !important;
 }
+
+a, div, input, textarea {
+    outline: 0;
+}
+
+a, a:visited {
+    list-style: none;
+    color: #606266;
+    cursor: pointer;
+    text-decoration: none
+}
+
+a:hover {
+    color: #409EFF;
+}
+
+/****search filter box*****/

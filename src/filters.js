@@ -92,7 +92,8 @@ export const toShortTimeString = (time) => {
     if (typeof time === 'string') {
         time = '1900-01-01 ' + time;
     }
-    return new Date(time).Format("hh:mm")
+    return moment(time).format("h:mm");
+    // return new Date(time).Format("hh:mm")
 }
 export const toDateString = (time) => {
     if (!time) return '';

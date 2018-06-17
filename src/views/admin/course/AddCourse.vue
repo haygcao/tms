@@ -1,9 +1,14 @@
 <template>
 <div class="course">
-    <el-row>
-        <h3>创建课程</h3>
-        <div class="horization-line"></div>
-    </el-row>
+  <el-row>
+     <div class="page-breadcrumb">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/admin' }">后台管理</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/admin/course/list/1' }">课程管理</el-breadcrumb-item>
+        <el-breadcrumb-item>新建课程</el-breadcrumb-item>
+      </el-breadcrumb>
+     </div>
+  </el-row>
     <el-row>
         <el-form ref="form" :model="form" :rules="rules"  label-width="180px" class="create-form">
             <el-form-item label="名称" prop="name" style="width:400px;">
@@ -32,13 +37,14 @@
             <el-form-item label="课程时长" prop="lesson_time" >
                 <el-radio-group v-model="form.lesson_time">
                     <el-radio v-for="item in lesson_times" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
+                    <el-radio v-if="form.class_type==test_class_key" :label="test_class_lesson_time.key" border>{{test_class_lesson_time.name}}</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="课次数" prop="total_lesson_number">
                 <el-input-number v-model="form.total_lesson_number" :min="1" :max="100" label="课次数"></el-input-number>
             </el-form-item>
-             <el-form-item label="课次单价" prop="price" >
-                <el-input v-model="form.price" style="width:200px;" :min="1" :max="100" label="课次单价"></el-input>元(CNY)
+             <el-form-item label="课次单价(元)" prop="price" >
+                <el-input type="number" v-model="form.price" style="width:200px;" :min="1" :max="100" label="课次单价"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -80,12 +86,14 @@ export default {
         price: [
           { required: true, message: "请输入课次单价", trigger: "blur" },
           {
-            pattern: /^[1-9]\d*$/,
+            pattern: /^[0-9]\d*$/,
             message: "请输入一个数字",
             trigger: "blur"
           }
         ]
-      }
+      },
+      test_class_key: 99,
+      test_class_lesson_time: { key: 480, name: "8h" }
     };
   },
   computed: {
@@ -93,7 +101,6 @@ export default {
       createResult: state => state.course.createResult
     }),
     ...mapGetters([
-      "provinceList",
       "terms",
       "subjects",
       "class_types",
@@ -113,7 +120,6 @@ export default {
         return grade.terms;
       }
       return sub.terms;
-      
     },
     name_display() {
       return `${SubjectName[this.form.subject] || ""}${Grade[this.form.grade] ||
@@ -126,6 +132,9 @@ export default {
     name_display(c, o) {
       if (c != o) {
         this.form.name = c;
+        this.form.total_lesson_number = (
+          this.subjectTerms.find(t => t.key == this.form.term) || {}
+        ).default_lesson_count;
       }
     },
     createResult(c, o) {
@@ -146,9 +155,6 @@ export default {
       createCourse: "createCourse"
     }),
 
-    handleRegionItemChange(val) {
-      console.log(val);
-    },
     toolTip(type, msg) {
       this.$message({
         message: msg || "恭喜你，创建成功",
@@ -158,7 +164,8 @@ export default {
     onSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          let payload = this.form;
+          let payload = Object.assign({}, this.form);
+          payload.price = parseInt(payload.price);
           this.createCourse(payload);
         } else {
           //   console.log("error submit!!");

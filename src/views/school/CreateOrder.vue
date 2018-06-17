@@ -368,9 +368,9 @@ export default {
     this.getClazzById({
       clazz_id: this.$route.query.clazz_id
     });
-    this.fetchCourseLesson({
-      clazz_id: this.$route.query.clazz_id
-    });
+    // this.fetchCourseLesson({
+    //   clazz_id: this.$route.query.clazz_id
+    // });
     this.getConsultants({ school_id: this.current_school.id });
   },
   watch: {

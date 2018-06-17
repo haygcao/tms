@@ -37,7 +37,7 @@
             <el-menu-item index="/admin/franchisee/create">新建加盟校</el-menu-item>
             
         </el-submenu>
-        <el-menu-item index="/admin/course/create">
+        <el-menu-item index="/admin/course/list">
             <i class="el-icon-menu"></i>
             <span slot="title">课程管理</span>
         </el-menu-item>
@@ -88,7 +88,7 @@ export default {
   }
 };
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 .admin .layout-head {
     position: fixed;
     width: 100%;
@@ -128,6 +128,8 @@ export default {
     border-bottom: 1px solid #d2d2d2;
     height: 100%;
     box-sizing: border-box;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .admin .header h1 a span {
@@ -157,7 +159,6 @@ export default {
 }
 
 .admin .page-container {
-    max-width: 1000px;
     margin: 0 auto;
 }
 

@@ -10,6 +10,8 @@ import Auth from './plugin/auth'
 import { sync } from 'vuex-router-sync'
 import * as filters from '@/filters'
 import vueHeadful from 'vue-headful';
+import ShoppingCard from './plugin/shoppingCard'
+import EmptyDataView from '@/components/EmptyDataView.vue'
 // 实例化Vue的filter
 Object.keys(filters).forEach(k => {
   // console.log('filter', k)
@@ -26,9 +28,11 @@ sync(store, router);//use vuex-router-sync to sync store and router state
 Vue.use(VueAxios, axios)
 axios.defaults.baseURL = process.env.VUE_APP_TMSAPI || 'http://localhost:7001/';
 Vue.use(Auth, { router: router, store: store })
+Vue.use(ShoppingCard);
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.component('vue-headful', vueHeadful);
+Vue.component('empty-data-view', EmptyDataView);
 new Vue({
   router,
   store,

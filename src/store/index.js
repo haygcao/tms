@@ -5,7 +5,7 @@ import modules from './modules'
 import createLogger from 'vuex/dist/logger'
 import createPersistedState from 'vuex-persistedstate'
 import { ClassType, SubjectName, Terms, Grade, JobTitles, JobTypes, Educations } from "@/lib/constants";
-import { CourseSetting } from "@/lib/constant_course_setting"
+import { CourseSetting, ClassTypeSetting, TermsSetting, GradesSetting } from "@/lib/constant_course_setting"
 import * as mutation_types from './mutation_types';
 Vue.use(Vuex)
 let plugins = [createPersistedState({ paths: ["login", "region", "current_user", "school"] })];
@@ -19,9 +19,10 @@ const state = {
 }
 const getters = {
   terms() {
-    let t = Object.keys(Terms).map(p => {
-      return { key: p, name: Terms[p] };
-    });
+    // let t = Object.keys(Terms).map(p => {
+    //   return { key: p, name: Terms[p] };
+    // });
+    let t = TermsSetting.filter(v => v.enable);
     return t;
   },
   subjects() {
@@ -31,10 +32,11 @@ const getters = {
     return t;
   },
   class_types() {
-    let t = Object.keys(ClassType).map(p => {
-      return { key: p, name: ClassType[p] };
-    });
-    return t;
+    // let t = Object.keys(ClassType).map(p => {
+    //   return { key: p, name: ClassType[p] };
+    // });
+    // return t;
+    return ClassTypeSetting.filter(v => v.enable);
   },
   grades() {
     let t = Object.keys(Grade).map(p => {
@@ -43,6 +45,9 @@ const getters = {
     return t;
   },
   lesson_times() {
+    // if (process.env.VUE_APP_TEST) {
+    //   return [{ key: 60, name: '1h' }, { key: 90, name: '1.5h' }, { key: 480, name: '8h' }]
+    // }
     return [{ key: 60, name: '1h' }, { key: 90, name: '1.5h' }]
   },
   genders() {

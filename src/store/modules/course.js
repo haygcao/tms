@@ -14,7 +14,7 @@ const getters = {
 }
 const actions = {
     async getCourseList({ commit, state, getters }, payload) {
-        let res = await clazz.list(payload);
+        let res = await course.list(payload);
         commit(mutations_types.course_list, { res })
     },
     async createCourse({ commit, state, getters }, payload) {

@@ -76,9 +76,14 @@ export default new Router({
           component: require('@/views/admin/AddSchool.vue').default
         },
         {
+          name: 'course_list',
+          path: 'course/list/:page(\\d+)',
+          component: require('@/views/admin/course/CourseList.vue').default
+        },
+        {
           name: 'course_add',
           path: 'course/create',
-          component: require('@/views/admin/AddCourse.vue').default
+          component: require('@/views/admin/course/AddCourse.vue').default
         }
 
       ]

@@ -67,7 +67,8 @@ const actions = {
     },
     async fetchCourseLesson({ commit, state, getters }, payload) {
         let res = await purchase.getCourse(payload);
-        commit(mutations_types.course_fetched, { res })
+        commit(mutations_types.course_fetched, { res });
+        return Promise.resolve(Object.assign({},res));
     },
     // async addStudentParent({ commit, state, getters }, payload) {
     //     let res = await student.addParent(payload);

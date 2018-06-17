@@ -8,10 +8,10 @@ const mutations_types = {
     course_fetched: "clazz/course_fetched",
     clear_state: "clazz/clear_state",
     teacher_info: "clazz/fetch_teacher_info",
-    clazz_close:"clazz/clazz_close",
-    clazz_remove:"clazz/clazz_remove",
-    clazz_set_visible_state:"clazz/clazz_set_visible_state",
-    visibled_clazz_list:"clazz/visibled_clazz_list"
+    clazz_close: "clazz/clazz_close",
+    clazz_remove: "clazz/clazz_remove",
+    clazz_set_visible_state: "clazz/clazz_set_visible_state",
+    visibled_clazz_list: "clazz/visibled_clazz_list"
 }
 const state = {
     clazzList: {},
@@ -19,7 +19,7 @@ const state = {
     createResult: {},
     selectedClazz: {},
     teacherInfo: {},
-    clazzListVisibled:{},
+    clazzListVisibled: {},
 }
 const getters = {
 
@@ -27,7 +27,8 @@ const getters = {
 const actions = {
     async getClazzById({ commit, state, getters }, payload) {
         let res = await clazz.findById(payload);
-        commit(mutations_types.clazz_fetch, { res })
+        commit(mutations_types.clazz_fetch, { res });
+        return Promise.resolve(res);
     },
     async getClazzList({ commit, state, getters }, payload) {
         let res = await clazz.list(payload);
@@ -78,7 +79,7 @@ const mutations = {
     [mutations_types.clazz_list](state, { res }) {
         state.clazzList = res;
     },
-    
+
     [mutations_types.visibled_clazz_list](state, { res }) {
         state.clazzListVisibled = res;
     },
@@ -115,7 +116,7 @@ const mutations = {
         state.createResult = {};
         state.clazzList = {};
         state.teacherInfo = {};
-        state.clazzListVisibled={};
+        state.clazzListVisibled = {};
     }
 }
 export default {

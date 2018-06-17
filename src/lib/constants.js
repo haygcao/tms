@@ -23,16 +23,22 @@ export const ClassType = {
     3: '短期班',
     4: '连续班',
     5: '试听班',
+
+}
+if (process.env.VUE_APP_TEST) {
+    ClassType[99] = "测试班"
 }
 
+
 export const Terms = {
+    5: '暑秋',
+    6: '寒春',
+    7: '全年',
     1: '暑假',
     2: '秋季',
     3: '寒假',
     4: '春季',
-    5: '暑秋',
-    6: '寒春',
-    7: '全年',
+
 }
 
 export const Grade = {
@@ -41,11 +47,11 @@ export const Grade = {
     A3: '5-6岁',
     H1: '3-4.5岁',
     H2: '4.5-6岁',
-    B1:'2-4岁',
-    B2:'4-5岁',
-    B3:'5-6岁',
-    B4:'6-8岁',
-    B5:'8-9岁',
+    B1: '2-4岁',
+    B2: '4-5岁',
+    B3: '5-6岁',
+    B4: '6-8岁',
+    B5: '8-9岁',
 }
 export const ClazzState = {
     0: '未开课',

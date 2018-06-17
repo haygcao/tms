@@ -1,65 +1,66 @@
 <template>
-  <div class="clazz">
-    <el-row>
+  <div class="clazz" style="max-width:1400px;" :style="{'padding-right':rightTabWidth}">
+    <vue-headful title="睿乐教育-选课报名" description="睿乐教育" />
+    <!-- <el-row>
       <div class="page-breadcrumb clearfix">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/school' }">校区管理</el-breadcrumb-item>
           <el-breadcrumb-item>报名管理</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-    </el-row>
+    </el-row> -->
     <el-row>
-      <el-form :inline="true" size="small" ref="searchForm" :model="searchForm" class="demo-form-inline">
-        <el-form-item prop="year">
-          <el-select v-model="searchForm.year" placeholder="年份" clearable>
-            <el-option v-for="item in yearOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="subject">
-          <el-select v-model="searchForm.subject" placeholder="学科" clearable>
-            <el-option v-for="item in subjects" :key="item.key" :label="item.name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="grade">
-          <el-select v-model="searchForm.grade" placeholder="年级" clearable>
-            <el-option v-for="item in grades" :key="item.key" :label="item.name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="term">
-          <el-select v-model="searchForm.term" placeholder="学期" clearable>
-            <el-option v-for="item in terms" :key="item.key" :label="item.name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="class_type">
-          <el-select v-model="searchForm.class_type" placeholder="选择班型" clearable>
-            <el-option v-for="item in class_types" :key="item.key" :label="item.name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="begin_date">
-          <el-select v-model="searchForm.begin_date" placeholder="开课日期" clearable>
-            <el-option v-for="item in beginDateOptions" :key="item.key" :label="item.name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="class_begin_time">
-          <el-select v-model="searchForm.class_begin_time" placeholder="上课时段" :value-key="'key'" clearable>
-            <el-option v-for="item in beginTimeOptions" :key="item.key" :label="item.name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
+    <div class="block">
+      <course-filter-box :searchForm="searchForm"></course-filter-box>
+    </div>
+    </el-row>
+    <el-row class="search-section-2">
+      <el-col :span="12">
+      <el-form :inline="true" size="small" ref="searchForm" :model="searchForm" class="clearfix">
         <el-form-item prop="teacher_name">
-          <el-input v-model="searchForm.teacher_name" placeholder="输入老师姓名" clearable></el-input>
+          <el-input style="width:240px" v-model="searchForm.teacher_name" placeholder="输入老师姓名" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
           <el-button v-if="showResetButton" type="text" @click="onResetSearchForm" icon="el-icon-circle-close-outline">清除查询条件</el-button>
         </el-form-item>
       </el-form>
+      </el-col>
+      <el-col :span="12">
+        <div style="float:right">
+      <el-dropdown trigger="click">
+        <span class="el-dropdown-link">
+          {{(yearOptions.find(p=>p.key==searchForm.year)||{}).name||yearOptions[0].name}}<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="item in yearOptions" :key="item.name">
+            <router-link :class="{'active':searchForm.year==item.key}" :to="{name:$route.name,params:{page:1},query:Object.assign({},searchForm,{year:item.key})}">{{item.name}}</router-link>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-dropdown trigger="click">
+        <span class="el-dropdown-link">
+          {{(beginDateOptions.find(p=>p.key==searchForm.begin_date)||{}).name||beginDateOptions[0].name}}<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="item in beginDateOptions" :key="item.name">
+            <router-link :class="{'active':searchForm.begin_date==item.key}" :to="{name:$route.name,params:{page:1},query:Object.assign({},searchForm,{begin_date:item.key})}">{{item.name}}</router-link>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-dropdown trigger="click">
+        <span class="el-dropdown-link">
+          {{(beginTimeOptions.find(p=>p.key==searchForm.class_begin_time)||{}).name||beginTimeOptions[0].name}}<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="item in beginTimeOptions" :key="item.name">
+            <router-link :class="{'active':searchForm.class_begin_time==item.key}" :to="{name:$route.name,params:{page:1},query:Object.assign({},searchForm,{class_begin_time:item.key})}">{{item.name}}</router-link>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+        </div>
+      </el-col>
+
     </el-row>
 
     <el-row class="">
@@ -137,66 +138,15 @@
           </div>
         </div>
       </div>
-      <!-- <el-table :data="clazzList.rows" stripe size="medium" v-if="false">
-
-        <el-table-column type="index" label="#" width="40">
-        </el-table-column>
-        <el-table-column label="班级">
-          <template slot-scope="scope">
-            {{scope.row.year}}{{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
-          </template>
-        </el-table-column>
-        <el-table-column width="200" label="上课时间">
-          <template slot-scope="scope">
-            <p>{{scope.row.begin_date|toDateString}}-{{scope.row.finish_date|toDateString}}</p>
-            <p>
-              <span v-if="scope.row.class_type=='0'||scope.row.class_type=='1'">{{scope.row.begin_date|weekDay}}</span> {{scope.row.class_begin_time|toShortTimeString}}-{{scope.row.class_finish_time|toShortTimeString}}</p>
-          </template>
-        </el-table-column>
-        <el-table-column width="120" label="上课地点">
-          <template slot-scope="scope">
-            {{scope.row.classroom_name}}
-          </template>
-        </el-table-column>
-        <el-table-column width="120" label="授课老师">
-          <template slot-scope="scope">
-            <el-button @click="onShowTeacherInfo(scope.row)" type="text">{{scope.row.teacher_name}}</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column width="70" label="总课次">
-          <template slot-scope="scope">
-            {{scope.row.total_lesson_number||0}}
-          </template>
-        </el-table-column>
-        <el-table-column width="80" label="剩余课次">
-          <template slot-scope="scope">
-            {{scope.row.total_lesson_number - (scope.row.current_lesson_number||0)}}
-          </template>
-        </el-table-column>
-        <el-table-column width="80" label="剩余名额">
-          <template slot-scope="scope">
-            <span :class="{'text-danger':(scope.row.student_limit-scope.row.student_count)<4}">{{scope.row.student_limit-scope.row.student_count}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column width="80" label="班级状态">
-          <template slot-scope="scope">
-            <span :class="{'text-danger':scope.row.state>0}">{{scope.row.state|classState}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
-          <template slot-scope="scope">
-            <el-button @click="handleEnrollmentClick(scope.row)" type="text" size="small">报名</el-button>
-          </template>
-        </el-table-column>
-      </el-table> -->
+      <empty-data-view v-show="clazzList.count==0"></empty-data-view>
     </el-row>
     <el-row>
-      <div class="text-center">
+      <div class="text-center" v-show="clazzList.count>0">
         <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :total="clazzList.count">
         </el-pagination>
       </div>
     </el-row>
-    <el-dialog :visible.sync="dialogFormVisible" center>
+    <el-dialog v-if="false" :visible.sync="dialogFormVisible" center>
       <h1 slot="title">老师介绍</h1>
       <div class="teacher-info" v-if="dialogFormVisible">
         <div class="text-center">
@@ -218,12 +168,20 @@
         </div>
       </div>
     </el-dialog>
+    <div class="right-tab" :style="{'width':rightTabWidth}" >
+      <div class="right-tab_arrow" @click="onToggleTabOpen"><span :class="tab_arrow_class" class="icon-bar"></span></div>
+        <div class="card-title"><h3>已选课程</h3></div>
+      <div class="shopping-card-container scroll_bar">
+        <shopping-card ref="shoppingCard"></shopping-card>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
-import AddClass from "@/views/teaching_manage/AddClass.vue";
+import CourseFilterBox from "@/components/CourseFilterBox.vue";
+import ShoppingCard from "@/views/school/ShoppingCard.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -240,81 +198,111 @@ export default {
         begin_date: undefined
       },
       beginTimeOptions: [
+        { name: "所有时段", key: undefined },
         { name: "上午", key: "a" },
         { name: "下午", key: "b" },
         { name: "晚上", key: "c" }
       ],
       beginDateOptions: [
+        { name: "日期不限", key: undefined },
         { name: "最近一周", key: "week" },
         { name: "最近一个月", key: "month" }
       ],
       yearOptions: [
-        new Date().getFullYear() - 1,
-        new Date().getFullYear(),
-        new Date().getFullYear() + 1
+        {
+          name: "年份不限",
+          key: undefined
+        },
+        {
+          name: new Date().getFullYear() - 1 + "年",
+          key: new Date().getFullYear() - 1
+        },
+        {
+          name: new Date().getFullYear() + "年",
+          key: new Date().getFullYear()
+        },
+        {
+          name: new Date().getFullYear() + 1 + "年",
+          key: new Date().getFullYear() + 1
+        }
       ],
       pageSize: 10,
       currentPage: 1,
       showResetButton: false,
 
       operate_mode: "create",
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      rightTabOpened: false,
+      rightTabWidth: "65px"
     };
   },
   computed: {
     ...mapState({
       clazzList: state => state.clazz.clazzListVisibled.data || {},
       current_school: state => state.current_user.current_school,
-      teacher_info: state => state.clazz.teacherInfo.data || {}
+      teacher_info: state => state.clazz.teacherInfo.data || {},
+      course: state => state.order.course.data || [],
+      currentClazz: state => state.clazz.selectedClazz.data
     }),
-    ...mapGetters(["terms", "subjects", "class_types", "grades"]),
-
-    searchCondition() {
-      return `${this.searchForm.year || ""}${this.searchForm.subject ||
-        ""}${this.searchForm.term || ""}${this.searchForm.grade || ""}${this
-        .searchForm.class_type || ""}${this.searchForm.class_begin_time ||
-        ""}${this.searchForm.begin_date || ""}`;
+    ...mapGetters([
+      "terms",
+      "subjects",
+      "class_types",
+      "grades",
+      "course_settings"
+    ]),
+    tab_arrow_class() {
+      return this.rightTabOpened
+        ? "el-icon-d-arrow-right"
+        : "el-icon-d-arrow-left";
     }
+  },
+  beforeRouteUpdate(to, from, next) {
+    // react to route changes...
+    // don't forget to call next()
+    this.currentPage = to.params.page > 0 ? to.params.page : 1;
+    this.searchForm = Object.assign(this.searchForm, to.query);
+    this.search();
+    next();
   },
   watch: {
     current_school(val, old) {
       if (val.id != old.id) {
         this.search();
       }
-    },
-    searchCondition: {
-      handler: function(val, old) {
-        if (val != "") {
-          this.showResetButton = true;
-        } else {
-          this.showResetButton = false;
-        }
-        if (val != old) {
-          this.search();
-        }
-      },
-      deep: true
     }
   },
   mounted() {
-    let query = this.$route.query;
-    this.searchForm = Object.assign({}, query);
-    this.currentPage = parseInt(this.$route.params.page);
+    this.currentPage =
+      this.$route.params.page > 0 ? parseInt(this.$route.params.page) : 1;
+    this.searchForm = Object.assign(
+      {
+        teacher_name: undefined,
+        term: undefined,
+        year: undefined,
+        subject: undefined,
+        grade: undefined,
+        class_type: undefined,
+        // state: undefined,
+        class_begin_time: undefined,
+        begin_date: undefined
+      },
+      this.$route.query
+    );
+
     this.search();
   },
   methods: {
     ...mapActions({
       getClazzList: "searchVisibledClazzList",
-      getTeacherInfo: "getTeacherInfo"
+      getTeacherInfo: "getTeacherInfo",
+      getClazzById: "getClazzById"
     }),
+
     handleEnrollmentClick(data) {
-      this.$router.push({ name: "create_order", query: { clazz_id: data.id } });
-    },
-    onResetSearchForm() {
-      // this.searchForm = Object.assign(this.searchForm, this.defaultSearchForm);
-      this.$refs["searchForm"].resetFields();
-      console.log("resetFields");
-      this.$refs["searchForm"].resetFields();
+      this.$refs["shoppingCard"].addToCard(data);
+
+      // this.$router.push({ name: "create_order", query: { clazz_id: data.id } });
     },
     onSearch() {
       this.currentPage = 1;
@@ -352,36 +340,57 @@ export default {
       this.getTeacherInfo({
         teacher_id: val.teacher_id
       });
+    },
+    onToggleTabOpen() {
+      this.rightTabOpened = !this.rightTabOpened;
+      this.rightTabWidth = this.rightTabOpened ? "340px" : "65px";
     }
   },
-  components: {}
+  components: {
+    CourseFilterBox,
+    ShoppingCard
+  }
 };
 </script>
 
 <style lang="stylus" scoped>
-.clazz{
-  min-width:800px;
+.clazz {
+  min-width: 800px;
 }
+
 .el-select {
   max-width: 110px;
 }
 
-.el-input {
-  max-width: 120px;
+.clazz .el-dropdown-link {
+  line-height: 32px;
+  margin: 0 10px;
+  display: inline-block;
+  border: 1px solid #dcdfe6;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 0 15px;
+}
+
+.clazz .el-dropdown-menu__item a.active {
+  color: #409EFF;
 }
 
 .img-circle {
   background-color: #EBEEF5;
   border: 1px solid #E4E7ED;
   width: 60px;
-  heigth: 60px;
+  height: 60px;
   overflow: hidden;
   border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  margin: auto 2px;
 }
 
 .img-circle.small {
   width: 28px;
-  heigth: 28px;
+  height: 28px;
 }
 
 .info-element {
@@ -395,10 +404,6 @@ export default {
 
 .teacher-info {
   max-width: 640px;
-}
-
-.clazz-list {
-  max-width: 1100px;
 }
 
 .clazz-list .clazz-item {
@@ -471,9 +476,8 @@ export default {
 
 .clazz-item-p2 .clazz-teacher-name >span {
   display: inline-block;
-  line-height :30px;
-  vertical-align :super;
-  margin-left:5px;
+  line-height: 30px;
+  margin-left: 5px;
 }
 
 .clazz-item-p3 {
@@ -506,5 +510,80 @@ export default {
 
 .clazz-item-p3 .clazz-last-count {
   font-size: 180%;
+}
+
+.right-tab {
+  position: fixed;
+  top: 51px;
+  right: 0;
+  width: 65px;
+  z-index: 800;
+  height: 100%;
+  text-align: center;
+  background-color: #eee;
+  transition: all 0.3s;
+  box-shadow: -3px 0 11px rgba(0, 0, 0, 0.2);
+}
+
+.shopping-card-container {
+  height: inherit;
+  position: relative;
+  overflow-y: auto;
+}
+
+.right-tab:hover .right-tab_arrow {
+  opacity: 1;
+}
+
+.right-tab.open {
+  width: 268px;
+}
+
+.right-tab .right-tab_arrow {
+  opacity: 0;
+  background-color: #eee;
+  border-left: 1px solid #eee;
+  border-top: 1px solid #eee;
+  border-right: 1px solid #cecece;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  display: inline-block;
+  width: 16px;
+  height: 92px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  margin-top: -46px;
+  left: -18px;
+  -webkit-box-shadow: -7px 0 11px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -7px 0 11px rgba(0, 0, 0, 0.2);
+  box-shadow: -7px 0 11px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+
+.right-tab .right-tab_arrow .icon-bar {
+  padding: 39px 0px;
+  font-size: 12px;
+  color: #909399;
+}
+
+/*
+ * scroll_bar STYLE
+ */
+.scroll_bar::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #F5F5F5;
+  // display: none;
+}
+
+.scroll_bar::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+}
+
+.scroll_bar::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #cccccc;
 }
 </style>

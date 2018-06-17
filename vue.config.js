@@ -6,6 +6,7 @@ module.exports = {
       output: {
         publicPath: './'
       }
+      // devtool:'source-map'
     }
   },
   // configure webpack-dev-server behavior
