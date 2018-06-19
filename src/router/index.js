@@ -84,6 +84,11 @@ export default new Router({
           name: 'course_add',
           path: 'course/create',
           component: require('@/views/admin/course/AddCourse.vue').default
+        },
+        {
+          name: 'product_setting',
+          path: 'product/course',
+          component: require('@/views/admin/course/CoursePrice.vue').default
         }
 
       ]

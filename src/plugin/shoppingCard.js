@@ -6,6 +6,21 @@ class ShoppingCard {
                 return {
                     items: []
                 }
+            },
+            computed: {
+                amount() {
+                    let am = 0;
+                    this.items.forEach(item => {
+                        item.details.forEach(grade => {
+                            grade.terms.forEach(term => {
+                                if (term.course) {
+                                    am += parseFloat(term.course.price);
+                                }
+                            })
+                        });
+                    });
+                    return am;
+                }
             }
         });
         this._card.$on('added', (goods) => {
@@ -21,6 +36,9 @@ class ShoppingCard {
     get items() {
         return this._card.items;
     }
+    get amount(){
+        return this._card.amount;
+    }
     get emitter() {
         return this._card;
     }
@@ -28,7 +46,7 @@ class ShoppingCard {
         // let cardItem = {
         //     key: clazz.id,
         //     index: clazz,
-        //     details: []
+        //     details: [{grade:'',terms:[{}]}]
         // }
         this.items.push(cardItem);
         this.emitter.$emit('added', cardItem);

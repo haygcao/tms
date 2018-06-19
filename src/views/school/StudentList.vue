@@ -23,7 +23,7 @@
               <div class="student-item block" v-for="student in studentList.rows" :key="student.id">
                 <div class="tag-student-state" :class="{'active':isStudy(student)}"><span class="student-state-text">{{isStudy(student)?'在学':'不在学'}}</span></div>
                 <div class="col-1">
-                  <img class="img-circle" :src="student.avatar_url?student.avatar_url:require('@/assets/img/default_student_avatar.png')"
+                  <img class="img-circle" :src="student.avatar_url?student.avatar_url:(student.gender==1?student_avatar_boy:student_avatar_girl)"
                                   :alt="student.name">
                   <i style="float:right" :class="[student.gender==1 ? 'icon-gender-male student-gender-male' : 'icon-gender-female student-gender-female']" class="emp-gender icon iconfont "></i>
                   <div class="student-fileds">{{student.name}}</div>
@@ -47,14 +47,14 @@
                     <div>
                         <el-button :disabled="!isStudy(student)" @click="onShiftSchedule(student)" class="mr-10" size="small" type="primary">调课</el-button>
                         <el-dropdown trigger="click" size="small">
-                            <el-button type="danger" size="small" :disabled="!isStudy(student)">
+                            <el-button type="danger" size="small">
                                 更多<i class="el-icon-arrow-down el-icon--right"></i>
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item><a @click="onUpdateStudent(student)">修改资料</a></el-dropdown-item>
-                                <el-dropdown-item divided><a @click="onResetPassword(student)" type="danger">重置密码</a></el-dropdown-item>
-                                <el-dropdown-item divided><a @click="onLockStudent(student)" type="danger" size="small">锁定</a></el-dropdown-item>
-                                <el-dropdown-item divided><a @click="onShiftClazz(student)" type="danger" size="small">转班</a></el-dropdown-item>
+                                <el-dropdown-item><a @click="onResetPassword(student)" type="danger">重置密码</a></el-dropdown-item>
+                                <el-dropdown-item   :disabled="!isStudy(student)"><a @click="onLockStudent(student)" type="danger" size="small">锁定</a></el-dropdown-item>
+                                <el-dropdown-item divided :disabled="!isStudy(student)"><a @click="onShiftClazz(student)" type="danger" size="small">转班</a></el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -149,7 +149,9 @@ export default {
       loading: false,
       selectedStudentId: undefined,
       dialogAddStudentVisible: false,
-      addStudentMode: "edit"
+      addStudentMode: "edit",
+      student_avatar_girl:require('@/assets/img/student_0.png'),
+      student_avatar_boy:require('@/assets/img/student_1.png')
     };
   },
   watch: {

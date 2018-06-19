@@ -98,7 +98,7 @@
                         trigger="hover">
                           <div class="teacher-dialog">
                               <div class="teacher-info">
-                              <div class="text-center"><img class="img-circle" :src="teacher_info.avatar_url?teacher_info.avatar_url:require('@/assets/img/default_teacher_avatar.png')"  :alt="teacher_info.name"></div>
+                              <div class="text-center"><img class="img-circle" :src="teacher_info.avatar_url?teacher_info.avatar_url:(teacher_info.gender==1?teacher_avatar_man:teacher_avatar_woman)"  :alt="teacher_info.name"></div>
                               <p class="text-center">{{teacher_info.name}}</p>
                             <div class="info-element">
                               <h4>毕业院校</h4>
@@ -115,7 +115,7 @@
                             </div>
                           </div>
                              <span class="clazz-teacher-name" slot="reference"> 
-                               <img class="img-circle small" :src="clazz.teacher.avatar_url?clazz.teacher.avatar_url:require('@/assets/img/default_teacher_avatar.png')"
+                               <img class="img-circle small" :src="clazz.teacher.avatar_url?clazz.teacher.avatar_url:(clazz.teacher.gender==1?teacher_avatar_man:teacher_avatar_woman)"
                                   :alt="clazz.teacher.name">
                                 <span>{{clazz.teacher.name}}</span>
                              </span>
@@ -172,7 +172,7 @@
       <div class="right-tab_arrow" @click="onToggleTabOpen"><span :class="tab_arrow_class" class="icon-bar"></span></div>
         <div class="card-title"><h3>已选课程</h3></div>
       <div class="shopping-card-container scroll_bar">
-        <shopping-card ref="shoppingCard"></shopping-card>
+        <shopping-card :width="rightTabWidth" ref="shoppingCard"></shopping-card>
       </div>
     </div>
   </div>
@@ -233,7 +233,9 @@ export default {
       operate_mode: "create",
       dialogFormVisible: false,
       rightTabOpened: false,
-      rightTabWidth: "65px"
+      rightTabWidth: "65px",
+      teacher_avatar_man:require('@/assets/img/teacher_1.png'),
+      teacher_avatar_woman:require('@/assets/img/teacher_0.png')
     };
   },
   computed: {
@@ -385,7 +387,6 @@ export default {
   border-radius: 50%;
   text-align: center;
   vertical-align: middle;
-  margin: auto 2px;
 }
 
 .img-circle.small {

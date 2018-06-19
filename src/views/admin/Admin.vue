@@ -41,7 +41,10 @@
             <i class="el-icon-menu"></i>
             <span slot="title">课程管理</span>
         </el-menu-item>
-
+        <el-menu-item index="/admin/product/course">
+            <i class="el-icon-menu"></i>
+            <span slot="title">课程价格</span>
+        </el-menu-item>
     </el-menu>
     </el-aside>
       <el-main>
@@ -66,7 +69,7 @@ export default {
       isCollapse: false,
       activeIndex: "1",
       activeIndex2: "1",
-      memuWidth:'200px'
+      memuWidth: "200px"
     };
   },
   computed: {
@@ -74,6 +77,11 @@ export default {
       console.log(this.$auth.user);
       return this.$auth.user;
     }
+  },
+  created() {
+    this.$nextTick(() => {
+      window.__app_tms_loaded = true;
+    });
   },
   methods: {
     logout() {
@@ -169,6 +177,7 @@ export default {
         margin-bottom: 0;
     }
 }
+
 .admin .header .nav {
     float: right;
     height: 100%;

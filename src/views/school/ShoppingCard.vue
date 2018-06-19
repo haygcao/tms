@@ -69,8 +69,9 @@
             </div>
         </div>
         </div>
-        <div class="card-bottom" :style="{'width':card_width}">
-            <el-button type="danger" class="card-submit-button">提交</el-button>
+        <div class="card-bottom" :style="{'width':width}">
+            <strong><em>&yen;</em><span>{{amount}}</span></strong>
+            <el-button type="danger" class="card-submit-button">结算</el-button>
         </div>
     </div>
 </template>
@@ -78,6 +79,9 @@
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   name: "shopping-card",
+  props: {
+    width: { type: String }
+  },
   data() {
     return {
       loadding_course: false,
@@ -95,6 +99,9 @@ export default {
     ]),
     card() {
       return this.$shoppingCard.items;
+    },
+    amount(){
+              return this.$shoppingCard.amount;
     }
   },
   created() {
@@ -103,8 +110,8 @@ export default {
   activated() {},
   mounted() {
     this.$nextTick(() => {
-        // console.log(this.$refs["shoppingCard"].offsetWidth)
-    //   this.card_width = this.$refs["shoppingCard"].offsetWidth+'px';
+      // console.log(this.$refs["shoppingCard"].offsetWidth)
+      //   this.card_width = this.$refs["shoppingCard"].offsetWidth+'px';
     });
   },
   methods: {
@@ -158,72 +165,79 @@ export default {
       //根据班级 ，获取所有待售课程
       this.fetchCourseLesson({ clazz_id: clazz.id }).then(res => {
         if (res && res.data) {
-          let availableCourseList = [];
           let allCourse = res.data;
-          //筛选可选课程加入购物车，选择同学科，同班型，>=当前年级 的所有学期课程
-          let subject_setting = this.course_settings.find(
-            c => c.key == clazz.subject
-          );
-          let grades = subject_setting.grades;
-          let currentGradeIdx = grades.findIndex(g => g.key == clazz.grade);
-          //选择年级>=当前班所在年级的课程
-          let availableGrades = grades.slice(currentGradeIdx) || [];
-
-          for (let i = 0; i < availableGrades.length; i++) {
-            var g = availableGrades[i];
-            let current_grade = {
-              grade: g.key,
-              terms: []
-            };
-            var terms = []; //g.terms.map(t => t.key);
-            if (clazz.term < 5) {
-              //兼容老数据
-              //暑，秋，寒，春，
-              terms = ["1", "2", "3", "4"];
-            } else if (clazz.term == 5 || clazz.term == 6) {
-              //暑秋，寒春，
-              terms = ["5", "6"];
-            } else if (clazz.term == 7) {
-              //全年
-              terms = ["7"];
-            }
-            terms.forEach(t => {
-              let c = allCourse.find(
-                v =>
-                  v.term == t &&
-                  v.grade == current_grade.grade &&
-                  v.class_type == clazz.class_type
-              );
-              if (
-                clazz.grade == current_grade.grade &&
-                parseInt(clazz.term) < parseInt(t)
-              ) {
-                c = null;
-              }
-              let current_term = { term: t, course: c, checked: !!c };
-              if (c) {
-                current_term.available_lesson_count = c.total_lesson_number;
-                if (c.grade == clazz.grade && c.term == clazz.term) {
-                  current_term.available_lesson_count =
-                    clazz.total_lesson_number - clazz.current_lesson_number;
-                }
-              } else {
-                current_term.available_lesson_count = 0;
-              }
-              current_grade.terms.push(current_term);
-            });
-
-            availableCourseList.push(current_grade);
-          }
-          let cardItem = {
-            key: clazz.id,
-            index: clazz,
-            length: availableGrades.length,
-            details: availableCourseList
-          };
+          let cardItem = this._packCardItem(allCourse, clazz);
           this.$shoppingCard.add(cardItem);
+        } else {
+          this.$message.error("课程获取失败");
         }
       });
+    },
+    _packCardItem(allCourse, clazz) {
+      let availableCourseList = [];
+
+      //筛选可选课程加入购物车，选择同学科，同班型，>=当前年级 的所有学期课程
+      let subject_setting = this.course_settings.find(
+        c => c.key == clazz.subject
+      );
+      let grades = subject_setting.grades;
+      let currentGradeIdx = grades.findIndex(g => g.key == clazz.grade);
+      //选择年级>=当前班所在年级的课程
+      let availableGrades = grades.slice(currentGradeIdx) || [];
+
+      for (let i = 0; i < availableGrades.length; i++) {
+        var g = availableGrades[i];
+        let current_grade = {
+          grade: g.key,
+          terms: []
+        };
+        var terms = []; //g.terms.map(t => t.key);
+        if (clazz.term < 5) {
+          //兼容老数据
+          //暑，秋，寒，春，
+          terms = ["1", "2", "3", "4"];
+        } else if (clazz.term == 5 || clazz.term == 6) {
+          //暑秋，寒春，
+          terms = ["5", "6"];
+        } else if (clazz.term == 7) {
+          //全年
+          terms = ["7"];
+        }
+        terms.forEach(t => {
+          let c = allCourse.find(
+            v =>
+              v.term == t &&
+              v.grade == current_grade.grade &&
+              v.class_type == clazz.class_type
+          );
+          if (
+            clazz.grade == current_grade.grade &&
+            parseInt(clazz.term) < parseInt(t)
+          ) {
+            c = null;
+          }
+          let current_term = { term: t, course: c, checked: !!c };
+          if (c) {
+            current_term.available_lesson_count = c.total_lesson_number;
+            if (c.grade == clazz.grade && c.term == clazz.term) {
+              current_term.available_lesson_count =
+                clazz.total_lesson_number - clazz.current_lesson_number;
+            }
+          } else {
+            current_term.available_lesson_count = 0;
+          }
+          current_grade.terms.push(current_term);
+        });
+
+        availableCourseList.push(current_grade);
+      }
+      let cardItem = {
+        key: clazz.id,
+        index: clazz,
+        length: availableGrades.length,
+        details: availableCourseList
+      };
+      return cardItem;
     },
     onRemoveFromCard(item) {
       this.$shoppingCard.remove(item);
@@ -250,6 +264,9 @@ export default {
           }, 0)
         );
       }, 0);
+    },
+    total_amount(card) {
+      return 2000.0;
     }
   }
 };
@@ -411,12 +428,13 @@ export default {
     position: fixed;
     bottom: 0px;
     background-color: #ffffff;
+    overflow: hidden;
 }
-.card-submit-button{
-    float:right;
-    border:none;
-    border-radius:0;
-    letter-spacing :5px;
+
+.card-submit-button {
+    float: right;
+    border: none;
+    border-radius: 0;
 }
 </style>
 
