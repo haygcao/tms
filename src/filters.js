@@ -1,24 +1,20 @@
 import * as constants from "@/lib/constants";
 import moment from 'moment';
+import Currency from 'currency.js';
 const { ClassType, SubjectName, Terms, Grade, ClazzState } = constants
 export const capitalize = function (value) {
     if (!value) return ''
     value = value.toString()
     return value.charAt(0).toUpperCase() + value.slice(1)
 }
-function formatMoney(number, places, symbol, thousand, decimal) {
-    number = number || 0;
-    places = !isNaN(places = Math.abs(places)) ? places : 2;
-    symbol = symbol !== undefined ? symbol : "$";
-    thousand = thousand || ",";
-    decimal = decimal || ".";
-    var negative = number < 0 ? "-" : "",
-        i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+
+export const formatCurrency = (val, _symbol) => {
+    let currency = Currency(val, { symbol: _symbol, formatWithSymbol: true })
+    return currency.format(!!_symbol)
 }
 export const money = (val) => {
-    return formatMoney(val, 2, '¥', '');
+    const CNY = "¥";
+    return formatCurrency(val, CNY);
 }
 export const numberToCn = function (number) {
     var SYMBOLS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
@@ -79,13 +75,12 @@ export const numberToCn = function (number) {
 
 
 export const toDateTimeString = (time) => {
-    // console.log('^^^^^^^^^^^',time);
     if (!time) return '';
-    return new Date(time).Format("yyyy-MM-dd hh:mm")
+    return formatDateTime(time).format("yyyy-MM-dd hh:mm")
 }
 export const toTimeString = (time) => {
     if (!time) return '';
-    return new Date(time).Format("MM月dd日 hh时mm分ss秒")
+    return moment.format("MM月DD日 hh时mm分ss秒")
 }
 export const toShortTimeString = (time) => {
     if (!time) return '';
@@ -93,11 +88,10 @@ export const toShortTimeString = (time) => {
         time = '1900-01-01 ' + time;
     }
     return moment(time).format("h:mm");
-    // return new Date(time).Format("hh:mm")
 }
 export const toDateString = (time) => {
     if (!time) return '';
-    return new Date(time).Format("yyyy/MM/dd")
+    return moment(time).format("YYYY/MM/DD")
 }
 export const formatDateTime = (date, format = 'YYYY/MM/DD') => {
     return moment(date).format(format);

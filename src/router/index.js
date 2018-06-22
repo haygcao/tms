@@ -76,6 +76,11 @@ export default new Router({
           component: require('@/views/admin/AddSchool.vue').default
         },
         {
+          name: 'course_list_default',
+          path: 'course/list',
+          redirect:'/admin/course/list/1',
+        },
+        {
           name: 'course_list',
           path: 'course/list/:page(\\d+)',
           component: require('@/views/admin/course/CourseList.vue').default
@@ -89,7 +94,13 @@ export default new Router({
           name: 'product_setting',
           path: 'product/course',
           component: require('@/views/admin/course/CoursePrice.vue').default
+        },
+        {
+          name: 'courseware_setting',
+          path: 'courseware/list',
+          component: require('@/views/admin/courseware/Courseware.vue').default
         }
+
 
       ]
     },

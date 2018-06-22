@@ -94,4 +94,41 @@ a:hover {
     color: #409EFF;
 }
 
-/****search filter box*****/
+/*
+ * scroll_bar STYLE
+ */
+
+.scroll_bar::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #F5F5F5;
+}
+
+.scroll_bar::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+
+.scroll_bar::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #cccccc;
+}
+
+/*********list transition*******/
+
+.list-enter-active, .list-leave-active {
+    transition: all .3s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.list-enter, .list-leave-to {
+    opacity: 0;
+    transform: translateY(100px);
+}
+
+.list-move {
+    transition: transform 1s;
+}
+
+.list-leave-active {
+    position: absolute;
+}

@@ -1,7 +1,7 @@
 import axios from 'axios';
 async function list(payload) {
     try {
-        const response = await axios.get('/api/product/list', {
+        const response = await axios.get('/resource/courseware/list', {
             params: payload
         });
         return response.data;
@@ -13,7 +13,7 @@ async function list(payload) {
 
 async function fetch(payload) {
     try {
-        const response = await axios.get('/api/product/fetch', {
+        const response = await axios.get('/resource/courseware/fetch', {
             params: payload
         });
         return response.data;
@@ -22,9 +22,20 @@ async function fetch(payload) {
     }
 
 }
+async function remove(payload) {
+    try {
+        const response = await axios.get('/resource/courseware/remove', {
+            params: payload
+        });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '删除失败' }
+    }
+
+}
 async function create(payload) {
     try {
-        const response = await axios.post('/api/product/create', payload);
+        const response = await axios.post('/resource/courseware/create', payload);
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
@@ -33,7 +44,7 @@ async function create(payload) {
 }
 async function update(payload) {
     try {
-        const response = await axios.post('/api/product/update', payload);
+        const response = await axios.post('/resource/courseware/update', payload);
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
@@ -45,4 +56,5 @@ export default {
     create,
     fetch,
     update,
+    remove,
 }

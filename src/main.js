@@ -12,6 +12,7 @@ import * as filters from '@/filters'
 import vueHeadful from 'vue-headful';
 import ShoppingCard from './plugin/shoppingCard'
 import EmptyDataView from '@/components/EmptyDataView.vue'
+import CNY from '@/components/CNY.vue'
 // 实例化Vue的filter
 Object.keys(filters).forEach(k => {
   // console.log('filter', k)
@@ -33,6 +34,8 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.component('vue-headful', vueHeadful);
 Vue.component('empty-data-view', EmptyDataView);
+Vue.component('cny',CNY);
+
 new Vue({
   router,
   store,

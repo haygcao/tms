@@ -1,4 +1,14 @@
-
+class ShoppingCardItem {
+    constructor({ category, index, product, quantity, details }) {
+        this.index = index;
+        this.key = index.id || '';
+        this.category = category || 'clazz';
+        this.product = product;
+        this.quantity = quantity || 1;
+        this.details = details;
+        this.showDetail=false;
+    }
+}
 class ShoppingCard {
     constructor(Vue) {
         this._card = new Vue({
@@ -36,7 +46,7 @@ class ShoppingCard {
     get items() {
         return this._card.items;
     }
-    get amount(){
+    get amount() {
         return this._card.amount;
     }
     get emitter() {
@@ -46,7 +56,8 @@ class ShoppingCard {
         // let cardItem = {
         //     key: clazz.id,
         //     index: clazz,
-        //     details: [{grade:'',terms:[{}]}]
+        //     product:{info:{subject,class_type,price},quantity:20}
+        //     details: [{grade:'A1',terms:[{term:'1',course:{courseObject},available_lesson_count,$checked}]}]
         // }
         this.items.push(cardItem);
         this.emitter.$emit('added', cardItem);
@@ -60,10 +71,13 @@ class ShoppingCard {
         let removed = this.items.splice(idx, 1);
         this.emitter.$emit('removed', removed);
     }
-    // replace(clazz) {
-    //     this.remove(clazz);
-    //     this.add(clazz);
-    // }
+    changeQuantityByYears(cardItem, year) {
+        if (year == 0) {
+            // let subject = this.items.find(v => v.key == cardItem.key);
+            // subject[]
+            cardItem.details[0][0].$checked = true;
+        }
+    }
 
 }
 function plugin(Vue, options) {
@@ -75,13 +89,18 @@ function plugin(Vue, options) {
     options = options || {};
 
     Vue.ShoppingCard = new ShoppingCard(Vue, options)
-
+    Vue.ShoppingCardItem = ShoppingCardItem;
 
     Object.defineProperties(Vue.prototype, {
 
         $shoppingCard: {
             get() {
                 return Vue.ShoppingCard;
+            }
+        },
+        $shoppingCardItem: {
+            get() {
+                return Vue.ShoppingCardItem;
             }
         }
 

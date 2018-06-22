@@ -1,13 +1,14 @@
 import api from '@/api'
 // import * as types from '../mutation_types'
 
-const { product } = api;
+const { courseware } = api;
 //mutations types
 const mutations_types = {
-    fetched: "product/fetched",
-    created: "product/create",
-    updated: "product/updated",
-    list: "product/list"
+    fetched: "courseware/fetched",
+    created: "courseware/create",
+    updated: "courseware/updated",
+    removed: "courseware/removed",
+    list: "courseware/list"
 }
 
 
@@ -15,7 +16,7 @@ const state = {
     list: {},
     create_reulst: {},
     update_result: {},
-    fetched_product:{}
+    fetched_courseware:{}
 }
 
 const getters = {
@@ -23,28 +24,33 @@ const getters = {
 }
 const actions = {
 
-    async createProduct({ commit, state }, payload) {
-        let res = await product.create(payload);
+    async createCourseware({ commit, state }, payload) {
+        let res = await courseware.create(payload);
         // await this.dispatch('provinces');
         commit(mutations_types.created, { res })
         return Promise.resolve(res)
 
     },
-    async updateProduct({ commit, state, getters }, payload) {
+    async updateCourseware({ commit, state, getters }, payload) {
         // let res = getters.children('1')
-        let res = await product.update(payload);
+        let res = await courseware.update(payload);
         commit(mutations_types.updated, { res });
         return Promise.resolve(res)
 
     },
-    async getProductList({ commit, state, getters }, payload) {
-        let res = await product.list(payload);
+    async getCoursewareList({ commit, state, getters }, payload) {
+        let res = await courseware.list(payload);
         commit(mutations_types.list, { res })
 
     },
-    async getProduct({ commit, state, getters }, payload) {
-        let res = await product.fetch(payload);
+    async getCourseware({ commit, state, getters }, payload) {
+        let res = await courseware.fetch(payload);
         commit(mutations_types.fetched, { res });
+        return Promise.resolve(res)
+    },
+    async removeCourseware({ commit, state, getters }, payload) {
+        let res = await courseware.remove(payload);
+        commit(mutations_types.removed, { res });
         return Promise.resolve(res)
     },
 }
@@ -60,7 +66,9 @@ const mutations = {
         state.list = res;
     },
     [mutations_types.fetched](state, { res }) {
-        state.fetched_product = res;
+        state.fetched_courseware = res;
+    },
+    [mutations_types.removed](state, { res }) {
     },
 }
 export default {

@@ -29,9 +29,9 @@
       <el-col :span="12">
         <div style="float:right">
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link">
+        <el-button class="el-dropdown-link">
           {{(yearOptions.find(p=>p.key==searchForm.year)||{}).name||yearOptions[0].name}}<i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
+        </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item v-for="item in yearOptions" :key="item.name">
             <router-link :class="{'active':searchForm.year==item.key}" :to="{name:$route.name,params:{page:1},query:Object.assign({},searchForm,{year:item.key})}">{{item.name}}</router-link>
@@ -39,9 +39,9 @@
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link">
+        <el-button class="el-dropdown-link">
           {{(beginDateOptions.find(p=>p.key==searchForm.begin_date)||{}).name||beginDateOptions[0].name}}<i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
+        </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item v-for="item in beginDateOptions" :key="item.name">
             <router-link :class="{'active':searchForm.begin_date==item.key}" :to="{name:$route.name,params:{page:1},query:Object.assign({},searchForm,{begin_date:item.key})}">{{item.name}}</router-link>
@@ -49,9 +49,9 @@
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link">
+        <el-button class="el-dropdown-link">
           {{(beginTimeOptions.find(p=>p.key==searchForm.class_begin_time)||{}).name||beginTimeOptions[0].name}}<i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
+        </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item v-for="item in beginTimeOptions" :key="item.name">
             <router-link :class="{'active':searchForm.class_begin_time==item.key}" :to="{name:$route.name,params:{page:1},query:Object.assign({},searchForm,{class_begin_time:item.key})}">{{item.name}}</router-link>
@@ -65,6 +65,7 @@
 
     <el-row class="">
       <div class="clazz-list">
+        <transition-group name="list" tag="div">
         <div class="clazz-item block" v-for="clazz in clazzList.rows" :key="clazz.id">
           <div class="clazz-item-p1">
             <div>{{clazz.begin_date|formatDateTime(' M月D日')}}-{{clazz.finish_date|formatDateTime(' M月D日')}}</div>
@@ -137,6 +138,7 @@
             </div>
           </div>
         </div>
+        </transition-group>
       </div>
       <empty-data-view v-show="clazzList.count==0"></empty-data-view>
     </el-row>
@@ -170,9 +172,8 @@
     </el-dialog>
     <div class="right-tab" :style="{'width':rightTabWidth}" >
       <div class="right-tab_arrow" @click="onToggleTabOpen"><span :class="tab_arrow_class" class="icon-bar"></span></div>
-        <div class="card-title"><h3>已选课程</h3></div>
       <div class="shopping-card-container scroll_bar">
-        <shopping-card :width="rightTabWidth" ref="shoppingCard"></shopping-card>
+        <shopping-card :display="rightTabOpened?'detail':'summary'" :width="rightTabWidth" ref="shoppingCard"></shopping-card>
       </div>
     </div>
   </div>
@@ -257,7 +258,10 @@ export default {
       return this.rightTabOpened
         ? "el-icon-d-arrow-right"
         : "el-icon-d-arrow-left";
-    }
+    },
+    card() {
+      return this.$shoppingCard.items;
+    },
   },
   beforeRouteUpdate(to, from, next) {
     // react to route changes...
@@ -298,11 +302,13 @@ export default {
     ...mapActions({
       getClazzList: "searchVisibledClazzList",
       getTeacherInfo: "getTeacherInfo",
-      getClazzById: "getClazzById"
+      getClazzById: "getClazzById",
+      fetchCourseLesson: "fetchCourseLesson",
+      getProduct: "getProduct"
     }),
 
     handleEnrollmentClick(data) {
-      this.$refs["shoppingCard"].addToCard(data);
+      this.$refs["shoppingCard"].addClazzToCard(data);
 
       // this.$router.push({ name: "create_order", query: { clazz_id: data.id } });
     },
@@ -566,25 +572,5 @@ export default {
   padding: 39px 0px;
   font-size: 12px;
   color: #909399;
-}
-
-/*
- * scroll_bar STYLE
- */
-.scroll_bar::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-  background-color: #F5F5F5;
-  // display: none;
-}
-
-.scroll_bar::-webkit-scrollbar {
-  width: 6px;
-  background-color: #F5F5F5;
-}
-
-.scroll_bar::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #cccccc;
 }
 </style>

@@ -13,7 +13,7 @@
           placement="bottom"
           width="320"
           trigger="click">
-          <el-form size="small" :model="createProductForm" label-position="top" ref="createProductForm">
+          <el-form size="small" :rules="createProductRules" :model="createProductForm" label-position="top" ref="createProductForm">
             <el-form-item label="学科" prop="subject">
                 <el-select v-model="createProductForm.subject">
                     <el-option v-for="item in course_settings" :key="item.key" :label="item.name" :value="item.key.toString()"></el-option>
@@ -82,13 +82,6 @@
     </el-table-column>
   </el-table>
   </el-row>
-   <!-- <el-dialog :visible.sync="dialogAddProductVisible" :close-on-click-modal="false" center >
-            <h2 slot="title">修改员工信息</h2>
-            <keep-alive>
-            <edit-employee mode="edit" :employeeId="selectedEmployee.id"  v-if="dialogEditEmployeeVisible" 
-            @success="onEditEmployeeSuccess" @cancel="dialogAddStudentVisible=false"></edit-employee>
-            </keep-alive>
-  </el-dialog> -->
     </div>
 </template>
 <script>

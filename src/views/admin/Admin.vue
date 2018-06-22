@@ -37,12 +37,16 @@
             <el-menu-item index="/admin/franchisee/create">新建加盟校</el-menu-item>
             
         </el-submenu>
-        <el-menu-item index="/admin/course/list">
-            <i class="el-icon-menu"></i>
+         <el-menu-item index="/admin/courseware/list">
+            <i class="el-icon-picture"></i>
+            <span slot="title">课件管理</span>
+        </el-menu-item>
+        <el-menu-item index="/admin/course/list/1">
+            <i class="el-icon-date"></i>
             <span slot="title">课程管理</span>
         </el-menu-item>
         <el-menu-item index="/admin/product/course">
-            <i class="el-icon-menu"></i>
+            <i class="el-icon-goods"></i>
             <span slot="title">课程价格</span>
         </el-menu-item>
     </el-menu>
