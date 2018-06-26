@@ -104,6 +104,11 @@ export default new Router({
           name: 'courseware_setting',
           path: 'courseware/list',
           component: require('@/views/admin/courseware/Courseware.vue').default
+        },
+        {
+          name: 'homework_setting',
+          path: 'homework/list',
+          component: require('@/views/admin/homework/Homework.vue').default
         }
 
 

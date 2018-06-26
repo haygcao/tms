@@ -51,9 +51,32 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="单价">
+      label="作业">
        <template slot-scope="scope">
-          {{ scope.row.price|money }}
+         <span style="margin-right:15px;"> {{ scope.row.homework?scope.row.homework.name:'无' }}</span>
+        <el-popover
+          placement="bottom"
+          width="320"
+          trigger="click">
+          <el-form size="small" :model="homeworkForm" :rules="homeworkFormRules" label-position="top" :ref="scope.row.id">
+              <el-form-item label="作业">
+                    <el-select v-model="homeworkForm.homework_id" filterable="" placeholder="请选择">
+                        <el-option
+                        v-for="item in homeworkList"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                        </el-option>
+                    </el-select>
+              </el-form-item>
+            
+            <el-form-item>
+                <el-button type="danger" @click="submitHomework">确定</el-button>
+              </el-form-item>
+          </el-form>
+        <el-button slot="reference" @click="onSetHomework(scope.row)" icon="el-icon-edit" type="text" size="small">设置</el-button>
+        </el-popover>
+        <p>{{scope.row.homework?scope.row.homework.absolute_url:''}}</p>
       </template>
     </el-table-column>
   </el-table>
@@ -75,6 +98,16 @@ export default {
           { required: true, message: "请选择课件", trigger: "blur" }
         ]
       },
+      homeworkForm: {
+        id: undefined,
+        course_id: undefined,
+        homework_id: undefined
+      },
+      homeworkFormRules: {
+        homework_id: [
+          { required: true, message: "请选择作业", trigger: "blur" }
+        ]
+      },
       course_id: undefined,
       subject: undefined
     };
@@ -82,8 +115,8 @@ export default {
   computed: {
     ...mapState({
       course: state => state.course.detail.data || {},
-      coursewareList: state => state.courseware.list.data || []
-      // regions: state => state.region.regions
+      coursewareList: state => state.courseware.list.data || [],
+      homeworkList: state => state.homework.list.data || []
     }),
     ...mapGetters([
       "terms",
@@ -99,14 +132,15 @@ export default {
     this.subject = this.$route.query.subject;
     this.getCourseDetail({ id: this.course_id });
     this.getCoursewareList({ subject: this.subject });
+    this.getHomeworkList({ subject: this.subject });
   },
   methods: {
     ...mapActions({
       getCourseDetail: "getCourseDetail",
       getCoursewareList: "getCoursewareList",
-      setCourseware: "setCourseware"
-      //   createProduct: "createProduct",
-      //   updateProduct: "updateProduct"
+      setCourseware: "setCourseware",
+      getHomeworkList: "getHomeworkList",
+      setHomework: "setHomework",
     }),
     filterCourseware() {},
     onSetCourseware(val) {
@@ -124,8 +158,36 @@ export default {
       this.$refs[this.coursewareForm.id].validate(valid => {
         if (valid) {
           let payload = Object.assign({}, this.coursewareForm);
-          payload.price = parseInt(payload.price);
           this.setCourseware(payload).then(res => {
+            if (res && res.code == 0) {
+              this.$message.success("保存成功 ");
+              this.getCourseDetail({ id: this.course_id });
+            } else {
+              this.$message.error("保存失败  " + res.message);
+            }
+          });
+        } else {
+          //   console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    onSetHomework(val) {
+      this.homeworkForm = {
+        homework_id: undefined,
+        id: val.id,
+        course_id: this.course_id
+      };
+    },
+    submitHomework() {
+      let self = this;
+      if (!this.$refs[this.homeworkForm.id]) {
+        return false;
+      }
+      this.$refs[this.homeworkForm.id].validate(valid => {
+        if (valid) {
+          let payload = Object.assign({}, this.homeworkForm);
+          this.setHomework(payload).then(res => {
             if (res && res.code == 0) {
               this.$message.success("保存成功 ");
               this.getCourseDetail({ id: this.course_id });

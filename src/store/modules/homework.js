@@ -1,14 +1,14 @@
 import api from '@/api'
 // import * as types from '../mutation_types'
 
-const { courseware } = api;
+const { homework } = api;
 //mutations types
 const mutations_types = {
-    fetched: "courseware/fetched",
-    created: "courseware/create",
-    updated: "courseware/updated",
-    removed: "courseware/removed",
-    list: "courseware/list"
+    fetched: "homework/fetched",
+    created: "homework/create",
+    updated: "homework/updated",
+    removed: "homework/removed",
+    list: "homework/list"
 }
 
 
@@ -16,7 +16,7 @@ const state = {
     list: {},
     create_reulst: {},
     update_result: {},
-    fetched_courseware:{}
+    fetched_homework:{}
 }
 
 const getters = {
@@ -24,33 +24,33 @@ const getters = {
 }
 const actions = {
 
-    async createCourseware({ commit, state }, payload) {
-        let res = await courseware.create(payload);
+    async createHomework({ commit, state }, payload) {
+        let res = await homework.create(payload);
         // await this.dispatch('provinces');
         commit(mutations_types.created, { res })
         return Promise.resolve(res)
 
     },
-    async updateCourseware({ commit, state, getters }, payload) {
+    async updateHomework({ commit, state, getters }, payload) {
         // let res = getters.children('1')
-        let res = await courseware.update(payload);
+        let res = await homework.update(payload);
         commit(mutations_types.updated, { res });
         return Promise.resolve(res)
 
     },
-    async getCoursewareList({ commit, state, getters }, payload) {
-        let res = await courseware.list(payload);
+    async getHomeworkList({ commit, state, getters }, payload) {
+        let res = await homework.list(payload);
         commit(mutations_types.list, { res })
 
     },
-    async getCourseware({ commit, state, getters }, payload) {
-        let res = await courseware.fetch(payload);
+    async getHomework({ commit, state, getters }, payload) {
+        let res = await homework.fetch(payload);
         commit(mutations_types.fetched, { res });
         return Promise.resolve(res)
     },
-    async removeCourseware({ commit, state, getters }, payload) {
-        let res = await courseware.remove(payload);
-        // commit(mutations_types.removed, { res });
+    async removeHomework({ commit, state, getters }, payload) {
+        let res = await homework.remove(payload);
+        commit(mutations_types.removed, { res });
         return Promise.resolve(res)
     },
 }
@@ -66,7 +66,7 @@ const mutations = {
         state.list = res;
     },
     [mutations_types.fetched](state, { res }) {
-        state.fetched_courseware = res;
+        state.fetched_homework = res;
     },
     [mutations_types.removed](state, { res }) {
     },

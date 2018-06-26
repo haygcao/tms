@@ -31,6 +31,11 @@ const actions = {
         let res = await course.setCourseware(payload);
         return Promise.resolve(res)
         // commit(mutations_types.detail, { res })
+    },
+    async setHomework({ commit, state, getters }, payload) {
+        let res = await course.setHomework(payload);
+        return Promise.resolve(res)
+        // commit(mutations_types.detail, { res })
     }
 }
 const mutations = {

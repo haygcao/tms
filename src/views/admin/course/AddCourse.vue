@@ -16,7 +16,7 @@
             </el-form-item>
             <el-form-item label="学科" prop="subject">
                 <el-radio-group v-model="form.subject">
-                    <el-radio v-for="item in course_settings" :key="item.key" :label="item.key"  border>{{item.name}}</el-radio>
+                    <el-radio v-for="item in course_settings" :key="item.key" :label="item.key.toString()"  border>{{item.name}}</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="年级" prop="grade" >
@@ -43,9 +43,9 @@
             <el-form-item label="课次数" prop="total_lesson_number">
                 <el-input-number v-model="form.total_lesson_number" :min="1" :max="100" label="课次数"></el-input-number>
             </el-form-item>
-             <el-form-item label="课次单价(元)" prop="price" >
+             <!-- <el-form-item label="课次单价(元)" prop="price" >
                 <el-input type="number" v-model="form.price" style="width:200px;" :min="1" :max="100" label="课次单价"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">立即创建</el-button>
             </el-form-item>
@@ -68,7 +68,7 @@ export default {
         subject: 1,
         grade: undefined,
         class_type: undefined,
-        price: undefined,
+        // price: undefined,
         total_lesson_number: undefined,
         lesson_time: null
       },
@@ -83,14 +83,14 @@ export default {
         total_lesson_number: [
           { required: true, message: "请输入课次数", trigger: "blur" }
         ],
-        price: [
-          { required: true, message: "请输入课次单价", trigger: "blur" },
-          {
-            pattern: /^[0-9]\d*$/,
-            message: "请输入一个数字",
-            trigger: "blur"
-          }
-        ]
+        // price: [
+        //   { required: true, message: "请输入课次单价", trigger: "blur" },
+        //   {
+        //     pattern: /^[0-9]\d*$/,
+        //     message: "请输入一个数字",
+        //     trigger: "blur"
+        //   }
+        // ]
       },
       test_class_key: 99,
       test_class_lesson_time: { key: 480, name: "8h" }
@@ -165,7 +165,9 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           let payload = Object.assign({}, this.form);
-          payload.price = parseInt(payload.price);
+          // payload.terms=payload.Terms.toString();
+          // payload.subject=payload.subject.toString();
+          // payload.price = parseInt(payload.price);
           this.createCourse(payload);
         } else {
           //   console.log("error submit!!");

@@ -41,6 +41,10 @@
             <i class="el-icon-picture"></i>
             <span slot="title">课件管理</span>
         </el-menu-item>
+         <el-menu-item index="/admin/homework/list">
+            <i class="el-icon-time"></i>
+            <span slot="title">课程作业</span>
+        </el-menu-item>
         <el-menu-item index="/admin/course/list/1">
             <i class="el-icon-date"></i>
             <span slot="title">课程管理</span>

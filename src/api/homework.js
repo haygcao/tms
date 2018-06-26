@@ -1,58 +1,50 @@
 import axios from 'axios';
 async function list(payload) {
     try {
-        const response = await axios.get('/api/course/list', {
+        const response = await axios.get('/resource/homework/list', {
             params: payload
         });
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
+
+}
+
+async function fetch(payload) {
+    try {
+        const response = await axios.get('/resource/homework/fetch', {
+            params: payload
+        });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
+
+}
+async function remove(payload) {
+    try {
+        const response = await axios.get('/resource/homework/remove', {
+            params: payload
+        });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '删除失败' }
     }
 
 }
 async function create(payload) {
     try {
-        const response = await axios.post('/api/course/create', payload);
+        const response = await axios.post('/resource/homework/create', payload);
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
     }
 
 }
-async function fetch(payload) {
+async function update(payload) {
     try {
-        const response = await axios.get('/api/course/fetch', {
-            params: payload
-        });
-        return response.data;
-    } catch (err) {
-        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
-    }
-
-}
-async function detail(payload) {
-    try {
-        const response = await axios.get('/api/course/detail', {
-            params: payload
-        });
-        return response.data;
-    } catch (err) {
-        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
-    }
-
-}
-async function setCourseware(payload) {
-    try {
-        const response = await axios.post('/api/course/detail/set_courseware', payload);
-        return response.data;
-    } catch (err) {
-        return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
-    }
-
-}
-async function setHomework(payload) {
-    try {
-        const response = await axios.post('/api/course/detail/set_homework', payload);
+        const response = await axios.post('/resource/homework/update', payload);
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
@@ -63,8 +55,6 @@ export default {
     list,
     create,
     fetch,
-    detail,
-    setCourseware,
-    setHomework,
-    
+    update,
+    remove,
 }
