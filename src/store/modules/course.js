@@ -4,10 +4,12 @@ import { CLEAR_STATE } from '../mutation_types';
 const mutations_types = {
     course_list: "course/list",
     create: "course/create",
+    detail: "course/detail",
 }
 const state = {
     courseList: {},
     createResult: {},
+    detail:{},
 }
 const getters = {
 
@@ -20,6 +22,15 @@ const actions = {
     async createCourse({ commit, state, getters }, payload) {
         let res = await course.create(payload);
         commit(mutations_types.create, { res })
+    },
+    async getCourseDetail({ commit, state, getters }, payload) {
+        let res = await course.detail(payload);
+        commit(mutations_types.detail, { res })
+    },
+    async setCourseware({ commit, state, getters }, payload) {
+        let res = await course.setCourseware(payload);
+        return Promise.resolve(res)
+        // commit(mutations_types.detail, { res })
     }
 }
 const mutations = {
@@ -28,6 +39,9 @@ const mutations = {
     },
     [mutations_types.create](state, { res }) {
         state.createResult = res;
+    },
+    [mutations_types.detail](state, { res }) {
+        state.detail = res;
     },
     [CLEAR_STATE](state) {
         state = {

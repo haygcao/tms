@@ -11,34 +11,6 @@
   <el-row>
     <div class="block">
        <course-filter-box :searchForm="searchForm"></course-filter-box>
-      <!-- <div class="search-row">
-        <div class="search-row-title">学科</div>
-        <div class="search-conditions">
-        <router-link class="search-item" :to="{name:'course_list',params:{page:1},query:Object.assign({},searchForm,{subject:undefined})}">全部</router-link>
-        <router-link class="search-item" :to="{name:'course_list',params:{page:1},query:Object.assign({},searchForm,{subject:item.key})}" v-for="item in subjects" :key="item.key">{{item.name}}</router-link>
-        </div>
-      </div>
-      <div class="search-row">
-        <div class="search-row-title">年级</div>
-        <div class="search-conditions">
-        <router-link class="search-item" :to="{name:'course_list',params:{page:1},query:Object.assign({},searchForm,{grade:undefined})}">全部</router-link>
-        <router-link class="search-item" :to="{name:'course_list',params:{page:1},query:Object.assign({},searchForm,{grade:item.key})}" v-for="item in subjectGrades" :key="item.key">{{item.name}}</router-link>
-        </div>
-      </div>
-      <div class="search-row">
-        <div class="search-row-title">学期</div>
-        <div class="search-conditions">
-        <router-link class="search-item" :to="{name:'course_list',params:{page:1},query:Object.assign({},searchForm,{term:undefined})}">全部</router-link>
-        <router-link class="search-item" :to="{name:'course_list',params:{page:1},query:Object.assign({},searchForm,{term:item.key})}" v-for="item in terms" :key="item.key">{{item.name}}</router-link>
-        </div>
-      </div>
-      <div class="search-row">
-        <div class="search-row-title">班型</div>
-        <div class="search-conditions">
-        <router-link class="search-item" :to="{name:'course_list',params:{page:1},query:Object.assign({},searchForm,{class_type:undefined})}">全部</router-link>
-        <router-link class="search-item" :to="{name:'course_list',params:{page:1},query:Object.assign({},searchForm,{class_type:item.key})}" v-for="item in class_types" :key="item.key">{{item.name}}</router-link>
-        </div>
-      </div> -->
       </div>
   </el-row>
   <el-row>
@@ -193,10 +165,10 @@ export default {
     },
     handleClick(val) {
       // console.log(val);
-      // this.$router.push({
-      //   name: "franchisee_detail",
-      //   params: { franchisee_id: val.id }
-      // });
+      this.$router.push({
+        name: "course_detail",
+        query: { id: val.id, subject: val.subject }
+      });
     },
     handleDelClick(val) {
       let self = this;

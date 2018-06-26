@@ -78,3 +78,15 @@ export const Educations = [
     { name: '研究生/硕士', key: 'master' },
     { name: '博士', key: 'doctor' }
 ]
+
+
+export const OssConfig = {
+    region: 'oss-cn-beijing',
+    accessKeyId: 'LTAINyj3tqkqy64w',
+    accessKeySecret: 'TZoibtVyWiKNZcOEbLYQHn2jWIrbgC',
+    // stsToken: creds.SecurityToken,
+    bucket: 'reallyedu-course'
+}
+export const CoursewareBasePath = process.env.VUE_APP_CoursewareBasePath || "kj-test";
+export const STS_Server = process.env.VUE_APP_TMSAPI
+export const CoursewareDomain = 'https://s.reallyedu.com';

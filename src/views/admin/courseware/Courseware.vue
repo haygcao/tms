@@ -39,6 +39,7 @@
       >
     </el-table-column>
      <el-table-column
+     width="80"
       label="学科">
        <template slot-scope="scope">
           {{ scope.row.subject|subjectName }}
@@ -50,11 +51,16 @@
     </el-table-column>
     <el-table-column
       prop="version"
+      width="40"
       label="版本">
     </el-table-column>
     <el-table-column
       prop="size"
+      width="90"
       label="大小">
+       <template slot-scope="scope">
+           {{(scope.row.size/1024/1024).toFixed(2) }} MB
+       </template>
     </el-table-column>
     <el-table-column
       prop="md5"
@@ -63,7 +69,7 @@
     <el-table-column
       label="文件地址">
        <template slot-scope="scope">
-          <a href="scope.row.file_path">{{ scope.row.file_path }}</a>
+          <a target="_blank" :href="scope.row.absolute_url">{{ scope.row.absolute_url }}</a>
       </template>
     </el-table-column>
     <el-table-column
@@ -77,30 +83,46 @@
     </el-table-column>
   </el-table>
   </el-row>
-  <el-dialog title="添加课件" center :visible.sync="dialogCreateVisible" :close-on-click-modal="false"	>
-        <el-form style="max-width:480px;margin:0 auto;" size="medium" :rules="createRules" :model="createForm" label-width="100px" label-position="right" ref="createProductForm">
-            <el-form-item label="学科" prop="subject">
+  <el-dialog fullscreen="" title="添加课件" center :visible.sync="dialogCreateVisible" :close-on-click-modal="false"	>
+        <el-form style="max-width:480px;margin:0 auto;" size="medium" :rules="createRules" :model="createForm" label-width="100px" label-position="right" ref="createForm">
+             <el-form-item label="学科" prop="subject">
                 <el-select v-model="createForm.subject">
                     <el-option v-for="item in course_settings" :key="item.key" :label="item.name" :value="item.key.toString()"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="名称" prop="name" >
+             <el-form-item label="上传课件" prop="file_path" v-show="!uploaded&&createForm.subject">
+                <el-upload
+            class="upload-demo"
+            drag
+            action="http://reallyedu-course.oss-cn-beijing.aliyuncs.com/kj-test"
+            :show-file-list="false"
+            :onSuccess="uploadSuccess"
+            :on-progress="onUploadProgress"
+            :http-request="onUploadFile">
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+            <el-progress :percentage="uploadPercentage" :status="uploadStatus" color="#8e71c7"></el-progress>
+            </el-form-item>
+            <div v-show="uploaded">
+            
+            <el-form-item label="标题" prop="name" >
                <el-input type="text" v-model="createForm.name" placeholder="知识点"></el-input>
             </el-form-item>
             <el-form-item label="编号" prop="s_no" >
                 <el-input v-model="createForm.price" placeholder="s1-g1-t1-01"></el-input>
             </el-form-item>
-            <el-form-item label="url" prop="file_path" >
-                <el-input v-model="createForm.file_path" placeholder="http://"></el-input>
-            </el-form-item>
-            <el-form-item label="MD5" prop="md5" >
-                <el-input v-model="createForm.md5" placeholder="md5 hash"></el-input>
-            </el-form-item>
-            <el-form-item label="文件大小" prop="size" >
-                <el-input v-model="createForm.size" placeholder=""></el-input>
-            </el-form-item>
              <el-form-item label="描述" prop="description" >
                 <el-input type="textarea" v-model="createForm.description" placeholder="描述"></el-input>
+            </el-form-item>
+             <el-form-item label="file_path" prop="file_path">
+                <el-input v-model="createForm.file_path" readonly="" placeholder="http://"></el-input>
+            </el-form-item>
+            <el-form-item label="url" prop="absolute_url">
+                <el-input v-model="createForm.absolute_url" readonly="" placeholder="http://"></el-input>
+            </el-form-item>
+            <el-form-item label="文件大小" prop="size" >
+                <el-input v-model="createForm.size" readonly="" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="版本" prop="version" >
                 <el-input readonly="" v-model="createForm.version" placeholder=""></el-input>
@@ -108,12 +130,16 @@
             <el-form-item>
                 <el-button type="danger" @click="submitCreate">确定</el-button>
               </el-form-item>
+            </div>
           </el-form>
   </el-dialog>
   </div>
       
   </template>
   <script>
+import * as oss from "ali-oss";
+import browserMD5File from "browser-md5-file";
+import { STS_Server, OssConfig, CoursewareBasePath,CoursewareDomain } from "@/lib/constants";
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -127,8 +153,12 @@ export default {
         s_no: undefined,
         name: undefined,
         version: 1,
-        description: undefined
+        description: undefined,
+        absolute_url: undefined
       },
+      uploaded: false,
+      uploadPercentage: 0,
+      uploadStatus: "pending",
       createForm: {
         size: undefined,
         md5: undefined,
@@ -141,10 +171,10 @@ export default {
       },
       createRules: {
         subject: [{ required: true, message: "请选择学科", trigger: "blur" }],
-        name: [{ required: true, message: "请填写名称", trigger: "blur" }],
-        file_path: [
-          { required: true, message: "请输入文件地址", trigger: "blur" }
-        ]
+        name: [{ required: true, message: "请填写名称", trigger: "blur" }]
+        // file_path: [
+        //   { required: true, message: "请输入文件地址", trigger: "blur" }
+        // ]
       },
       searchForm: {
         subject: undefined
@@ -172,6 +202,7 @@ export default {
     );
     this.search();
   },
+  activated() {},
   methods: {
     ...mapActions({
       getCoursewareList: "getCoursewareList",
@@ -179,11 +210,20 @@ export default {
       updateCourseware: "updateCourseware",
       removeCourseware: "removeCourseware"
     }),
+    initCreateForm() {
+      this.uploaded = false;
+      this.uploadPercentage = 0;
+      this.uploadStatus = "";
+      this.$refs["createForm"].resetFields();
+    },
     search() {
       this.getCoursewareList({ subject: this.searchForm.subject });
     },
     onCreate() {
       this.dialogCreateVisible = true;
+      this.$nextTick(() => {
+        this.initCreateForm();
+      });
     },
     submitCreate() {
       this.$refs["createForm"].validate(valid => {
@@ -204,9 +244,112 @@ export default {
       });
     },
     handleUpdateClick(item) {},
-    handleRemoveClick(item) {}
+    handleRemoveClick(item) {},
+    get_suffix(filename) {
+      var pos = filename.lastIndexOf(".");
+      var suffix = "";
+      if (pos !== -1) {
+        suffix = filename.substring(pos);
+      }
+      return suffix;
+    },
+    combineURLs(baseURL, relativeURL) {
+      return relativeURL
+        ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "")
+        : baseURL;
+    },
+    onUploadFile(e) {
+      let self = this;
+      let file = e.file.slice();
+      console.log(e);
+      browserMD5File(file, (err, md5) => {
+        let filename =self.createForm.subject+'/'+ md5 + this.get_suffix(e.file.name);
+        let key = this.combineURLs(CoursewareBasePath, filename);
+        //   console.log(file);
+        self.createForm.md5 = md5;
+        self.createForm.size = e.file.size;
+        var sts_token_url = "/ali_sts";
+
+        this.$http.get(sts_token_url).then(res => {
+          var creds = res.data.token;
+          var client = new oss.Wrapper({
+            region: OssConfig.region,
+            bucket: OssConfig.bucket,
+            accessKeyId: creds.AccessKeyId,
+            accessKeySecret: creds.AccessKeySecret,
+            stsToken: creds.SecurityToken
+          });
+          client
+            .multipartUpload(key, file, {
+              progress: (p, cpt, re) => {
+                return function(done) {
+                  console.log(re);
+                  console.log(cpt);
+                  e.percentage = e.file.percentage = ~~(p * 100);
+                  e.onProgress(e, p, cpt, re);
+                  done();
+                };
+              }
+            })
+            .then(function(res) {
+
+              self.createForm.absolute_url = client.generateObjectUrl(res.name,CoursewareDomain);
+              self.createForm.file_path = res.name;
+              e.onSuccess(res);
+              self.uploaded = true;
+              self.uploadStatus = "success";
+              //   return listFiles(client);
+            })
+            .catch(err => {
+              self.uploadStatus = "exception";
+              e.onError(err);
+            });
+        });
+      });
+    },
+    onCompleted() {},
+    onUploadProgress(e, res) {
+      //   console.log(res.headers["x-oss-request-id"]);
+      //   return p;
+
+      console.log("upload: " + e.percentage + "%");
+      this.uploadPercentage = e.percentage;
+    },
+    uploadSuccess(res) {
+      console.log(res);
+    }
   }
 };
 </script>
   
+  <style lang="stylus" scoped>
+  .vue-oss-upload-input {
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 5px;
+      border: 2px dashed #aaaaaa;
+      line-height: 66px;
+
+      i {
+          font-style: normal;
+          font-size: 36px;
+          color: #aaaaaa;
+          display: block;
+      }
+
+      input {
+          width: 100%;
+          height: 100%;
+          /* margin-top: -66px; */
+          opacity: 0;
+          position: absolute;
+          padding: 0;
+          top: 0;
+          left: 0;
+      }
+  }
+</style>
   
