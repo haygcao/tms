@@ -31,7 +31,7 @@
           trigger="click">
           <el-form size="small" :model="coursewareForm" :rules="coursewareFormRules" label-position="top" :ref="scope.row.id">
               <el-form-item label="课件">
-                    <el-select v-model="coursewareForm.courseware_id" filterable="" placeholder="请选择">
+                    <el-select v-model="coursewareForm.courseware_id" filterable placeholder="请选择">
                         <el-option
                         v-for="item in coursewareList"
                         :key="item.id"
@@ -60,7 +60,7 @@
           trigger="click">
           <el-form size="small" :model="homeworkForm" :rules="homeworkFormRules" label-position="top" :ref="scope.row.id">
               <el-form-item label="作业">
-                    <el-select v-model="homeworkForm.homework_id" filterable="" placeholder="请选择">
+                    <el-select v-model="homeworkForm.homework_id" filterable placeholder="请选择">
                         <el-option
                         v-for="item in homeworkList"
                         :key="item.id"

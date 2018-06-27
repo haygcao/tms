@@ -8,7 +8,7 @@
           <img class="logo" src="../assets/logo2.png">
         </div>
         <div class="login-box">
-          <el-form class="login-form" :model="loginForm" :rules="rules" ref="loginForm">
+          <el-form class="login-form" @keyup.enter.native="submitForm('loginForm')" :model="loginForm" :rules="rules" ref="loginForm">
             <div style="height:38px">
               <el-alert v-if="loginResult.error" :title="loginResult.message" type="error" show-icon>
               </el-alert>

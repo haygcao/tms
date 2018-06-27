@@ -147,7 +147,16 @@ export default {
   mounted() {
     this.currentPage =
       this.$route.params.page > 0 ? parseInt(this.$route.params.page) : 1;
-    this.searchForm = Object.assign({}, this.$route.query);
+    this.searchForm = Object.assign(
+      {
+        term: undefined,
+        year: undefined,
+        subject: undefined,
+        grade: undefined,
+        class_type: undefined
+      },
+      this.$route.query
+    );
     this.search();
   },
   methods: {

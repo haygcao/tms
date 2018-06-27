@@ -42,3 +42,8 @@ serve -s dist
 docker build -t reallyedu/tms-web .
 
 ```
+- aliyun docker push
+```
+ $ sudo docker tag [ImageId] registry.cn-beijing.aliyuncs.com/reallyedu/tms-web:[镜像版本号]
+ $ sudo docker push registry.cn-beijing.aliyuncs.com/reallyedu/tms-web:[镜像版本号]
+```

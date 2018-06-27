@@ -1,5 +1,5 @@
 <template>
-    <div class="students" @keyup.enter="onEnterPress">
+    <div class="students" >
         <el-row>
         <div class="page-breadcrumb clearfix">
             <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -9,11 +9,12 @@
         </div>
         </el-row>
         <el-row>
-            <el-form :inline="true" size="small" ref="searchForm" v-on:submit.prevent :model="searchForm">
+            <el-form :inline="true" size="small" ref="searchForm" @keydown.native.enter.prevent="()=>{}" :model="searchForm">
                 <el-form-item prop="kw">
-                    <el-input name="input_kw" form="noref" style="width:320px" clearable  v-model="searchForm.kw" placeholder="输入学员姓名，编号或手机号查询"></el-input>
+                    <el-input name="input_kw"  @keyup.enter.native="onEnterPress" form="noref" style="width:320px" clearable  v-model="searchForm.kw" placeholder="输入学员姓名，编号或手机号查询"></el-input>
                 </el-form-item>
                 <el-form-item>
+                  <!-- <input type="text" style="display:none"> -->
                 <el-button type="danger" @click.stop="onSearch"  icon="el-icon-search">查询</el-button>
                 </el-form-item>
             </el-form>

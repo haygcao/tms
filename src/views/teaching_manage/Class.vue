@@ -27,7 +27,7 @@
             </el-form-item>
              <el-form-item prop="grade">
                 <el-select v-model="searchForm.grade" placeholder="年级" clearable>
-                    <el-option v-for="item in grades" :key="item.key" :label="item.name" :value="item.key">
+                    <el-option v-for="item in subjectGrades" :key="item.key" :label="item.name" :value="item.key">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -170,7 +170,19 @@ export default {
       clazzList: state => state.clazz.clazzList.data || {},
       current_school: state => state.current_user.current_school
     }),
-    ...mapGetters(["terms", "subjects", "class_types", "grades"])
+    ...mapGetters([
+      "terms",
+      "subjects",
+      "class_types",
+      "grades",
+      "course_settings"
+    ]),
+    subjectGrades() {
+      let sub = this.course_settings.find(
+        v => v.key == this.searchForm.subject
+      );
+      return sub ? sub.grades : [];
+    }
   },
   watch: {
     $route(val, old) {
@@ -200,12 +212,12 @@ export default {
     }),
     handleMouseEnter(event, data) {
       this.$nextTick(() => {
-        event.target.innerText = data.visible ? "隐藏" : "显示";
+        event.target.innerText = data.visible ? "隐藏" : "公开";
       });
     },
     handleMouseLeve(event, data) {
       this.$nextTick(() => {
-        event.target.innerText = data.visible ? "显示" : "隐藏";
+        event.target.innerText = data.visible ? "公开" : "隐藏";
       });
     },
     handleVisibleClick(data) {
@@ -304,7 +316,7 @@ export default {
     },
     search() {
       this.loading = true;
-      let payload =Object.assign({},this.searchForm) ;
+      let payload = Object.assign({}, this.searchForm);
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
       payload.school_id = this.current_school.id;

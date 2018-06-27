@@ -19,7 +19,7 @@
                     </el-form-item>
                     <el-form-item label="年级" prop="grade">
                         <el-radio-group v-model="searchForm.grade">
-                            <el-radio v-for="item in grades" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
+                            <el-radio v-for="item in subjectGrades" :key="item.key" :label="item.key" border>{{item.name}}</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="学期" prop="term">
@@ -188,7 +188,7 @@ export default {
         finish_date: undefined,
         class_begin_time: undefined,
         class_finish_time: undefined,
-        visible: true,
+        visible: false,
         student_limit: 12,
         teacher: undefined,
         classroom: undefined
@@ -259,8 +259,15 @@ export default {
       "subjects",
       "class_types",
       "grades",
+      "course_settings",
       "lesson_times"
-    ])
+    ]),
+    subjectGrades() {
+      let sub = this.course_settings.find(
+        v => v.key == this.searchForm.subject
+      );
+      return sub ? sub.grades : [];
+    }
   },
   watch: {
     selectedClassroom: function(val, old) {
