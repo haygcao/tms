@@ -1,5 +1,5 @@
 <template>
-    <div class="text-info text-center"><p>{{message}}</p></div>
+    <div class="text-info text-center"><slot><p>{{message}}</p></slot></div>
 </template>
 <script>
 export default {

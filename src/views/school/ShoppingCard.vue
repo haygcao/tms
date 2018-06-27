@@ -418,8 +418,11 @@ export default {
 }
 
 .card-item {
-  background: #ffffff;
+  background: #fff;
   padding: 0px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #dedede;
+  border-top: 1px solid #dedede;
 }
 
 .card-item-title {

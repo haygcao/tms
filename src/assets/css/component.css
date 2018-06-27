@@ -94,6 +94,24 @@ a:hover {
     color: #409EFF;
 }
 
+.img-circle {
+    background-color: #EBEEF5;
+    border: 1px solid #E4E7ED;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto 2px;
+    overflow: hidden;
+  }
+  
+  .img-circle.small {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+  }
 /*
  * scroll_bar STYLE
  */

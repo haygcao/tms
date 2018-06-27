@@ -16,7 +16,7 @@
             </el-form-item>
             <el-form-item label="学科" prop="subject">
                 <el-radio-group v-model="form.subject">
-                    <el-radio v-for="item in course_settings" :key="item.key" :label="item.key"  border>{{item.name}}</el-radio>
+                    <el-radio v-for="item in course_settings" :key="item.key" :label="item.key.toString()"  border>{{item.name}}</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="年级" prop="grade" >
@@ -65,7 +65,7 @@ export default {
       form: {
         name: undefined,
         term: undefined,
-        subject: 1,
+        subject: '1',
         grade: undefined,
         class_type: undefined,
         // price: undefined,

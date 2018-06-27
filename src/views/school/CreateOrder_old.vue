@@ -1,9 +1,7 @@
 <template>
-<empty-data-view v-if="card.length==0" message=""><p class="text-info">还没选取课程 <el-button type="text" @click="goBack" size="">去选课<i class="el-icon-arrow-right"></i></el-button></p></empty-data-view>
-<div v-else class="order">
-
-    <el-row class="page-breadcrumb ">
-        <el-button type="text" @click="goBack" size="" icon="el-icon-arrow-left">重新选课</el-button>
+<div class="order">
+    <el-row>
+        <el-button type="danger" @click="goBack" size="small" icon="el-icon-arrow-left">返回上一页</el-button>
     </el-row>
     <el-row class="" v-if="currentClazz[0].student_limit&&currentClazz[0].student_count==currentClazz[0].student_limit">
       <div class="mt-15 info-block text-center text-warning">
@@ -12,77 +10,56 @@
     </el-row>
     <div v-else>
     <el-row>
-        <h3>选课信息</h3>
-        <div class="card-content" v-if="card.length>0">
-        <div class="card-item " v-for="item in card" :key="item.index.id">
-            <div class="card-item-title clearfix">
-            <div class="item-title-inner">
-            <strong>{{item.index.subject|subjectName}}</strong>
-
-            </div>
-            </div>
-            <div class="divide-line"></div>
-            <div class="card-item-index" >
-              <div v-if="item.category=='clazz'">
-                <div> <span class="item-desc">报名班级:</span>
-                    <strong class="clazz-name">
-                    <span>{{item.index.grade|grade}}{{item.index.term|terms}}{{item.index.class_type|classType}}</span>
-                    <span class="clazz-state-badge" v-if="item.index.state==1">{{item.index.state|classState}}</span>
-                </strong>
-                </div>
-                
-                <div class="clazz-fileds clearfix">
-                <div class="">
-                    <div class="fileds-s1">
-                        <div>{{item.index.begin_date|formatDateTime(' M月D日')}}-{{item.index.finish_date|formatDateTime(' M月D日')}}</div>
-                        <span v-if="item.index.class_type=='1'||item.index.class_type=='2'">{{item.index.begin_date|weekDay}}</span>
-                        <span v-if="item.index.class_type=='3'||item.index.class_type=='4'">每天</span>
-                        {{item.index.class_begin_time|toShortTimeString}}-{{item.index.class_finish_time|toShortTimeString}}
-                    </div>
-                    <div class="fileds-s2">
-                    <div>剩余/总课次</div>
-                    <div>
-                        <strong>{{item.index.total_lesson_number-(item.index.current_lesson_number||0)}}</strong><span class="text-info">/</span>
-                        <strong>{{item.index.total_lesson_number}}</strong>
-                    </div>
-                    </div>
-                    <div class="fileds-s3">
-                      <img class="img-circle small" :src="item.index.teacher.avatar_url?item.index.teacher.avatar_url:(item.index.teacher.gender==1?teacher_avatar_man:teacher_avatar_woman)"
-                                  :alt="item.index.teacher.name">
-                                <span>{{item.index.teacher.name}}</span>
-                    
-                    </div>
-                </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-item-product">
-              <template v-if="item.category=='clazz'">
-                <div><span  class="item-desc">已选课程:</span>
-                <span class="product-info">
-                  <span>{{item.product.subject|subjectName}}{{item.product.class_type|classType}}</span>
-                  <cny class="margin-left-10" :value="item.product.price"></cny>
-                  <span class="text-info"> &times;</span>
-                  <strong>{{item.quantity}}</strong>
-                  <span class="text-info">=</span>
-                  <cny class="text-danger" :value="item|item_amount"></cny>
-                </span>
-                </div>
-                <div></div>
-              </template>
-            </div>
-        </div>
-        <div class="card-item"><div class="card-item-title">
-            <div class="item-title-inner">
-             <span class="text-info">课程费用总计:</span><cny class="amount-total margin-left-10 text-danger"  :value="card|total_amount"></cny></div></div>
-            </div>
-        </div>
+        <h3>所报班级</h3>
+        <el-table :data="currentClazz" border style="max-width: 1100px">
+            <el-table-column label="班级">
+                <template slot-scope="scope">
+              {{scope.row.year}}{{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
+          </template>
+            </el-table-column>
+            <el-table-column width="200" label="上课时间">
+                <template slot-scope="scope">
+            <p>{{scope.row.begin_date|toDateString}}-{{scope.row.finish_date|toDateString}}</p>
+            <p><span v-if="scope.row.class_type=='0'||scope.row.class_type=='1'">{{scope.row.begin_date|weekDay}}</span> {{scope.row.class_begin_time|toShortTimeString}}-{{scope.row.class_finish_time|toShortTimeString}}</p>
+          </template>
+            </el-table-column>
+            <el-table-column width="120" label="上课地点">
+                <template slot-scope="scope">
+            {{scope.row.classroom_name}}
+          </template>
+            </el-table-column>
+            <el-table-column width="120" label="授课老师">
+                <template slot-scope="scope">
+            {{scope.row.teacher_name}}
+          </template>
+            </el-table-column>
+            <el-table-column width="80" label="总课次">
+                <template slot-scope="scope">
+            {{scope.row.total_lesson_number||0}}
+          </template>
+            </el-table-column>
+            <el-table-column width="80" label="剩余课次">
+                <template slot-scope="scope">
+             {{scope.row.total_lesson_number - (scope.row.current_lesson_number||0)}}
+          </template>
+            </el-table-column>
+            <el-table-column width="80" label="剩余名额">
+                <template slot-scope="scope">
+            <span :class="{'text-danger':(scope.row.student_limit-scope.row.student_count)<4}">{{scope.row.student_limit-scope.row.student_count}}</span>
+          </template>
+            </el-table-column>
+            <el-table-column width="80" label="状态">
+                <template slot-scope="scope">
+            {{scope.row.state|classState}}
+          </template>
+            </el-table-column>
+        </el-table>
     </el-row>
     <el-row>
         <h3>学员信息</h3>
         <div>
             <p><span class="text-warning text-small"><i class="el-icon-warning"></i>请先查询系统中是否存在该学员信息!</span></p>
-            <el-form @keyup.enter.native="onSearch" :inline="true" size="small" class="search-form" ref="searchForm" :rules="searchFormRules" :model="searchForm">
+            <el-form :inline="true" size="small" class="search-form" ref="searchForm" :rules="searchFormRules" :model="searchForm">
                 <el-form-item prop="mobile">
                     <el-input v-model="searchForm.mobile" clearable placeholder="输入学员家长的手机号查询"></el-input>
                 </el-form-item>
@@ -116,6 +93,7 @@
                 </el-form-item>
                 <el-form-item> <span class="text-info">年龄:{{student.data.birthday|age}}</span></el-form-item>
             </el-form>
+            <p>家长信息</p>
             <el-form v-for="(parentForm ,index) in student.data.parents" :key="index" size="small" class="parent-form" :inline="true" disabled :model="parentForm">
                 <el-form-item prop="relation" :label="'家长'+(index+1)">
                     <el-input v-model="parentForm.relation"></el-input>
@@ -166,6 +144,97 @@
         </div>
     </el-row>
     <el-row>
+        <h3>是否年缴</h3>
+        <el-switch v-model="payment_by_year" active-text="按年缴费" inactive-text="仅这学期">
+        </el-switch>
+
+        <div class="mt-15">
+            <el-radio-group v-if="payment_by_year" v-model="order_length">
+                <el-radio :label="1">缴1年</el-radio>
+                <el-radio :label="2" v-if="currentClazz[0].grade=='A1'||currentClazz[0].grade=='A2'||currentClazz[0].grade=='H1'">缴2年</el-radio>
+                <el-radio :label="3" v-if="currentClazz[0].grade=='A1'||currentClazz[0].grade=='H1'">缴3年</el-radio>
+            </el-radio-group>
+        </div>
+        <div class="course-detail-block">
+          <table class="title">
+            <tr><td>年级</td><td v-for="grade in courseTable.grades" :key="grade">{{grade|grade}}</td></tr>
+            <!-- <div><td>学期</td><td v-for="grade in courseTable.grades" :key="grade">{{grade|grade}}</td></div> -->
+            <div>年级</div>
+            <div>年级</div>
+          </table>
+          <!-- <div v-if=""></div> -->
+          <div class="grade-row"></div>
+        </div>
+    </el-row>
+    <el-row>
+        <h3>缴费明细</h3>
+        <div class="bill-block">
+          <div class="bill-item">
+            <div><p>学费</p></div>
+            <div><p>课次数:10</p></div>
+            <div><p>单价:<em>&yen;</em><del>200</del><span><em>&yen;</em>198</span></p></div>
+            <div><p>小计:<em>&yen;</em>1980.00</p></div>
+            <!-- <div>优惠合计</div>
+            <div>应付合计</div> -->
+          </div>
+          <div class="bill-item">
+            <div><p>报名费</p></div>
+            <div></div>
+            <div><p>单价:<em>&yen;</em><del>100</del><span><em>&yen;</em>0</span></p></div>
+            <div><p>小计:<em>&yen;</em>0</p></div>
+          </div>
+          <div class="bill-item">
+            <div><p>折扣</p></div>
+            <div><p>7 折</p></div>
+            <div></div>
+            <div><p>单价优惠:-10*10=100.00</p><p>连报折扣:-200.00</p></div>
+          </div>
+          <div class="bill-item">
+            <div><p>总计</p></div>
+            <div></div>
+            <div></div>
+            <div><p>1800.00</p></div>
+          </div>
+        </div>
+        <el-collapse v-model="activeNames" @change="handleChange">
+          <el-collapse-item title="" name="1">
+            <template slot="title">
+              优惠减免<span style="float:right" class="text-primary">点击添加优惠</span>
+            </template>
+            <div>
+              <el-form :model="preferenceForm" ref="preferenceForm" :inline="true" label-position="left" label-width="100px" size="small">
+                    <el-form-item prop="customize_preference"  label="优惠减免(元)">
+                        <el-input type="number" prefix-icon="iconfont icon-rmb" v-model="preferenceForm.customize_preference" placeholder="减免金额"></el-input>
+                    </el-form-item>
+                    <br>
+                    <el-form-item prop="customize_preference_description" label="优惠描述">
+                        <el-input type="textarea" style="width:200px" v-model="preferenceForm.customize_preference_description" placeholder="优惠描述..."></el-input>
+                    </el-form-item>            
+              </el-form>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+
+        <el-table :data="order_charges" :span-method="objectSpanMethod" border style="max-width: 850px; margin-top: 20px">
+            <el-table-column prop="category" label="类目" width="">
+            </el-table-column>
+            <el-table-column prop="total_lesson_number" label="课次数">
+            </el-table-column>
+            <el-table-column prop="unit_price" label="单价/元">
+            </el-table-column>
+            <el-table-column prop="amount" label="原价合计/元">
+            </el-table-column>
+            <el-table-column prop="discount" label="折扣">
+            </el-table-column>
+            <el-table-column prop="discount_amount" label="优惠金额/元">
+            </el-table-column>
+            <el-table-column prop="amount_payable" label="应付/元">
+            </el-table-column>
+            <el-table-column prop="total" label="合计/元">
+            </el-table-column>
+        </el-table>
+    </el-row>
+    <el-row>
         <h3>支付方式</h3>
         <el-radio-group v-model="payment_type">
             <el-radio disabled="" :label="0" border><i class="iconfont icon-wxpay"></i>微信</el-radio>
@@ -182,8 +251,7 @@
         <h1 slot="title">{{addStudentMode=='create'?'添加新学员':'修改学员信息'}}</h1>
       <add-student :mode="addStudentMode" :studentId="(student.data?student.data.id:'')" :school="currentClazz[0].school_id" v-if="dialogAddStudentVisible" @success="onCreateStudentSuccess" @cancel="dialogAddStudentVisible=false"></add-student>
      </el-dialog>
-     </div>
-
+</div>
 </template>
 
 <script>
@@ -194,8 +262,6 @@ import AddStudent from "@/views/school/AddStudent.vue";
 export default {
   data() {
     return {
-      teacher_avatar_man: require("@/assets/img/teacher_1.png"),
-      teacher_avatar_woman: require("@/assets/img/teacher_0.png"),
       dialogAddStudentVisible: false,
       addStudentMode: "create",
       searchForm: {
@@ -253,9 +319,6 @@ export default {
       schoolConsultants: state => state.school.schoolConsultants.data || []
     }),
     ...mapGetters(["genders", "grades", "terms"]),
-    card() {
-      return this.$shoppingCard.items;
-    },
     courseToBuy() {
       let list = [];
       const grade1 = ["A1", "A2", "A3"];
@@ -299,12 +362,12 @@ export default {
     }
   },
   created() {
-    // this.clearOrderCreateStates();
+    this.clearOrderCreateStates();
   },
   mounted() {
-    // this.getClazzById({
-    //   clazz_id: this.$route.query.clazz_id
-    // });
+    this.getClazzById({
+      clazz_id: this.$route.query.clazz_id
+    });
     // this.fetchCourseLesson({
     //   clazz_id: this.$route.query.clazz_id
     // });
@@ -460,18 +523,6 @@ export default {
       }
     }
   },
-  filters:{
-      total_amount(card) {
-      let amount = 0;
-      card.forEach(item => {
-        amount += item.quantity * parseFloat(item.product.price);
-      });
-      return amount;
-    },
-    item_amount(item) {
-      return item.quantity * parseFloat(item.product.price);
-    }
-  },
   destroyed() {},
   components: {
     AddStudent
@@ -481,158 +532,60 @@ export default {
 
 <style lang="stylus" scoped>
 em, i, u {
-    font-style: normal;
+  font-style: normal;
 }
 
 .order {
-    background-color: #ffffff;
+  background-color: #ffffff;
 }
 
 .search-form .el-input {
-    width: 240px;
+  width: 240px;
 }
 
 .order .el-row {
-    border-top: 1px dashed #DCDFE6;
+  border-top: 1px dashed #DCDFE6;
 
-    &:first-child {
-        border-top: none;
-    }
+  &:first-child {
+    border-top: none;
+  }
 }
 
 .parent-form {
-    padding-top: 15px;
+  padding-top: 15px;
 
-    &:first-child {
-        border-top: none;
-        padding-top: 0;
-    }
+  &:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
 }
 
 .mt-15 {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .student-info-form .el-input {
-    width: 178px !important;
+  width: 178px !important;
 }
 
-.card-item {
-    background: #fff;
-    padding: 0px;
-    border: 1px solid #dedede;
+.bill-block .bill-item {
+  display: flex;
+  border-bottom: 1px solid #E4E7ED;
+  // border-left: 1px solid #E4E7ED;
+  // border-right: 1px solid #E4E7ED;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
-.card-item:not(:last-child) {
-    border-bottom: none;
+.bill-block .bill-item:last-child {
+  border-bottom: none;
+  margin-bottom: 20px;
 }
 
-.card-item-title {
-    padding: 10px 0px;
-    background: #f8f8f8;
-}
-
-.item-desc {
-    color: #909399;
-    padding: 5px 0px;
-}
-
-.product-info {
-    line-height: 28px;
-    font-size: 14px;
-}
-
-.item-title-inner {
-    line-height: 28px;
-    font-size: 18px;
-    padding-left: 8px;
-    padding-right: 10px;
-}
-
-.subject-tag-1 {
-    padding: 10px 5px;
-    background: #F56C6C;
-}
-
-.subject-tag-2 {
-    padding: 10px 5px;
-    background: #409EFF;
-}
-
-.subject-tag-3 {
-    padding: 10px 5px;
-    background: #E6A23C;
-}
-
-.divide-line {
-    border-bottom: 1px solid #e4e7ed;
-}
-
-.card-item-index, .card-item-product, .card-item-detail {
-    padding: 10px;
-}
-
-.clazz-name {
-    font-size: 16px;
-}
-
-.clazz-fileds {
-    font-size: 12px;
-    padding: 8px;
-    margin: 5px 0px;
-}
-
-.clazz-fileds div[class^='fileds-'] {
-    padding: 0px 8px;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.clazz-fileds div[class^='fileds-']:first-child {
-    border-left: none;
-    padding-left: 0px;
-}
-
-.fileds-s1 {
-    display: inline-block;
-}
-
-.fileds-s2 {
-    display: inline-block;
-    border-left: 1px solid #e4e7ed;
-    border-right: 1px solid #e4e7ed;
-}
-
-.fileds-s3 {
-    display: inline-block;
-}
-
-.terms-list {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    background: #f8f8f8;
-    padding: 8px;
-    margin: 5px auto;
-    font-size: 12px;
-}
-
-.terms-list > div {
-    flex: 1;
-    text-align: center;
-    border-right: 1px solid #e4e7ed;
-}
-
-.terms-list > div:last-child {
-    border-right: none;
-}
-
-.grades {
-    font-size: 14px;
-}
-
-.float-right {
-    float: right;
+.bill-item > div {
+  padding: 0px 10px;
+  width: 160px;
+  flex: none;
 }
 </style>
