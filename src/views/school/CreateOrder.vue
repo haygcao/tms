@@ -210,7 +210,6 @@ export default {
           }
         ]
       },
-      hover: false,
       payment_by_year: false,
       order_length: 1,
       payment_type: 2,

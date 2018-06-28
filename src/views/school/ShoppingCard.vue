@@ -316,7 +316,8 @@ export default {
     },
     purchase() {
       if (this.card.length > 0) {
-        this.$router.push({ name: "create_order" });
+        // this.$router.push({ name: "create_order" });
+        this.$emit('onPurchase');
       }
     },
     total_lesson_count(gradeList) {
@@ -540,6 +541,8 @@ export default {
   background-color: #ffffff;
   overflow: hidden;
   padding: 0 10px;
+  border-top: 1px solid #e4e7ed;
+  z-index: 10;
 }
 
 .card-submit-button {

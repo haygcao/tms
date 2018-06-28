@@ -62,67 +62,6 @@
                 </div>
               </div>
             </div>
-            <el-table v-if="false" v-loading="loading" :data="studentList.rows" stripe  size="small">
-                <el-table-column type="index" width="30">
-                </el-table-column>
-                <el-table-column prop="student_no" width="130" label="编号">
-                </el-table-column>
-                <el-table-column prop="name" width="120" label="姓名">
-                </el-table-column>
-                <el-table-column width="60" label="性别">
-                    <template slot-scope="scope">{{scope.row.gender|gender}}</template>
-                </el-table-column>  
-                <el-table-column width="110" label="年龄">
-                    <template slot-scope="scope">{{scope.row.birthday}}<br>{{scope.row.birthday|age}}</template>
-                </el-table-column>  
-                <el-table-column prop="mobile" width="" label="睿乐账号">
-                </el-table-column> 
-                <el-table-column  width="150" label="家长">
-                    <template slot-scope="scope">
-                        <el-popover
-                        placement=""
-                        :open-delay="500"	
-                        width="200"
-                        trigger="hover">
-                        <el-table :data="scope.row.parents||[]" size="mini" :highlight-current-row	="false" style="width:100%" :show-header="false">
-                            <el-table-column width="60" property="relation" label="#"></el-table-column>
-                            <el-table-column width="" property="mobile" label="#"></el-table-column>
-                        </el-table>
-                        <div slot="reference" class="name-wrapper">
-                            <label v-if="scope.row.parents&&scope.row.parents.length>0">{{ scope.row.parents[0].relation }}:{{scope.row.parents[0].mobile}}</label>
-                        </div>
-                        </el-popover>
-                    </template>
-                </el-table-column> 
-                <el-table-column prop="name" width="" label="累计报班">
-                    <template slot-scope="scope">{{scope.row.clazz_count}}</template>
-                </el-table-column> 
-                <el-table-column width="" label="消课/购课">
-                    <template slot-scope="scope">{{scope.row.consume_lesson_count}}/{{scope.row.total_lesson_count}}</template>
-                </el-table-column> 
-                <el-table-column width="" label="睿乐币">
-                    <template slot-scope="scope">{{scope.row.points||0}}/{{scope.row.points_total||0}}</template>
-                </el-table-column> 
-                <el-table-column width="" label="是否在学">
-                    <template slot-scope="scope"><span :class="{'text-success':isStudy(scope.row)}">{{isStudy(scope.row)?'是':'否'}}</span></template>
-                </el-table-column>
-                <el-table-column fixed="right" width="" label="操作">
-                    <template slot-scope="scope">
-                        <el-button @click="onShiftSchedule(scope.row)" class="mr-10" size="small" type="text">调课</el-button>
-                        <el-dropdown trigger="click" size="small">
-                            <span class="el-dropdown-link">
-                                更多<i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item><a @click="onUpdateStudent(scope.row)">修改资料</a></el-dropdown-item>
-                                <el-dropdown-item divided><a @click="onResetPassword(scope.row)" type="danger">重置密码</a></el-dropdown-item>
-                                <el-dropdown-item divided><a @click="onLockStudent(scope.row)" type="danger" size="small">锁定</a></el-dropdown-item>
-                                <el-dropdown-item divided><a @click="onShiftClazz(scope.row)" type="danger" size="small">转班</a></el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </template>
-                </el-table-column>                   
-            </el-table>
         </el-row>
         <el-row>
             <div class="text-center" v-show="studentList&&studentList.count>0">

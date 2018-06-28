@@ -16,13 +16,12 @@
     </el-row>
     <el-row class="search-section-2">
       <el-col :span="12">
-      <el-form :inline="true" size="small" ref="searchForm" :model="searchForm" class="clearfix">
+      <el-form :inline="true" size="small" ref="searchForm" @keydown.native.enter.prevent="()=>{}"  :model="searchForm" class="clearfix">
         <el-form-item prop="teacher_name">
-          <el-input style="width:240px" v-model="searchForm.teacher_name" placeholder="输入老师姓名" clearable></el-input>
+          <el-input style="width:240px" v-model="searchForm.teacher_name" @keyup.enter.native="onSearch" placeholder="输入老师姓名查询" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
-          <el-button v-if="showResetButton" type="text" @click="onResetSearchForm" icon="el-icon-circle-close-outline">清除查询条件</el-button>
         </el-form-item>
       </el-form>
       </el-col>
@@ -140,7 +139,7 @@
         </div>
         </transition-group>
       </div>
-      <empty-data-view v-show="clazzList.count==0"></empty-data-view>
+      <empty-data-view v-show="clazzList.count==0" message="没有可报名的班级"></empty-data-view>
     </el-row>
     <el-row>
       <div class="text-center" v-show="clazzList.count>0">
@@ -148,34 +147,17 @@
         </el-pagination>
       </div>
     </el-row>
-    <el-dialog v-if="false" :visible.sync="dialogFormVisible" center>
-      <h1 slot="title">老师介绍</h1>
-      <div class="teacher-info" v-if="dialogFormVisible">
-        <div class="text-center">
-          <img class="img-circle" :src="teacher_info.avatar_url?teacher_info.avatar_url:require('@/assets/img/default_teacher_avatar.png')"
-            :alt="teacher_info.name">
-        </div>
-        <p class="text-center">{{teacher_info.name}}</p>
-        <div class="info-element">
-          <h4>毕业院校</h4>
-          <div>{{teacher_info.graduated_from}}</div>
-        </div>
-        <div class="info-element">
-          <h4>教学特点</h4>
-          <div>{{teacher_info.teaching_features}}</div>
-        </div>
-        <div class="info-element">
-          <h4>教学成果</h4>
-          <div>{{teacher_info.teaching_achievement}}</div>
-        </div>
-      </div>
-    </el-dialog>
     <div class="right-tab" :style="{'width':rightTabWidth}" >
       <div class="right-tab_arrow" @click="onToggleTabOpen"><span :class="tab_arrow_class" class="icon-bar"></span></div>
       <div class="shopping-card-container scroll_bar">
-        <shopping-card :display="rightTabOpened?'detail':'summary'" :width="rightTabWidth" ref="shoppingCard"></shopping-card>
+        <shopping-card @onPurchase="onPurchase" :display="rightTabOpened?'detail':'summary'" :width="rightTabWidth" ref="shoppingCard"></shopping-card>
       </div>
     </div>
+     <el-dialog :visible.sync="dialogStudentPickerVisible" fullscreen  center >
+        <h1 slot="title">{{addStudentMode=='create'?'添加新学员':'修改学员信息'}}</h1>
+        
+      <add-student :mode="addStudentMode" :studentId="(student.data?student.data.id:'')" :school="currentClazz[0].school_id" v-if="dialogAddStudentVisible" @success="onCreateStudentSuccess" @cancel="dialogAddStudentVisible=false"></add-student>
+     </el-dialog>
   </div>
 </template>
 
@@ -235,8 +217,9 @@ export default {
       dialogFormVisible: false,
       rightTabOpened: false,
       rightTabWidth: "65px",
-      teacher_avatar_man:require('@/assets/img/teacher_1.png'),
-      teacher_avatar_woman:require('@/assets/img/teacher_0.png')
+      teacher_avatar_man: require("@/assets/img/teacher_1.png"),
+      teacher_avatar_woman: require("@/assets/img/teacher_0.png"),
+      dialogStudentPickerVisible:false,
     };
   },
   computed: {
@@ -261,7 +244,7 @@ export default {
     },
     card() {
       return this.$shoppingCard.items;
-    },
+    }
   },
   beforeRouteUpdate(to, from, next) {
     // react to route changes...
@@ -352,6 +335,9 @@ export default {
     onToggleTabOpen() {
       this.rightTabOpened = !this.rightTabOpened;
       this.rightTabWidth = this.rightTabOpened ? "340px" : "65px";
+    },
+    onPurchase(){
+      this.dialogStudentPickerVisible=true;
     }
   },
   components: {
