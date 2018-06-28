@@ -6,7 +6,7 @@ class ShoppingCardItem {
         this.product = product;
         this.quantity = quantity || 1;
         this.details = details;
-        this.showDetail=false;
+        this.showDetail = false;
     }
 }
 class ShoppingCard {
@@ -14,7 +14,8 @@ class ShoppingCard {
         this._card = new Vue({
             data() {
                 return {
-                    items: []
+                    items: [],
+                    student: undefined,
                 }
             },
             computed: {
@@ -49,8 +50,14 @@ class ShoppingCard {
     get amount() {
         return this._card.amount;
     }
+    get student() {
+        return this._card.student;
+    }
     get emitter() {
         return this._card;
+    }
+    set student(value) {
+        this._card.student = value;
     }
     add(cardItem) {
         // let cardItem = {

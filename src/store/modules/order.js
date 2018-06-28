@@ -31,7 +31,7 @@ const getters = {
 const actions = {
     async getOrderStudentByMobile({ commit, state, getters }, payload) {
         let res = await student.findByMobile(payload);
-        commit(mutations_types.order_student, { res })
+        // commit(mutations_types.order_student, { res })
         return Promise.resolve(res);
     },
     // async checkStudentExist({ commit, state, getters }, payload) {

@@ -12,6 +12,29 @@
     </el-row>
     <div v-else>
     <el-row>
+         <h3>孩子信息 <el-button size="small" type="text" @click="onEditStudent" icon="el-icon-edit">更改</el-button></h3>
+         <div class="student-info">
+                <div class="student-item block">
+                <div class="col-1">
+                  <img class="img-circle" :src="student.avatar_url?student.avatar_url:(student.gender==1?student_avatar_boy:student_avatar_girl)">
+                  <i style="float:right" :class="[student.gender==1 ? 'icon-gender-male student-gender-male' : 'icon-gender-female student-gender-female']" class="emp-gender icon iconfont "></i>
+                  <div class="student-fileds">{{student.name}}</div>
+                </div>
+                <div class="col-2">
+                  <div class="student-fileds"><span class="">编号:</span><span>{{student.student_no}}</span></div>
+                  <div class="student-fileds"><span>睿乐账号:</span><span>{{student.mobile}}</span></div>
+                  <div class="student-fileds"><span>年龄:</span><span>{{student.birthday}}<span class="text-danger">({{student.birthday|age}})</span></span></div>
+                </div>
+                <div class="col-3">
+                  <div class="student-fileds" v-for="(parent, index) in student.parents" :key="parent.relation">
+                    <span v-if="index<4"><span>{{ parent.relation }}<span v-if="parent.name">({{parent.name}})</span>:{{parent.mobile}}</span></span>
+                  </div>
+                </div>
+                <!-- <div class="col-4"><el-button icon="el-icon-edit" size="small" plain @click="onEditStudent">修改</el-button></div> -->
+              </div>
+            </div>
+    </el-row>
+    <el-row>
         <h3>选课信息</h3>
         <div class="card-content" v-if="card.length>0">
         <div class="card-item " v-for="item in card" :key="item.index.id">
@@ -78,7 +101,7 @@
             </div>
         </div>
     </el-row>
-    <el-row>
+    <el-row v-if="false">
         <h3>学员信息</h3>
         <div>
             <p><span class="text-warning text-small"><i class="el-icon-warning"></i>请先查询系统中是否存在该学员信息!</span></p>
@@ -173,14 +196,19 @@
             <el-radio :label="2" border><i class="iconfont icon-rmb"></i>现金</el-radio>
             <el-radio :label="3" border><i class="iconfont icon-yinlian"></i>刷卡</el-radio>
         </el-radio-group>
+        
+       
+    </el-row>
+    <el-row>
         <h3>
-            <el-button type="primary" @click="onSubmitOrder()">确认提交</el-button>
+            <el-button type="danger" size="" icon="iconfont icon-bankcard el-icon-" @click="onSubmitOrder()">确认提交</el-button>
         </h3>
     </el-row>
     </div>
-     <el-dialog :visible.sync="dialogAddStudentVisible" fullscreen  center >
-        <h1 slot="title">{{addStudentMode=='create'?'添加新学员':'修改学员信息'}}</h1>
-      <add-student :mode="addStudentMode" :studentId="(student.data?student.data.id:'')" :school="currentClazz[0].school_id" v-if="dialogAddStudentVisible" @success="onCreateStudentSuccess" @cancel="dialogAddStudentVisible=false"></add-student>
+    <el-dialog :visible.sync="dialogStudentPickerVisible" fullscreen  center >
+        <student-picker v-if="dialogStudentPickerVisible"  @student-picked="dialogStudentPickerVisible=false"></student-picker>
+         <div slot="footer" class="dialog-footer">
+        </div>
      </el-dialog>
      </div>
 
@@ -190,13 +218,16 @@
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
 import { mapGetters, mapState, mapActions } from "vuex";
 import AddStudent from "@/views/school/AddStudent.vue";
-
+import StudentPicker from "@/views/school/StudentPicker.vue";
 export default {
   data() {
     return {
       teacher_avatar_man: require("@/assets/img/teacher_1.png"),
       teacher_avatar_woman: require("@/assets/img/teacher_0.png"),
+      student_avatar_girl: require("@/assets/img/student_0.png"),
+      student_avatar_boy: require("@/assets/img/student_1.png"),
       dialogAddStudentVisible: false,
+      dialogStudentPickerVisible:false,
       addStudentMode: "create",
       searchForm: {
         mobile: undefined
@@ -246,7 +277,6 @@ export default {
       },
       current_school: state => state.current_user.current_school,
       course: state => state.order.course.data || [],
-      student: state => state.order.student || {},
       prePage: state => state.route.from,
       createOrderResult: state => state.order.createOrderResult,
       schoolConsultants: state => state.school.schoolConsultants.data || []
@@ -254,6 +284,9 @@ export default {
     ...mapGetters(["genders", "grades", "terms"]),
     card() {
       return this.$shoppingCard.items;
+    },
+    student() {
+      return this.$shoppingCard.student;
     },
     courseToBuy() {
       let list = [];
@@ -342,6 +375,9 @@ export default {
         path: "/school/classes/1"
       });
     },
+     confirmToPurchase(){
+      this.$router.push({name:'create_order'})
+    },
     onSearch() {
       if (this.searchForm.mobile == null) {
         return false;
@@ -368,8 +404,8 @@ export default {
       this.getStudentByMobile({ mobile: mobile });
     },
     onEditStudent() {
-      this.dialogAddStudentVisible = true;
-      this.addStudentMode = "edit";
+      this.dialogStudentPickerVisible = true;
+    //   this.addStudentMode = "edit";
     },
     switchOrderType(val) {
       if (this.order_type == 1) {
@@ -459,8 +495,8 @@ export default {
       }
     }
   },
-  filters:{
-      total_amount(card) {
+  filters: {
+    total_amount(card) {
       let amount = 0;
       card.forEach(item => {
         amount += item.quantity * parseFloat(item.product.price);
@@ -473,7 +509,7 @@ export default {
   },
   destroyed() {},
   components: {
-    AddStudent
+    StudentPicker
   }
 };
 </script>
@@ -633,5 +669,77 @@ em, i, u {
 
 .float-right {
     float: right;
+}
+
+.student-info .student-item {
+    background-color: #ffffff;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 20px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+    color: #606266;
+}
+
+.student-item .col-1 {
+    width: 120px !important;
+    text-align: center;
+    border-right: 1px solid #ebeef5;
+    padding-left: 0px !important;
+    /* order: 1; */
+}
+
+.student-item .col-2 {
+    width: 200px;
+    /* order: 2; */
+}
+
+.student-item .col-3 {
+    flex: 1;
+    /* order: 3; */
+}
+
+.student-item .col-4 {
+    /* border-right: 1px solid #ebeef5; */
+    width: 120px !important;
+    /* order: 1; */
+}
+
+.student-item .student-fileds .fileds-title {
+    width: 80px;
+    display: inline-block;
+}
+
+.student-item .student-fileds .fileds-counter {
+    font-size: 20px;
+    line-height: 12px;
+}
+
+.student-item div[class^='col-'] {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 200px;
+}
+
+.student-item .student-fileds {
+    padding: 8px 0px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: normal;
+    text-overflow: ellipsis;
+}
+
+.student-item:not(.disabled) .student-gender-male {
+    color: #409eff;
+    color: rgba(64, 158, 255, 0.5);
+}
+
+.student-item:not(.disabled) .student-gender-female {
+    color: #f56c6c;
+    color: rgba(245, 108, 108, 0.5);
 }
 </style>

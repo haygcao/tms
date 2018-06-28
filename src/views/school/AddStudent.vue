@@ -1,5 +1,6 @@
 <template>
      <div class="student-form">
+       <slot name="title"></slot>
             <div class="box-card">
                 <el-form size="small" :inline="true" :model="createStudentForm" :rules="createStudentFormRules" ref="createStudentForm" >
                 <el-row>
@@ -66,8 +67,8 @@
                 </el-row>
                 <el-row>
                     <div class="mt-15">
-                    <el-button  type="primary" @click="onSubmit()"> &nbsp;&nbsp; 保存 &nbsp;&nbsp; </el-button>
-                    <el-button  type="text" @click="onCancel()">取消</el-button>
+                    <el-button size="medium"  type="primary" @click="onSubmit()"> &nbsp;&nbsp; 保存 &nbsp;&nbsp; </el-button>
+                    <el-button size="medium" type="" @click="onCancel()">取消</el-button>
                     </div>
                 </el-row>
                 </el-form>
@@ -199,6 +200,7 @@ export default {
           if (res.data.parents) {
             for (let i = 0; i < res.data.parents.length; i++) {
               self.createStudentForm.parents.unshift(res.data.parents[i]);
+              self.createStudentForm.parents.pop();
             }
           }
         }

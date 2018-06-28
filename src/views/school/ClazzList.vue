@@ -154,9 +154,9 @@
       </div>
     </div>
      <el-dialog :visible.sync="dialogStudentPickerVisible" fullscreen  center >
-        <h1 slot="title">{{addStudentMode=='create'?'添加新学员':'修改学员信息'}}</h1>
-        
-      <add-student :mode="addStudentMode" :studentId="(student.data?student.data.id:'')" :school="currentClazz[0].school_id" v-if="dialogAddStudentVisible" @success="onCreateStudentSuccess" @cancel="dialogAddStudentVisible=false"></add-student>
+        <student-picker v-if="dialogStudentPickerVisible" @student-picked="confirmToPurchase"></student-picker>
+         <div slot="footer" class="dialog-footer">
+        </div>
      </el-dialog>
   </div>
 </template>
@@ -165,6 +165,7 @@
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
 import CourseFilterBox from "@/components/CourseFilterBox.vue";
 import ShoppingCard from "@/views/school/ShoppingCard.vue";
+import StudentPicker from "@/views/school/StudentPicker.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -338,11 +339,15 @@ export default {
     },
     onPurchase(){
       this.dialogStudentPickerVisible=true;
+    },
+    confirmToPurchase(){
+      this.$router.push({name:'create_order'})
     }
   },
   components: {
     CourseFilterBox,
-    ShoppingCard
+    ShoppingCard,
+    StudentPicker
   }
 };
 </script>
