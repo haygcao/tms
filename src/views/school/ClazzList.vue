@@ -150,7 +150,7 @@
     <div class="right-tab" :style="{'width':rightTabWidth}" >
       <div class="right-tab_arrow" @click="onToggleTabOpen"><span :class="tab_arrow_class" class="icon-bar"></span></div>
       <div class="shopping-card-container scroll_bar">
-        <shopping-card @onPurchase="onPurchase" :display="rightTabOpened?'detail':'summary'" :width="rightTabWidth" ref="shoppingCard"></shopping-card>
+        <shopping-card @content-changed="rightTabOpened=true" @onPurchase="onPurchase" :display="rightTabOpened?'detail':'summary'" :width="rightTabWidth" ref="shoppingCard"></shopping-card>
       </div>
     </div>
      <el-dialog :visible.sync="dialogStudentPickerVisible" fullscreen  center >
@@ -217,10 +217,9 @@ export default {
       operate_mode: "create",
       dialogFormVisible: false,
       rightTabOpened: false,
-      rightTabWidth: "65px",
       teacher_avatar_man: require("@/assets/img/teacher_1.png"),
       teacher_avatar_woman: require("@/assets/img/teacher_0.png"),
-      dialogStudentPickerVisible:false,
+      dialogStudentPickerVisible: false
     };
   },
   computed: {
@@ -245,6 +244,10 @@ export default {
     },
     card() {
       return this.$shoppingCard.items;
+    },
+    rightTabWidth() {
+      let width = this.rightTabOpened ? "340px" : "65px";
+      return width;
     }
   },
   beforeRouteUpdate(to, from, next) {
@@ -335,13 +338,12 @@ export default {
     },
     onToggleTabOpen() {
       this.rightTabOpened = !this.rightTabOpened;
-      this.rightTabWidth = this.rightTabOpened ? "340px" : "65px";
     },
-    onPurchase(){
-      this.dialogStudentPickerVisible=true;
+    onPurchase() {
+      this.dialogStudentPickerVisible = true;
     },
-    confirmToPurchase(){
-      this.$router.push({name:'create_order'})
+    confirmToPurchase() {
+      this.$router.push({ name: "create_order" });
     }
   },
   components: {

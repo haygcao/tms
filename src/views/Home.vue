@@ -4,7 +4,7 @@
     <el-container class="layout-main">
        <transition name="el-fade-in-linear">
       <el-aside :width="memuWidth">
-      <left-side-menu @menuCollapse="handleCollapse"></left-side-menu>
+      <left-side-menu @menuCollapse="handleCollapse" :isCollapse="isCollapse"></left-side-menu>
       </el-aside>
        </transition>
       <el-main>
@@ -24,9 +24,13 @@ export default {
   name: "home",
   data() {
     return {
-      isCollapse: false,
-      memuWidth: "200px"
+      isCollapse: true
     };
+  },
+  computed: {
+    memuWidth() {
+      return this.isCollapse ? "66px" : "200px";
+    }
   },
   created() {
     this.$nextTick(() => {
@@ -36,7 +40,6 @@ export default {
   methods: {
     handleCollapse(collapse) {
       this.isCollapse = collapse;
-      this.memuWidth = collapse ? "66px" : "200px";
     }
   },
   components: {

@@ -2,10 +2,11 @@
 <div class="menu-wrap" :class="{'menu-collapsed':isCollapse}">
  <div class="clearfix menu-expand"><a class="menu-switch primary" @click="handleMenuCollapse"><i class="el-icon-more"></i></a></div>
   <!-- #545c64 -->
-  <el-menu :router="true" 
-      background-color="#00509F"
+   <!-- background-color="#00509F"
       text-color="#fff"
-      active-text-color="#f56c6c"
+      active-text-color="#f56c6c" -->
+  <el-menu :router="true" 
+     
       :unique-opened="true"
       :collapse-transition="true"
       class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
@@ -60,9 +61,12 @@ const _roles = [
 ];
 export default {
   name: "LeftSideMenu",
+  props: {
+    isCollapse: Boolean
+  },
   data() {
     return {
-      isCollapse: false
+      // isCollapse: true
     };
   },
   computed: {
@@ -95,8 +99,8 @@ export default {
   },
   methods: {
     handleMenuCollapse() {
-      this.isCollapse = !this.isCollapse;
-      this.$emit("menuCollapse", this.isCollapse);
+      // this.isCollapse = !this.isCollapse;
+      this.$emit("menuCollapse", !this.isCollapse);
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -118,8 +122,8 @@ export default {
 
 .menu-wrap {
   height: 100%;
-  background-color: #00509F; // #545c64;
-  // border-right: solid 1px #e6e6e6;
+  background-color: #ffffff; // #00509F; //
+  border-right: solid 1px #e6e6e6;
   overflow-x: hidden;
 }
 
@@ -129,7 +133,7 @@ export default {
   white-space: nowrap;
   cursor: pointer;
   background: #fff;
-  border: 1px solid #dcdfe6;
+  // border-bottom: 1px solid #dcdfe6;
   color: #606266;
   text-align: center;
   box-sizing: border-box;
@@ -143,9 +147,8 @@ export default {
 }
 
 .menu-switch.primary {
-  color: #fff;
-  background-color: #00509F; // #409EFF;
-  border-color: #00509F; // #409EFF;
+  color: #409EFF;
+  background-color: #ffffff; // #00509F;
 }
 
 .menu-switch:focus, .menu-switch:hover {

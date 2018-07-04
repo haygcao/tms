@@ -46,6 +46,7 @@ const actions = {
     async payOffline({ commit, state, getters }, payload) {
         let res = await purchase.payOffline(payload);
         commit(mutations_types.payOffline, { res });
+        return Promise.resolve(res);
     },
     async getOrderList({ commit, state, getters }, payload) {
         let res = await purchase.getOrderList(payload);
@@ -54,16 +55,18 @@ const actions = {
     async cancelOrder({ commit, state, getters }, payload) {
         let res = await purchase.cancelOrder(payload);
         commit(mutations_types.cancelOrder, { res });
+        return Promise.resolve(res);
     },
     async createOrder({ commit, state, getters, dispatch }, payload) {
-        payload.order.student_id = state.student.data.id;
-        payload.order.student_name = state.student.data.name;
+        
         let res = await purchase.createOrder(payload.order);
         commit(mutations_types.create_order, { res })
+        return Promise.resolve(res);
     },
     async fetchOrderById({ commit, state, getters }, payload) {
         let res = await purchase.getOrderById(payload);
         commit(mutations_types.fetch_order, { res });
+        return Promise.resolve(res);
     },
     async fetchCourseLesson({ commit, state, getters }, payload) {
         let res = await purchase.getCourse(payload);

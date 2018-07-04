@@ -27,7 +27,7 @@ const getters = {
 const actions = {
     async getClazzById({ commit, state, getters }, payload) {
         let res = await clazz.findById(payload);
-        commit(mutations_types.clazz_fetch, { res });
+        // commit(mutations_types.clazz_fetch, { res });
         return Promise.resolve(res);
     },
     async getClazzList({ commit, state, getters }, payload) {

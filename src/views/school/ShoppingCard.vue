@@ -86,7 +86,11 @@
         </div>
         </div>
         <div class="card-bottom" v-if="card.length>0&&display=='detail'" :style="{'width':width}">
-            <span class="text-info">总计:</span><cny class="amount-total margin-left-10 text-danger"  :value="card|total_amount"></cny>
+            <span class="text-info">总计:</span><cny class="amount-total margin-left-10 text-danger"  :value="$shoppingCard.amount|total_amount_discounted((discount.discount_percent||100)/100)"></cny>
+            <el-badge v-if="discount&&(discount.discount_percent||100)<100" :value="formatDiscount(discount.discount_percent)" class="item">
+            <span v-if="discount&&(discount.discount_percent||100)<100" class="margin-left-10 text-info"><small>&yen;</small><del>{{$shoppingCard.amount|formatCurrency}}</del></span>
+            </el-badge>
+            <!-- <strong class=" margin-left-10" v-if="discount&&(discount.discount_percent||100)<100"><i class="el-icon- iconfont icon-discount"></i>{{(discount.discount_percent||100)|formatDiscount}}折</strong> -->
             <el-button type="danger" class="card-submit-button" @click="purchase">结算</el-button>
         </div>
     </div>
@@ -109,6 +113,10 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      current_school: state => state.current_user.current_school,
+      discounts: state => state.discount.list.data || []
+    }),
     ...mapGetters([
       "terms",
       "subjects",
@@ -116,6 +124,22 @@ export default {
       "grades",
       "course_settings"
     ]),
+    discount() {
+      if (!this.discounts) {
+        return {};
+      }
+      let total_quantity = this.$shoppingCard.quantity;
+      let discounts_sorted = this.discounts.slice().sort((a, b) => {
+        return a - b;
+      });
+      let filter = discounts_sorted.filter(
+        v => v.min_quantity <= total_quantity
+      );
+      if (filter && filter.length > 0) {
+        return filter[filter.length];
+      }
+      return {};
+    },
     card() {
       return this.$shoppingCard.items;
     }
@@ -125,19 +149,28 @@ export default {
   },
   created() {
     let self = this;
-    this.$shoppingCard.emitter.$on("added", item => {});
+    this.$shoppingCard.emitter.$on("added", item => {
+      this.$emit('content-changed');
+    });
     this.$on("_caculate_product_count", function(cardItem) {
       cardItem.quantity = self.total_lesson_count(cardItem.details);
       // console.warn("_caculate_product_count", cardItem.quantity);
     });
   },
-  activated() {},
-  mounted() {},
+  activated() {
+    if (!this.discounts) {
+      this.getDiscountList({ school_id: this.current_school.id });
+    }
+  },
+  mounted() {
+    this.getDiscountList({ school_id: this.current_school.id });
+  },
   methods: {
     ...mapActions({
       fetchCourseLesson: "fetchCourseLesson",
       getClazzById: "getClazzById",
-      getProduct: "getProduct"
+      getProduct: "getProduct",
+      getDiscountList: "getDiscountList"
     }),
     addClazzToCard(clazz) {
       if (this.card.find(v => v.index.id == clazz.id)) {
@@ -317,8 +350,18 @@ export default {
     purchase() {
       if (this.card.length > 0) {
         // this.$router.push({ name: "create_order" });
-        this.$emit('onPurchase');
+        this.$emit("onPurchase");
       }
+    },
+    formatDiscount(discount_percent) {
+      if (typeof discount_percent !== "number") {
+        return "";
+      }
+      let percent =
+        ~~(discount_percent / 10) === discount_percent / 10
+          ? ~~(discount_percent / 10)
+          : discount_percent / 10;
+      return `${percent}折`;
     },
     total_lesson_count(gradeList) {
       if (!gradeList || gradeList.length == 0) {
@@ -349,7 +392,11 @@ export default {
       card.forEach(item => {
         amount += item.quantity * parseFloat(item.product.price);
       });
+
       return amount;
+    },
+    total_amount_discounted(amount, discount) {
+      return amount * discount;
     },
     item_amount(item) {
       return item.quantity * parseFloat(item.product.price);

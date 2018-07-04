@@ -46,8 +46,8 @@
                     </h4>
                        <el-col :span="24" v-for="(parentForm ,index) in createStudentForm.parents" :key="index">
                         <el-form-item :prop="'parents.' + index + '.relation'" :rules="[{required:true, message:'请填写与孩子的关系'}]">
-                            <el-select style="width:178px;" v-model="parentForm.relation" placeholder="与孩子关系">
-                                <el-option v-for="item in parentRelations" :key="item" :label="item" :value="item"></el-option>
+                            <el-select style="width:178px;" v-model="parentForm.relation" :key="parentForm.id"  placeholder="与孩子关系">
+                                <el-option v-for="(item,idx) in parentRelations" :key="idx" :label="item" :value="item"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item :prop="'parents.' + index + '.name'" >
@@ -185,7 +185,7 @@ export default {
     ...mapGetters(["genders"])
   },
   created() {
-    console.log("created+++++++++++++++++")
+    console.log("created+++++++++++++++++");
     let self = this;
     if (this.mode != "create") {
       this.getStudentById({ id: this.studentId }).then(res => {
@@ -200,8 +200,8 @@ export default {
           if (res.data.parents) {
             for (let i = 0; i < res.data.parents.length; i++) {
               self.createStudentForm.parents.unshift(res.data.parents[i]);
-              self.createStudentForm.parents.pop();
             }
+            self.createStudentForm.parents.pop();
           }
         }
       });
@@ -275,9 +275,9 @@ export default {
         }
       });
     },
-    
+
     beforeDestroy() {
-      console.log("beforeDestroy++++++++++")
+      // console.log("beforeDestroy++++++++++")
     }
   }
 };

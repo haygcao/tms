@@ -22,7 +22,7 @@
                 <el-input v-model="searchForm.order_no" placeholder="订单编号"></el-input>
             </el-form-item>
             <el-form-item prop="student">
-                <el-input v-model="searchForm.student" placeholder="输入学员姓名或手机号"></el-input>
+                <el-input v-model="searchForm.student" clearable="" placeholder="输入学员姓名或手机号"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
@@ -47,14 +47,14 @@
                           <el-form-item label="来源">
                             <span>{{scope.row.origin}}</span>
                           </el-form-item>
-                          <el-form-item label="是否年缴">
+                          <!-- <el-form-item label="是否年缴">
                             <span>{{scope.row.order_type==0?'否':('缴'+scope.row.order_type+'年')}}</span>
-                          </el-form-item>
+                          </el-form-item> -->
                           <el-form-item label="创建时间">
-                            <span>{{scope.row.created_at|toDateTimeString}}</span>
+                            <span>{{scope.row.created_at|formatDateTime("YYYY-MM-DD hh:mm")}}</span>
                           </el-form-item>
                           <el-form-item label="支付时间">
-                            <span> {{scope.row.payment_time|toDateTimeString}}</span>
+                            <span> {{scope.row.payment_time|formatDateTime("YYYY-MM-DD hh:mm")}}</span>
                           </el-form-item>
                           <el-form-item label="支付方式">
                             <span> {{scope.row.payment_type|payment_type}}</span>
@@ -69,7 +69,7 @@
             </el-table-column>
             <el-table-column prop="order_no" width="160" label="订单编号">
             </el-table-column>
-            <el-table-column width="" label="班级">
+            <el-table-column width="" label="课程">
                 <template slot-scope="scope">
             {{scope.row.subject}}
           </template>
@@ -79,24 +79,9 @@
             {{scope.row.student_name}}
           </template>
             </el-table-column>
-            <!-- <el-table-column width="80" label="课程顾问">
-                <template slot-scope="scope">
-            {{scope.row.consultant_name}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="来源">
-                <template slot-scope="scope">
-            {{scope.row.origin}}
-          </template>
-            </el-table-column>
-            <el-table-column label="是否年缴">
-                <template slot-scope="scope">
-              {{scope.row.order_type==0?'否':('缴'+scope.row.order_type+'年')}}
-          </template>
-            </el-table-column> -->
             <el-table-column width="100" label="购买课次">
                 <template slot-scope="scope">
-            {{scope.row.total_lesson_number}}
+            {{scope.row.total_lesson}}
           </template>
             </el-table-column>
             <el-table-column width="100" label="订单金额">
@@ -104,34 +89,25 @@
            {{scope.row.amount|money}}
           </template>
             </el-table-column>
+             <el-table-column width="100" label="实付">
+                <template slot-scope="scope">
+              {{scope.row.amount_payable|money}}
+              </template>
+            </el-table-column>
             <el-table-column width="80" label="状态">
                 <template slot-scope="scope">
-            {{scope.row.state|orderState}}
+           <span :class="{'text-success':scope.row.state==2,'text-danger':scope.row.state==1}"> {{scope.row.state|orderState}}</span>
           </template>
             </el-table-column>
             <el-table-column width="150" label="创建时间">
                 <template slot-scope="scope">
-            {{scope.row.created_at|toDateTimeString}}
+            {{scope.row.created_at|formatDateTime("YYYY-MM-DD hh:mm")}}
           </template>
              </el-table-column>
-            <!--<el-table-column width="150" label="支付时间">
-                <template slot-scope="scope">
-            {{scope.row.payment_time|toDateTimeString}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="支付方式">
-                <template slot-scope="scope">
-             {{scope.row.payment_type|payment_type}}
-          </template>
-            </el-table-column>
-            <el-table-column width="100" label="收款人">
-                <template slot-scope="scope">
-            {{scope.row.payee}}
-          </template>
-            </el-table-column> -->
             <el-table-column fixed="right" label="操作" width="150">
                 <template slot-scope="scope">
             <el-button @click="onShowDetail(scope.row)" type="text" size="small">查看</el-button>
+            <el-button v-if="scope.row.state<=1" @click="onCashier(scope.row)" type="text" size="small">继续付款</el-button>
             <el-button v-if="scope.row.state<=1" @click="onCancelOrder(scope.row)" type="text" size="small">取消</el-button>
              <el-button v-if="scope.row.state>1&&scope.row.state<9" @click="onRefundOrder(scope.row)" type="text" size="small">退款</el-button>
           </template>
@@ -176,12 +152,12 @@ export default {
     ...mapGetters(["terms", "subjects", "class_types", "grades"])
   },
   watch: {
-    $route(val, old) {
-      let query = val.query;
-      this.currentPage = parseInt(val.params.page);
-      this.searchForm = Object.assign({}, query);
-      this.search();
-    },
+    // $route(val, old) {
+    //   let query = val.query;
+    //   this.currentPage = parseInt(val.params.page);
+    //   this.searchForm = Object.assign({}, query);
+    //   this.search();
+    // },
     current_school(val, old) {
       if (val.id != old.id) {
         this.search();
@@ -195,10 +171,32 @@ export default {
       }
     }
   },
+  beforeRouteUpdate(to, from, next) {
+    // react to route changes...
+    // don't forget to call next()
+    this.currentPage = to.params.page > 0 ? to.params.page : 1;
+    this.searchForm = Object.assign(this.searchForm, to.query);
+    this.search();
+    next();
+  },
   mounted() {
-    let query = this.$route.query;
-    this.searchForm = Object.assign({}, query);
-    this.currentPage = parseInt(this.$route.params.page);
+    // let query = this.$route.query;
+    // this.searchForm = Object.assign({}, query);
+    // this.currentPage = parseInt(this.$route.params.page);
+    // this.search();
+    this.currentPage =
+      this.$route.params.page > 0 ? parseInt(this.$route.params.page) : 1;
+    this.searchForm = Object.assign(
+      {
+        begin: undefined,
+        end: undefined,
+        // state: undefined,
+        student: undefined,
+        order_no: undefined
+      },
+      this.$route.query
+    );
+
     this.search();
   },
   methods: {
@@ -217,11 +215,10 @@ export default {
       this.search();
     },
     search() {
-      let payload = Object.assign({}, this.searchForm);
-      payload.limit = parseInt(this.pageSize);
+     let payload = Object.assign({}, this.searchForm);
+      payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
       payload.school_id = this.current_school.id;
-
       this.getOrderList(payload);
     },
     onSearchLatstWeek() {
@@ -259,6 +256,11 @@ export default {
         params: { page: this.currentPage },
         query: this.searchForm
       });
+    },
+    onCashier(val) {
+      if (val.state < 2) {
+        this.$router.push({ name: "cashier", query: { order_id: val.id } });
+      }
     },
     onCancelOrder(payload) {
       // this.searchForm = Object.assign(this.searchForm, this.defaultSearchForm);

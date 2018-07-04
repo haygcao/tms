@@ -1,44 +1,22 @@
 <template>
-<div class="order">
-    <h3>等待支付,<span class="text-danger">请于 {{orderSummaryInfo.payment_expires_at|toTimeString}}前完成支付</span></h3>
+<div v-if="orderSummaryInfo" class="order">
+    <h3>等待支付,请于 <span class="text-danger">{{orderSummaryInfo.payment_expires_at|formatDateTime('MM月DD日 hh时mm分ss秒')}}</span>前完成支付</h3>
     <el-row>
-        <h3>报名信息</h3>
-        <el-table :data="currentClazz" border style="max-width: 1100px">
-            <el-table-column label="班级">
-                <template slot-scope="scope">
-              {{scope.row.year}}{{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
-          </template>
-            </el-table-column>
-            <el-table-column width="200" label="上课时间">
-                <template slot-scope="scope">
-            <p>{{scope.row.begin_date|toDateString}}-{{scope.row.finish_date|toDateString}}</p>
-            <p><span v-if="scope.row.class_type=='0'||scope.row.class_type=='1'">{{scope.row.begin_date|weekDay}}</span> {{scope.row.class_begin_time|toShortTimeString}}-{{scope.row.class_finish_time|toShortTimeString}}</p>
-          </template>
-            </el-table-column>
-            <el-table-column width="120" label="上课地点">
-                <template slot-scope="scope">
-            {{scope.row.classroom_name}}
-          </template>
-            </el-table-column>
-            <el-table-column width="120" label="授课老师">
-                <template slot-scope="scope">
-            {{scope.row.teacher_name}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="总课次">
-                <template slot-scope="scope">
-            {{scope.row.total_lesson_number||0}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="剩余课次">
-                <template slot-scope="scope">
-             {{scope.row.total_lesson_number - (scope.row.current_lesson_number||0)}}
-          </template>
-            </el-table-column>
-        </el-table>
+        <h3>订单:<small>{{orderSummaryInfo.order_no}}</small></h3>
+        <el-form :model="orderSummaryInfo">
+          <el-form-item label="学员"><span>{{orderSummaryInfo.student_name}}</span></el-form-item>
+          <el-col :span="11"><el-form-item label="购买课程">
+            <span>{{orderSummaryInfo.subject}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11">
+            <el-form-item label="数量">
+            <span>{{orderSummaryInfo.total_lesson}}</span></el-form-item>
+          </el-col>
+        </el-form>
     </el-row>
     <el-row>
-        <h3>缴费金额(元): <span class="text-danger">{{orderSummaryInfo.amount|money}}</span></h3>
+        <h3>缴费金额: <cny class="text-danger" :value="orderSummaryInfo.amount_payable"></cny></h3>
         <p>支付方式:{{orderSummaryInfo.payment_type|payment_type}}</p>
     </el-row>
     <el-row>
@@ -55,12 +33,13 @@
                 </el-form-item>
                 <el-form-item>
                      <el-button type="danger" @click="onSubmitPayment()">确认付款</el-button>
-                      <el-button type="text" @click="onCancleOrder()">取消订单</el-button>
+                      <el-button type="info" @click="onCancleOrder()">取消订单</el-button>
                 </el-form-item>
             </el-form>
             </div>
     </el-row>
 </div>
+
 </template>
 
 <script>
@@ -77,89 +56,136 @@ export default {
   },
   computed: {
     ...mapState({
-      currentClazz: state => {
-        if (state.clazz.selectedClazz.data) {
-          return [state.clazz.selectedClazz.data];
-        }
-        return [];
-      },
       payOfflineResult: state => state.order.payOfflineResult,
+      current_school: state => state.current_user.current_school,
       //   course: state => state.order.course,
       student: state => state.order.student,
-      orderSummaryInfo: state => state.order.orderSummaryInfo.data||{}
+      orderSummaryInfo: state => state.order.orderSummaryInfo.data || {}
     }),
     order_id() {
       return this.$route.query.order_id;
-    },
-    sign() {
-      return this.$route.query.sign;
     }
   },
-  watch: {
-    orderSummaryInfo(val, old) {
-      if (val) {
-        this.getClazzById({
-          clazz_id: val.clazz_id
-        });
-      }
-    },
-    payOfflineResult(val, old) {
-      if (val && val.code == 0) {
-        this.$message.success("提交成功");
-        this.$router.replace({ name: "order_list" });
-      } else {
-        this.$message.success(val.message || "提交失败");
-      }
-    }
-  },
+  watch: {},
   mounted() {
-    this.fetchOrderById({ order_id: this.order_id });
+    this.fetchOrderById({ order_id: this.order_id }).then(res => {
+      if (res && res.code == 0 && res.data && res.data.state == 1) {
+        if (
+          new Date(res.data.payment_expires_at).setMilliseconds(0) < Date.now()
+        ) {
+          return this.onPaymentResult("failed", {
+            code: 110,
+            order_id: this.order_id
+          });
+        }
+        return;
+      } else {
+        if (!res || !res.data) {
+          this.$router.replace({
+            name: "404"
+          });
+          return;
+        }
+        if (res.data.state == 2) {
+          return this.onPaymentResult("success");
+        }
+        if (res.data.state > 2) {
+          this.$router.replace({
+            name: "order_list"
+          });
+        }
+      }
+    });
   },
   methods: {
     ...mapActions({
       payOffline: "payOffline",
       fetchOrderById: "fetchOrderById",
-      getClazzById: "getClazzById"
+      cancelOrder: "cancelOrder"
     }),
+    onPaymentResult(status, query) {
+      this.$router.replace({
+        name: "cashier_result",
+        query: query,
+        params: { status: status }
+      });
+    },
     onSubmitPayment() {
       this.$refs["paymentInfo"].validate(valid => {
-        if (valid && this.order_id && this.sign) {
+        if (valid && this.order_id) {
           let payload = this.paymentInfo;
           payload.order_id = this.order_id;
-          payload.sign = this.sign;
-          this.payOffline(payload);
+          payload.school_id = this.current_school.id;
+          this.payOffline(payload).then(val => {
+            if (val && val.code == 0) {
+              this.$message.success("提交成功");
+              this.$router.replace({
+                name: "cashier_result",
+                params: { status: "success" }
+              });
+              // this.$router.replace({ name: "order_list" });
+            } else {
+              this.onPaymentResult("falied", {
+                code: val.code,
+                order_id: payload.order_id
+              });
+              // this.$router.replace({
+              //   name: "cashier_result",
+              //   query: { code: val.code, order_id: payload.order_id },
+              //   params: { status: "failed" }
+              // });
+              // this.$message.error("提交失败");
+            }
+          });
         }
       });
     },
-    onCancleOrder() {}
+    onCancleOrder() {
+      this.$confirm("确认取消订单？")
+        .then(_ => {
+          this.cancelOrder({ id: this.order_id }).then(res => {
+            if (res && res.code == 0) {
+              this.$message.success("操作成功");
+              this.$router.push({ name: "order_list", params: { page: 1 } });
+            } else {
+              this.$message.error("操作失败");
+            }
+          });
+        })
+        .catch(_ => {});
+    }
   }
 };
 </script>
 <style lang="stylus" scoped>
+.order {
+  background-color: #ffffff;
+}
+
 .search-form .el-input {
-    width: 240px;
+  width: 240px;
 }
 
 .order .el-row {
-    border-top: 1px dashed #DCDFE6;
+  border-top: 1px dashed #DCDFE6;
 
-    &:first-child {
-        border-top: none;
-    }
+  &:first-child {
+    border-top: none;
+  }
 }
 
 .parent-form {
-    border-top: 1px dashed #EBEEF5;
-    padding-top: 15px;
+  border-top: 1px dashed #EBEEF5;
+  padding-top: 15px;
 
-    &:first-child {
-        border-top: none;
-        padding-top: 0;
-    }
+  &:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
 }
 
 .mt-15 {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .student-form .el-input {

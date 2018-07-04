@@ -13,20 +13,48 @@ Vue.use(Router)
 //   routes.push(files(key).default) 
 // })
 // console.log(JSON.stringify(routes))
-
+// scrollBehavior:
+// - only available in html5 history mode
+// - defaults to no scroll behavior
+// - return false to prevent scroll
+const scrollBehavior = (to, from, savedPosition) => {
+  if (savedPosition) {
+    // savedPosition is only available for popstate navigations.
+    return savedPosition
+  } else {
+    const position = {}
+    // new navigation.
+    // scroll to anchor by returning the selector
+    if (to.hash) {
+      position.selector = to.hash
+    }
+    // check if any matched route config has meta that requires scrolling to top
+    if (to.matched.some(m => m.meta.scrollToTop)) {
+      // cords will be used if no selector is provided,
+      // or if the selector didn't match any element.
+      position.x = 0
+      position.y = 0
+    }
+    // if the returned position is falsy or an empty object,
+    // will retain current scroll position.
+    return position
+  }
+}
 export default new Router({
+  scrollBehavior,
   routes: [
     
     {
       path: '/',
       name: 'default',
       component: Home,
+      redirect:'/index',
       meta: { auth: true },
       children: [
         {
-          path: '/',
+          path: '/index',
           name:'index',
-          redirect:'/dashboard',
+          // redirect:'/dashboard',
           component: require('@/views/Default.vue').default
         },
         {
@@ -122,12 +150,12 @@ export default new Router({
       children: [
         {
           name: 'students',
-          path: 'students/:page(\\d+)',
+          path: 'students/:page(\\d+)?',
           component: require('@/views/school/StudentList.vue').default
         },
         {
           name: 'products',
-          path: 'classes/:page(\\d+)',
+          path: 'classes/:page(\\d+)?',
           component: require('@/views/school/ClazzList.vue').default
         },
         {
@@ -137,13 +165,18 @@ export default new Router({
         },
         {
           name: 'order_list',
-          path: 'purchase/order/list/:page(\\d+)',
+          path: 'purchase/order/list/:page(\\d+)?',
           component: require('@/views/school/OrderList.vue').default
         },
         {
           name: 'cashier',
           path: 'purchase/cashier',
           component: require('@/views/school/Cashier.vue').default
+        },
+        {
+          name: 'cashier_result',
+          path: 'purchase/cashier/payment/:status',
+          component: require('@/views/school/PaymentComplete.vue').default
         },
       ]
     },

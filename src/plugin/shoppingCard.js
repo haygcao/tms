@@ -1,3 +1,12 @@
+
+function getExpiration(exp) {
+    return exp ? Date.now() + exp : 0
+}
+
+function isExpired(exp) {
+    return exp && (Date.now() > exp)
+}
+const cache = {}
 class ShoppingCardItem {
     constructor({ category, index, product, quantity, details }) {
         this.index = index;
@@ -10,7 +19,7 @@ class ShoppingCardItem {
     }
 }
 class ShoppingCard {
-    constructor(Vue) {
+    constructor(Vue, options) {
         this._card = new Vue({
             data() {
                 return {
@@ -20,17 +29,63 @@ class ShoppingCard {
             },
             computed: {
                 amount() {
-                    let am = 0;
+                    let amount = 0;
                     this.items.forEach(item => {
-                        item.details.forEach(grade => {
-                            grade.terms.forEach(term => {
-                                if (term.course) {
-                                    am += parseFloat(term.course.price);
-                                }
-                            })
-                        });
+                        amount += item.quantity * parseFloat(item.product.price);
                     });
-                    return am;
+
+                    return amount;
+                },
+                quantity() {
+                    return this.items.reduce((acc, cur) => {
+                        return acc + cur.quantity;
+                    }, 0);;
+                }
+
+            },
+            beforeCreate() {
+                this.$persist = (names, storeName = options.storeName, storeExpiration = options.expiration) => {
+                    let read=options.read;
+                    let write=options.write;
+                    let clear=options.clear;
+                    let store = cache[storeName] = JSON.parse(read(storeName) || '{}')
+                    store.data = store.data || {}
+
+                    if (isExpired(store.expiration)) {
+                        clear(storeName)
+                        store = {
+                            data: {},
+                            expiration: getExpiration(storeExpiration)
+                        }
+                    }
+
+                    if (!store.expiration) {
+                        store.expiration = getExpiration(storeExpiration)
+                    }
+
+                    this._persistWatchers = this._persistWatchers || []
+
+                    for (const name of names) {
+                        if (typeof store.data[name] !== 'undefined') {
+                            this[name] = store.data[name]
+                        }
+
+                        if (this._persistWatchers.indexOf(name) === -1) {
+                            this._persistWatchers.push(name)
+
+                            this.$watch(name, val => {
+                                store.data[name] = val
+                                write(storeName, JSON.stringify(store))
+                            }, { deep: true })
+                        }
+                    }
+                }
+            },
+            persist: ['items', 'student'],
+            created() {
+                const { persist } = this.$options
+                if (persist) {
+                    this.$persist(persist)
                 }
             }
         });
@@ -50,6 +105,9 @@ class ShoppingCard {
     get amount() {
         return this._card.amount;
     }
+    get quantity() {
+        return this._card.quantity;
+    }
     get student() {
         return this._card.student;
     }
@@ -58,6 +116,19 @@ class ShoppingCard {
     }
     set student(value) {
         this._card.student = value;
+    }
+    package() {
+        let pack = {};
+        pack.amount = this.amount;
+        pack.quantity = this.quantity;
+        pack.items = JSON.parse(JSON.stringify(this.items));
+        pack.student = JSON.parse(JSON.stringify(this.student));
+        return pack;
+    }
+    clear() {
+        this._card.items = [];
+        this.student = undefined;
+        this.emitter.$emit('clear');
     }
     add(cardItem) {
         // let cardItem = {
@@ -69,10 +140,6 @@ class ShoppingCard {
         this.items.push(cardItem);
         this.emitter.$emit('added', cardItem);
     }
-    // addItemDetail(index, detail) {
-    //     let item = this.items.find(v => v.index.id == index.id);
-    //     item.details.push(detail);
-    // }
     remove(cardItem) {
         let idx = this.items.findIndex(v => v.key == cardItem.key);
         let removed = this.items.splice(idx, 1);
@@ -86,6 +153,14 @@ class ShoppingCard {
         }
     }
 
+
+}
+const defaultOptions = {
+    storeName: 'persist:shoppingcard-store',
+    expiration: 1000 * 60 * 60 * 24,
+    read: k => localStorage.getItem(k),
+    write: (k, v) => localStorage.setItem(k, v),
+    clear: k => localStorage.removeItem(k)
 }
 function plugin(Vue, options) {
 
@@ -93,7 +168,7 @@ function plugin(Vue, options) {
         return;
     }
 
-    options = options || {};
+    options = Object.assign(defaultOptions, options);
 
     Vue.ShoppingCard = new ShoppingCard(Vue, options)
     Vue.ShoppingCardItem = ShoppingCardItem;

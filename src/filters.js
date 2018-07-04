@@ -16,6 +16,12 @@ export const money = (val) => {
     const CNY = "¥";
     return formatCurrency(val, CNY);
 }
+export const formatDiscount = (discount_percent) => {
+    if (typeof discount_percent !== 'number') {
+        return '';
+    }
+    return ~~(discount_percent / 10) === (discount_percent / 10) ? ~~(discount_percent / 10) : (discount_percent / 10);
+}
 export const numberToCn = function (number) {
     var SYMBOLS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
     var UNIT_MAP = {
@@ -74,10 +80,10 @@ export const numberToCn = function (number) {
 }
 
 
-export const toDateTimeString = (time) => {
-    if (!time) return '';
-    return formatDateTime(time).format("yyyy-MM-dd hh:mm")
-}
+// export const toDateTimeString = (time) => {
+//     if (!time) return '';
+//     return formatDateTime(time).format("yyyy-MM-dd hh:mm")
+// }
 export const toTimeString = (time) => {
     if (!time) return '';
     return moment.format("MM月DD日 hh时mm分ss秒")
@@ -94,6 +100,7 @@ export const toDateString = (time) => {
     return moment(time).format("YYYY/MM/DD")
 }
 export const formatDateTime = (date, format = 'YYYY/MM/DD') => {
+    if (!date) return '';
     return moment(date).format(format);
 }
 export const age = (birthday) => {
@@ -172,13 +179,23 @@ export const payment_type = (val) => {
 
     return payType[val] || '其他'
 }
+// pending: 0,//新订单
+//         submit: 1,//待支付
+//         paid: 2,//已支付
+//         refund_apply: 21,//退款申请中
+//         refund_success: 22,//已退款
+//         canceled: 11,//已取消
+//         completed: 90,//已完成
+//         closed: 99,//已关闭
 const OrderStatus = {
     0: '已提交',
     1: '待支付',
     2: '已支付',
-    3: '已完成',
+    21:'退款申请中',
+    22:'已退款',
     11: '已取消',
-    12: '已关闭',
+    90: '已完成',
+    99: '已关闭',
 }
 export const orderState = (val = 0) => {
     return OrderStatus[val] || '--'

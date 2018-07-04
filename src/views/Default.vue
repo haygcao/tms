@@ -1,9 +1,8 @@
 <template>
   <div class="dashboard">
         <el-row>
-       
         </el-row>
-        <el-row>
+        <el-row v-if="false">
           <el-col :xs="24" :sm="12" :md="8" :lg="8">
             <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -100,8 +99,8 @@ export default {
 };
 </script>
 <style scoped>
-.box-card{
-    max-width: 320px;
+.box-card {
+  max-width: 320px;
 }
 </style>
 
