@@ -4,7 +4,7 @@
         <div v-show="!showAddStudentModal" class="">
         <h3 class="text-info text-center" v-show="!showAddStudentModal">请为您选的课程选择一个学员</h3>
 
-        <el-form v-if="!student" @keyup.enter.native="onSearch" :inline="true" size="small" class="search-form" ref="searchForm" :rules="searchFormRules" :model="searchForm">
+        <el-form v-if="!student" @keydown.native.enter.prevent="()=>{}" @keyup.enter.native="onSearch" :inline="true" size="small" class="search-form" ref="searchForm" :rules="searchFormRules" :model="searchForm">
                 <el-form-item prop="mobile">
                     <el-input style="width:320px" v-model="searchForm.mobile" clearable placeholder="输入学员家长的手机号查询"></el-input>
                 </el-form-item>
