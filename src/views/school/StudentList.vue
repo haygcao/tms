@@ -90,8 +90,8 @@ export default {
       selectedStudentId: undefined,
       dialogAddStudentVisible: false,
       addStudentMode: "edit",
-      student_avatar_girl:require('@/assets/img/student_0.png'),
-      student_avatar_boy:require('@/assets/img/student_1.png')
+      student_avatar_girl: require("@/assets/img/student_0.png"),
+      student_avatar_boy: require("@/assets/img/student_1.png")
     };
   },
   watch: {
@@ -100,12 +100,20 @@ export default {
         this.search();
       }
     },
-    $route(val, old) {
-      let query = val.query;
-      this.currentPage = parseInt(val.params.page);
-      this.searchForm.kw = query.kw;
-      this.search();
-    }
+    // $route(val, old) {
+    //   let query = val.query;
+    //   this.currentPage = parseInt(val.params.page);
+    //   this.searchForm.kw = query.kw;
+    //   this.search();
+    // }
+  },
+  beforeRouteUpdate(to, from, next) {
+    // react to route changes...
+    // don't forget to call next()
+    this.currentPage = to.params.page > 0 ? to.params.page : 1;
+    this.searchForm = Object.assign(this.searchForm, to.query);
+    this.search();
+    next();
   },
   computed: {
     ...mapState({
@@ -116,7 +124,8 @@ export default {
   mounted() {
     let query = this.$route.query;
     this.searchForm.kw = query.kw;
-    this.currentPage = parseInt(this.$route.params.page);
+    this.currentPage =
+      this.$route.params.page > 0 ? parseInt(this.$route.params.page) : 1;
     this.search();
   },
   methods: {

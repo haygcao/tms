@@ -1,5 +1,6 @@
 import * as constants from "@/lib/constants";
 import moment from 'moment';
+// moment.locale('zh-cn');
 import Currency from 'currency.js';
 const { ClassType, SubjectName, Terms, Grade, ClazzState } = constants
 export const capitalize = function (value) {
@@ -84,16 +85,16 @@ export const numberToCn = function (number) {
 //     if (!time) return '';
 //     return formatDateTime(time).format("yyyy-MM-dd hh:mm")
 // }
-export const toTimeString = (time) => {
-    if (!time) return '';
-    return moment.format("MM月DD日 hh时mm分ss秒")
-}
+// export const toTimeString = (time) => {
+//     if (!time) return '';
+//     return moment.format("MM月DD日 hh时mm分ss秒")
+// }
 export const toShortTimeString = (time) => {
     if (!time) return '';
     if (typeof time === 'string') {
         time = '1900-01-01 ' + time;
     }
-    return moment(time).format("h:mm");
+    return moment(time).format("H:mm");
 }
 export const toDateString = (time) => {
     if (!time) return '';
@@ -191,8 +192,8 @@ const OrderStatus = {
     0: '已提交',
     1: '待支付',
     2: '已支付',
-    21:'退款申请中',
-    22:'已退款',
+    21: '退款申请中',
+    22: '已退款',
     11: '已取消',
     90: '已完成',
     99: '已关闭',

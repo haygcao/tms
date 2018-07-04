@@ -51,10 +51,10 @@
                             <span>{{scope.row.order_type==0?'否':('缴'+scope.row.order_type+'年')}}</span>
                           </el-form-item> -->
                           <el-form-item label="创建时间">
-                            <span>{{scope.row.created_at|formatDateTime("YYYY-MM-DD hh:mm")}}</span>
+                            <span>{{scope.row.created_at|formatDateTime("YYYY-MM-DD H:mm")}}</span>
                           </el-form-item>
                           <el-form-item label="支付时间">
-                            <span> {{scope.row.payment_time|formatDateTime("YYYY-MM-DD hh:mm")}}</span>
+                            <span> {{scope.row.payment_time|formatDateTime("YYYY-MM-DD H:mm")}}</span>
                           </el-form-item>
                           <el-form-item label="支付方式">
                             <span> {{scope.row.payment_type|payment_type}}</span>
@@ -101,7 +101,7 @@
             </el-table-column>
             <el-table-column width="150" label="创建时间">
                 <template slot-scope="scope">
-            {{scope.row.created_at|formatDateTime("YYYY-MM-DD hh:mm")}}
+            {{scope.row.created_at|formatDateTime("YYYY-MM-DD H:mm")}}
           </template>
              </el-table-column>
             <el-table-column fixed="right" label="操作" width="150">

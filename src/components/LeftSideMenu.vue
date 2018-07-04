@@ -120,6 +120,10 @@ export default {
   border-right: none;
 }
 
+.el-menu--collapse .el-submenu__title, .el-menu--collapse .el-menu-item {
+  font-size: 16px;
+}
+
 .menu-wrap {
   height: 100%;
   background-color: #ffffff; // #00509F; //
