@@ -138,7 +138,6 @@ export default {
       }
     },
     createResult(c, o) {
-      // debugger;
       if (c.code == 0) {
         this.$message({
           message: "恭喜你，创建成功",

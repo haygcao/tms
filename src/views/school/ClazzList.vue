@@ -83,8 +83,8 @@
                 <i class="el-icon-location-outline"></i>
                 <span>{{clazz.classroom_name}}</span>
               </span>
-              <span class="clazz-lesson">共{{clazz.total_lesson_number||0}}节课
-                <span v-if="clazz.state==1" class="text-danger">(剩余{{clazz.total_lesson_number - (clazz.current_lesson_number||0)}}节课)</span>
+              <span class="clazz-lesson">共{{clazz.total_lesson_number||0}}次课
+                <span v-if="clazz.state==1" class="text-danger">(剩余{{clazz.total_lesson_number - (clazz.current_lesson_number||0)}}次课)</span>
               </span>
             </div>
             <div class="clazz-item-p2-s3">

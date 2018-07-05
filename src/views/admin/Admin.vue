@@ -38,7 +38,7 @@
             
         </el-submenu>
          <el-menu-item index="/admin/courseware/list">
-            <i class="el-icon-picture"></i>
+            <i class="iconfont icon-ppt"></i>
             <span slot="title">课件管理</span>
         </el-menu-item>
          <el-menu-item index="/admin/homework/list">

@@ -1,11 +1,14 @@
 // vue.config.js https://github.com/vuejs/vue-cli/blob/dev/docs/config.md
 module.exports = {
   lintOnSave: true,
+  baseUrl:'/',
   configureWebpack: config => {
     {
       output: {
         publicPath: './'
       }
+      // assetsDir: './src/assets'
+      // baseUrl:'/'
       // devtool:'source-map'
     }
   },

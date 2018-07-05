@@ -1,5 +1,5 @@
 <template>
-<div class="menu-wrap" :class="{'menu-collapsed':isCollapse}">
+<div class="menu-wrap scroll_bar" :class="{'menu-collapsed':isCollapse}" >
  <div class="clearfix menu-expand"><a class="menu-switch primary" @click="handleMenuCollapse"><i class="el-icon-more"></i></a></div>
   <!-- #545c64 -->
    <!-- background-color="#00509F"
@@ -14,30 +14,28 @@
     <i class="iconfont icon-pie-chart"></i>
     <span slot="title">校区概况</span>
   </el-menu-item>
-  <el-submenu index="/home/employee" v-if="business_master">
-    <template slot="title">
-      <i class="iconfont icon-discount-setting"></i>
-      <span slot="title">业务管理</span>
-    </template>
-      <el-menu-item index="/home/employee/1" :route="{name:'employee_default'}">员工管理</el-menu-item>
-    
-    <el-menu-item-group title="价格管理" v-if="business_master">
-      <el-menu-item index="/home/promotion/unitprice">课次单价</el-menu-item>
-       <el-menu-item index="1-4-1">连报折扣</el-menu-item>
-    </el-menu-item-group>
-  </el-submenu>
-  <el-submenu index="/teaching" v-if="school_master">
-    <template slot="title">
+  <el-menu-item index="/home/employee/1" v-if="business_master">
+    <i class="iconfont icon-employee"></i>
+    <span slot="title">员工管理</span>
+  </el-menu-item>
+  <el-menu-item index="/home/promotion" v-if="business_master">
+    <i class="iconfont icon-discount-setting"></i>
+    <span slot="title">促销折扣</span>
+  </el-menu-item>
+   <el-menu-item index="/teaching/classroom" v-if="school_master">
     <i class="iconfont icon-classroom"></i>
-      <span slot="title">教学管理</span>
-    </template>
-    <el-menu-item index="/teaching/classroom">教室管理</el-menu-item>
-    <el-menu-item index="/teaching/schedule">课程表</el-menu-item>
-    <el-menu-item index="/teaching/class">班级管理</el-menu-item>        
-  </el-submenu>
-  
+    <span slot="title">教室管理</span>
+  </el-menu-item>
+   <el-menu-item index="/teaching/class" v-if="school_master">
+    <i class="iconfont icon-clazz"></i>
+    <span slot="title">班级管理</span>
+  </el-menu-item>
+   <el-menu-item index="/teaching/schedule" v-if="school_master">
+    <i class="iconfont icon-schedule-setting"></i>
+    <span slot="title">开班排课</span>
+  </el-menu-item>
   <el-menu-item index="/school/classes/1" v-if="school_master||student_master">
-    <i class="iconfont icon-sign"></i>
+    <i class="iconfont icon-consume-course"></i>
     <span slot="title">选课报名</span>
   </el-menu-item>
   <el-menu-item index="/school/purchase/order/list/1" v-if="school_master||student_master">
@@ -45,7 +43,7 @@
     <span slot="title">订单管理</span>
   </el-menu-item>
   <el-menu-item index="/school/students/1">
-    <i class="iconfont icon-class-setting"></i>
+    <i class="iconfont icon-student"></i>
     <span slot="title">学员管理</span>
   </el-menu-item>
 </el-menu>
@@ -81,7 +79,6 @@ export default {
       return this.$auth.isAuthenticated([
         "teaching_manager",
         "school_manager",
-        // "administrator",
         "franchisee_admin",
         "investor"
       ]);
@@ -91,7 +88,6 @@ export default {
         "consultant",
         "teaching_manager",
         "school_manager",
-        // "administrator",
         "franchisee_admin",
         "investor"
       ]);
@@ -103,10 +99,10 @@ export default {
       this.$emit("menuCollapse", !this.isCollapse);
     },
     handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     }
   }
 };
@@ -119,9 +115,27 @@ export default {
 .menu-wrap .el-menu {
   border-right: none;
 }
+.menu-wrap.scroll_bar::-webkit-scrollbar {
+    width: 0px;
+    background-color: #ffffff;
+}
+// .scroll_bar::-webkit-scrollbar-track {
+//     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+//     background-color: #F5F5F5;
+// }
 
+// .scroll_bar::-webkit-scrollbar {
+//     width: 6px;
+//     background-color: #F5F5F5;
+// }
+
+// .scroll_bar::-webkit-scrollbar-thumb {
+//     border-radius: 4px;
+//     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+//     background-color: #cccccc;
+// }
 .el-menu--collapse .el-submenu__title, .el-menu--collapse .el-menu-item {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .menu-wrap {
