@@ -1,5 +1,5 @@
 <template>
-  <div class="login-page">
+  <div class="login-page" style="overflow:hidden">
     <vue-headful title="欢迎-睿乐教育" description="睿乐教育" />
     <div class="bg-cover" :class="{'fade-in':loaded}"></div>
     <div class="login-container-wrap" :class="{'active':loaded}">
@@ -25,6 +25,10 @@
           </el-form>
         </div>
       </div>
+    </div>
+    <div class="footer-wrap">
+    <div class="footer"><span style="margin-right:10px">&copy;{{new Date().getFullYear()}}   reallyedu.com, all rights reserved</span>
+    <span style="margin-right:10px">北京睿乐未来教育科技有限公司</span><span> 京ICP备18022452号</span></div>
     </div>
   </div>
 </template>
@@ -148,6 +152,22 @@ export default {
 };
 </script>
 <style scoped>
+.footer-wrap {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: 100;
+}
+.footer {
+    width: 70%;
+    height: 20px;
+    min-width: 1000px;
+    line-height: 20px;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    margin: 0 auto 30px auto;
+}
 .fs-18 {
   font-size: 18px !important;
 }
@@ -184,6 +204,8 @@ export default {
 
 .login-page {
   height: 100%;
+  min-width: 1024px;
+  min-height: 600px;
 }
 
 .login-button {
@@ -209,7 +231,7 @@ export default {
   right: 0;
   bottom: 0;
   background-color: transparent;
-  background-image: url("../assets/img/login-bg-low.jpg");
+  background-image: url("../assets/img/login-bg.png");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -219,7 +241,7 @@ export default {
 }
 
 .fade-in {
-  background-image: url("../assets/img/login-bg-low.jpg");
+  background-image: url("../assets/img/login-bg.png");
   filter: blur(0px) drop-shadow(0px 0 0);
 }
 
