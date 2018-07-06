@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home.vue'
-import About from '@/views/About.vue'
-import Course from '@/views/Course.vue'
 import Admin from '@/views/admin/Admin.vue'
 import Franchisee from '@/views/admin/Franchisee.vue'
 Vue.use(Router)
@@ -184,7 +182,7 @@ export default new Router({
       path: '/teaching',
       component: Home,
       name: 'teaching',
-      redirect: '/classroom',
+      redirect: '/teaching/classroom',
       meta: { auth: { roles: ["teaching_manager", "school_manager", "franchisee_admin", "investor"] } },
       children: [
         {
@@ -194,20 +192,9 @@ export default new Router({
           component: require('@/views/teaching_manage/Classroom.vue').default
         },
         {
-          name: 'clazz_default',
-          path: 'class',
-          redirect: '/teaching/class/1',
-        },
-        {
           name: 'clazz',
-          path: 'class/:page(\\d+)',
+          path: 'class/:page(\\d+)?',
           component: require('@/views/teaching_manage/Class.vue').default
-        },
-        {
-          // 当 /user/:id/posts 匹配成功
-          // UserPosts 会被渲染在 User 的 <router-view> 中
-          path: 'course',
-          component: Course
         }
       ]
     },
@@ -219,13 +206,8 @@ export default new Router({
       meta: { auth: { roles: ['franchisee_admin', 'investor'] } },
       children: [
         {
-          name: 'employee_default',
-          path: 'employee',
-          redirect: '/home/employee/1',
-        },
-        {
           name: 'employee_list',
-          path: 'employee/:page(\\d+)',
+          path: 'employee/:page(\\d+)?',
           component: require('@/views/employee/Employee.vue').default
         },
         {
@@ -234,9 +216,9 @@ export default new Router({
           component: require('@/views/employee/CreateEmployee.vue').default
         },
         {
-          name: 'promotion_uprice',
-          path: 'promotion/unitprice',
-          component: require('@/views/promotion/UnitPrice.vue').default
+          name: 'promotion',
+          path: 'promotion/discount',
+          component: require('@/views/promotion/Discount.vue').default
         }
       ]
     },

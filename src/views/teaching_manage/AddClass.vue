@@ -139,7 +139,8 @@ export default {
     return {
       pickerOptions: {
         disabledDate: function(current) {
-          if (current.getTime() < Date.now()) {
+          let now=new Date();
+          if (current.getTime() < new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime()) {
             return true;
           }
           return false;
@@ -447,6 +448,9 @@ class ClazzDate {
       case 5:
         valid = true;
         break;
+      default:
+        valid = true;
+        break;
     }
   }
   caluFinishTime(startTime) {
@@ -477,6 +481,7 @@ class ClazzDate {
       case 3:
       case 4:
       case 5:
+      case 99:
         end = start.getTime() + 0x5265c00 * (total - 1);
         break;
     }

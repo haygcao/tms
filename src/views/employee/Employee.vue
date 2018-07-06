@@ -3,7 +3,7 @@
    <el-row >
      <div class="page-breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/employee' }">业务管理</el-breadcrumb-item>
+        <el-breadcrumb-item>业务管理</el-breadcrumb-item>
         <el-breadcrumb-item>员工管理</el-breadcrumb-item>
       </el-breadcrumb>
      </div>
@@ -165,20 +165,30 @@ export default {
       if (val) {
         this.loading = false;
       }
-    },
-    $route(val, old) {
-      let query = val.query;
-      this.currentPage = parseInt(val.params.page);
-      this.searchForm.kw = query.kw;
-      this.search();
     }
   },
-  mounted() {
-    let query = this.$route.query;
-    this.searchForm = Object.assign({}, query);
-    this.currentPage = parseInt(this.$route.params.page);
+  beforeRouteUpdate(to, from, next) {
+    // react to route changes...
+    // don't forget to call next()
+    this.currentPage = to.params.page > 0 ? parseInt(to.params.page) : 1;
+    this.searchForm = Object.assign(this.searchForm, to.query);
     this.search();
+    next();
+  },
+  mounted() {
     this.countEmployees();
+    this.currentPage =
+      this.$route.params.page > 0 ? parseInt(this.$route.params.page) : 1;
+    this.searchForm = Object.assign(
+      {
+        query: undefined,
+        state: undefined,
+        job_title: undefined
+      },
+      this.$route.query
+    );
+
+    this.search();
   },
   methods: {
     ...mapActions([
@@ -194,7 +204,6 @@ export default {
       this.search();
     },
     search() {
-      
       let payload = Object.assign({}, this.searchForm);
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;

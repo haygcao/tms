@@ -78,7 +78,7 @@
 }
 
 .iconfont {
-    font-size: inherit !important;
+    font-size: inherit;
 }
 
 a, div, input, textarea {

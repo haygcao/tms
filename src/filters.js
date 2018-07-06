@@ -203,7 +203,7 @@ export const orderState = (val = 0) => {
 }
 
 const JobTitles = {
-    investor: '投资人',
+    investor: '管理员',
     teacher: '教师',
     consultant: '顾问',
     teaching_manager: '教学管理',

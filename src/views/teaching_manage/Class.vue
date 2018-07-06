@@ -185,23 +185,29 @@ export default {
     }
   },
   watch: {
-    $route(val, old) {
-      // console.warn("route change---->",val,old)
-      let query = val.query;
-      this.currentPage = parseInt(val.params.page);
-      this.searchForm = Object.assign({}, query);
-      this.search();
-    },
     current_school(val, old) {
       if (val.id != old.id) {
         this.search();
       }
     }
   },
+  beforeRouteUpdate(to, from, next) {
+    // react to route changes...
+    // don't forget to call next()
+    this.currentPage = to.params.page > 0 ? to.params.page : 1;
+    this.searchForm = Object.assign(this.searchForm, to.query);
+    this.search();
+    next();
+  },
   mounted() {
-    let query = this.$route.query;
-    this.searchForm = Object.assign({}, query);
-    this.currentPage = parseInt(this.$route.params.page);
+    // let query = this.$route.query;
+    // this.searchForm = Object.assign({}, query);
+    // this.currentPage = parseInt(this.$route.params.page);
+    // this.search();
+    this.currentPage =
+      this.$route.params.page > 0 ? parseInt(this.$route.params.page) : 1;
+    this.searchForm = Object.assign({}, this.searchForm, this.$route.query);
+
     this.search();
   },
   methods: {

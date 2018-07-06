@@ -202,4 +202,19 @@ export default {
     position: relative;
     cursor: pointer;
 }
+.admin .el-menu-item [class^=el-icon-], .admin .el-menu-item [class*='icon-'] {
+  margin-right: 5px;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+.admin .el-submenu [class*='icon-'] {
+  vertical-align: middle;
+  margin-right: 5px;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+}
 </style>

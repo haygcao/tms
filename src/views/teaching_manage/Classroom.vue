@@ -3,7 +3,7 @@
     <el-row>
       <div class="page-breadcrumb clearfix">
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/teaching' }">教学管理</el-breadcrumb-item>
+          <el-breadcrumb-item>教学管理</el-breadcrumb-item>
           <el-breadcrumb-item>教室管理</el-breadcrumb-item>
         </el-breadcrumb>
       </div>

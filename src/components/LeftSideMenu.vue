@@ -18,7 +18,7 @@
     <i class="iconfont icon-employee"></i>
     <span slot="title">员工管理</span>
   </el-menu-item>
-  <el-menu-item index="/home/promotion" v-if="business_master">
+  <el-menu-item index="/home/promotion/discount" v-if="business_master">
     <i class="iconfont icon-discount-setting"></i>
     <span slot="title">促销折扣</span>
   </el-menu-item>
@@ -119,24 +119,6 @@ export default {
     width: 0px;
     background-color: #ffffff;
 }
-// .scroll_bar::-webkit-scrollbar-track {
-//     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-//     background-color: #F5F5F5;
-// }
-
-// .scroll_bar::-webkit-scrollbar {
-//     width: 6px;
-//     background-color: #F5F5F5;
-// }
-
-// .scroll_bar::-webkit-scrollbar-thumb {
-//     border-radius: 4px;
-//     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-//     background-color: #cccccc;
-// }
-.el-menu--collapse .el-submenu__title, .el-menu--collapse .el-menu-item {
-  font-size: 20px;
-}
 
 .menu-wrap {
   height: 100%;
@@ -207,8 +189,10 @@ export default {
 .menu-switch {
   transition: all 0.3s;
 }
-
-.el-menu-item [class^=el-icon-], .el-menu-item [class*='icon-'] {
+.el-menu--collapse .el-submenu__title, .el-menu--collapse .el-menu-item {
+  font-size: 20px;
+}
+.el-menu-item [class^=el-icon-],.el-menu-item [class*='icon-'] {
   margin-right: 5px;
   width: 24px;
   text-align: center;
@@ -216,7 +200,7 @@ export default {
   vertical-align: middle;
 }
 
-.el-submenu [class*='icon-'] {
+ .el-submenu [class*='icon-'] {
   vertical-align: middle;
   margin-right: 5px;
   width: 24px;
