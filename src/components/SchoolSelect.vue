@@ -27,14 +27,27 @@ export default {
   mounted() {
     // let schools = this.$auth.userInfo().schools || [];
     if (this.schools.length > 0) {
-      this.switchSchool(this.schools[0]);
+      let franchisee_id = (this.$auth.userInfo().franchisee || {}).id;
+      if (
+        !this.current_school &&
+        this.current_school.franchisee_id != franchisee_id
+      ) {
+        let school = Object.assign({}, this.schools[0], {
+          franchisee_id: franchisee_id
+        });
+        this.switchSchool(school);
+      }
     }
   },
   methods: {
     ...mapActions(["switchSchool", "clearState"]),
 
     switchSchoolCommand(command) {
-      let school = this.schools.find(v => v.id == command);
+      let sc = this.schools.find(v => v.id == command);
+      let franchisee_id = (this.$auth.userInfo().franchisee || {}).id;
+      let school = Object.assign({}, sc, {
+        franchisee_id: franchisee_id
+      });
       this.switchSchool(school);
       window.dispatchEvent(
         new CustomEvent("school-switched", { detail: school })
@@ -42,7 +55,7 @@ export default {
     }
   },
   destroyed() {
-    this.clearState();
+    // this.clearState();
   }
 };
 </script>

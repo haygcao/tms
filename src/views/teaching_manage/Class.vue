@@ -113,6 +113,11 @@
                   <div v-else><el-button disabled=""  plain size="small" :type="scope.row.visible?'success':'info'">{{scope.row.visible?"公开":"隐藏"}}</el-button> </div>
                 </template>
             </el-table-column>
+             <el-table-column label="创建时间">
+                <template slot-scope="scope">
+                    <span>{{scope.row.created_at|formatDateTime('YYYY/MM/DD HH:mm:ss')}}</span>
+                </template>
+          </el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
                 <template slot-scope="scope">
             <el-button @click="handleCloseClick(scope.row)" type="text" size="small">关班</el-button>
@@ -129,8 +134,8 @@
     </el-row>
     <el-dialog :visible.sync="dialogFormVisible" fullscreen center>
       <h1 slot="title">{{operate_mode=='create'?'新建':'修改'}}班级</h1>
-      <add-class v-if="dialogFormVisible" v-bind:mode="operate_mode" @updated-success="onUpdated"
-        @created-success="onCreated"></add-class>
+      <add-class v-if="dialogFormVisible" v-bind:mode="operate_mode" @update-success="onUpdated"
+        @create-success="onCreated"></add-class>
     </el-dialog>
 </div>
 </template>
@@ -214,7 +219,8 @@ export default {
     ...mapActions({
       getClazzList: "getClazzList",
       setClazzVisibleState: "setClazzVisibleState",
-      removeClazz: "removeClazz"
+      removeClazz: "removeClazz",
+      closeClazz: "closeClazz"
     }),
     handleMouseEnter(event, data) {
       this.$nextTick(() => {
@@ -260,12 +266,12 @@ export default {
         .catch(_ => {});
     },
     handleCloseClick(data) {
-      if (data.state == 1 || (data.state == 0 && data.student_count > 0)) {
-        this.$alert("开课中班级或已报名的班级无法关闭");
+      if (data.state == 1) {
+        this.$alert("开课中班级无法关闭");
         return false;
       }
       if (data.state == 0 && data.student_count > 0) {
-        this.$alert("该班级已有学生报名，无法关闭");
+        this.$alert("该班级已有学生报名，结课后才可关闭");
         return false;
       }
       // if (data.state == 0 && data.student_count > 0) {
@@ -274,13 +280,14 @@ export default {
       // }
       this.$confirm("确认关闭班级？", "警告", { type: "error" })
         .then(_ => {
-          this.removeClazz({
+          this.closeClazz({
             clazz_id: data.id
           }).then(res => {
             if (res.code > 0) {
               this.$message.error(res.message || "关闭失败");
             } else {
               this.$message.success("关闭成功");
+              this.search();
             }
           });
         })
@@ -302,9 +309,10 @@ export default {
           this.removeClazz({
             clazz_id: data.id
           }).then(res => {
-            if (res.code > 0) {
+            if (res.code > 0 || res.data < 1) {
               this.$message.error(res.message || "删除失败");
             } else {
+              this.$message.success("删除成功");
               this.search();
             }
           });
@@ -342,16 +350,12 @@ export default {
       });
     },
     onUpdated() {
-      //   this.dialogFormVisible = false;
-      this.getClassroomList({
-        school_id: this.current_school.id
-      });
+      this.dialogFormVisible = false;
+      this.search();
     },
     onCreated() {
-      //   this.dialogFormVisible = false;
-      this.getClassroomList({
-        school_id: this.current_school.id
-      });
+      this.dialogFormVisible = false;
+      this.search();
     },
     onAddClass() {
       this.operate_mode = "create";

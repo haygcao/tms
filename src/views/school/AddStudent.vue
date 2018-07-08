@@ -185,7 +185,7 @@ export default {
     ...mapGetters(["genders"])
   },
   created() {
-    console.log("created+++++++++++++++++");
+    // console.log("created+++++++++++++++++");
     let self = this;
     if (this.mode != "create") {
       this.getStudentById({ id: this.studentId }).then(res => {

@@ -403,6 +403,7 @@ export default {
         });
       } else {
         this.$message.success("保存成功");
+        this.$emit('create-success')
         this.resetForm();
       }
     },

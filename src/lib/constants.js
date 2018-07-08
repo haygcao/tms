@@ -57,7 +57,7 @@ export const ClazzState = {
     0: '未开课',
     1: '开课中',
     2: '已结课',
-    3: '已关闭',
+    99: '已关闭',
 }
 export const JobTitles = [
     { key: 'investor', name: '投资人', show: false },
