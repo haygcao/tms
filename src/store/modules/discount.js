@@ -31,25 +31,29 @@ const actions = {
     },
     async removeDiscount({ commit, state, getters }, payload) {
         // let res = getters.children('1')
-        let res = await discount.update(payload);
+        let res = await discount.remove(payload);
         commit(mutations_types.removed, { res });
         return Promise.resolve(res)
 
     },
+    async updateDiscount({ commit, state, getters }, payload) {
+        let res = await discount.update(payload);
+        return Promise.resolve(res)
+    },
     async getDiscountList({ commit, state, getters }, payload) {
         let res = await discount.list(payload);
         commit(mutations_types.list, { res })
-        return Promise.resolve(res)
+        return Promise.resolve(Object.assign({}, res))
 
     },
-   
+
 }
 const mutations = {
 
     [mutations_types.created](state, { res }) {
         state.create_reulst = res;
     },
-    
+
     [mutations_types.list](state, { res }) {
         state.list = res;
     },

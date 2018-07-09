@@ -129,14 +129,12 @@ export default {
         return {};
       }
       let total_quantity = this.$shoppingCard.quantity;
-      let discounts_sorted = this.discounts.slice().sort((a, b) => {
-        return a - b;
-      });
-      let filter = discounts_sorted.filter(
-        v => v.min_quantity <= total_quantity
-      );
+      // let discounts_sorted = this.discounts.slice().sort((a, b) => {
+      //   return a.min_quantity - b.min_quantity;
+      // });
+      let filter = this.discounts.filter(v => v.min_quantity <= total_quantity);
       if (filter && filter.length > 0) {
-        return filter[filter.length];
+        return filter[filter.length - 1];
       }
       return {};
     },
@@ -150,7 +148,7 @@ export default {
   created() {
     let self = this;
     this.$shoppingCard.emitter.$on("added", item => {
-      this.$emit('content-changed');
+      this.$emit("content-changed");
     });
     this.$on("_caculate_product_count", function(cardItem) {
       cardItem.quantity = self.total_lesson_count(cardItem.details);
@@ -227,7 +225,7 @@ export default {
         let prod = results[0];
         let course = results[1];
         if (!prod || !prod.data || !course || !course.data) {
-          this.$message.error("课程获取失败");
+          this.$message.error("无法获取课程的价格信息");
           return false;
         }
         let cardItem = this._packClazzCardItem(course.data, clazz, prod.data);
@@ -246,7 +244,6 @@ export default {
       let currentGradeIdx = grades.findIndex(g => g.key == clazz.grade);
       //选择年级>=当前班所在年级的课程
       let availableGrades = grades.slice(currentGradeIdx) || [];
-
       for (let i = 0; i < availableGrades.length; i++) {
         var g = availableGrades[i];
         let current_grade = {
@@ -255,14 +252,15 @@ export default {
           terms: []
         };
         var terms = []; //g.terms.map(t => t.key);
-        if (clazz.term < 5) {
+        let current_term = parseInt(clazz.term);
+        if (current_term < 5) {
           //兼容老数据
           //暑，秋，寒，春，
           terms = ["1", "2", "3", "4"];
-        } else if (clazz.term == 5 || clazz.term == 6) {
+        } else if (current_term == 5 || current_term == 6) {
           //暑秋，寒春，
           terms = ["5", "6"];
-        } else if (clazz.term == 7) {
+        } else if (current_term == 7) {
           //全年
           terms = ["7"];
         }
@@ -273,9 +271,10 @@ export default {
               v.grade == current_grade.grade &&
               v.class_type == clazz.class_type
           );
+          //只取当前年级未开课的学期
           if (
             clazz.grade == current_grade.grade &&
-            parseInt(clazz.term) < parseInt(t)
+            parseInt(clazz.term) > parseInt(t)
           ) {
             c = null;
           }
@@ -297,7 +296,6 @@ export default {
           }
           current_grade.terms.push(current_term);
         });
-
         availableCourseList.push(current_grade);
       }
       let cardItem = new this.$shoppingCardItem({

@@ -29,7 +29,8 @@ export default {
     if (this.schools.length > 0) {
       let franchisee_id = (this.$auth.userInfo().franchisee || {}).id;
       if (
-        !this.current_school &&
+        !this.current_school ||
+        !this.current_school.id ||
         this.current_school.franchisee_id != franchisee_id
       ) {
         let school = Object.assign({}, this.schools[0], {

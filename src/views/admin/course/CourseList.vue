@@ -161,7 +161,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      getCourseList: "getCourseList"
+      getCourseList: "getCourseList",
+      removeCourse: "removeCourse"
     }),
     search() {
       let payload = Object.assign({}, this.searchForm);
@@ -183,9 +184,11 @@ export default {
       let self = this;
       this.$confirm("确认删除？")
         .then(_ => {
-          // self.removeFranchisee({
-          //   franchisee_id: val.id
-          // });
+          self.removeCourse({
+            id: val.id
+          }).then(res=>{
+            self.search()
+          });
         })
         .catch(_ => {});
     },

@@ -55,6 +55,9 @@ export default {
     ...mapActions(["switchSchool"]),
     logout() {
       this.$auth.logout();
+      this.$store.dispatch("clearState");
+      
+      // this.$store.replaceState({});
     }
   },
   components: {

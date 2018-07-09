@@ -19,6 +19,15 @@ async function create(payload) {
     }
 
 }
+async function remove(payload) {
+    try {
+        const response = await axios.post('/api/course/remove', payload);
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '删除失败' }
+    }
+
+}
 async function fetch(payload) {
     try {
         const response = await axios.get('/api/course/fetch', {
@@ -62,6 +71,7 @@ async function setHomework(payload) {
 export default {
     list,
     create,
+    remove,
     fetch,
     detail,
     setCourseware,

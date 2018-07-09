@@ -10,6 +10,13 @@
       </div>
     </el-row> -->
     <el-row>
+      <el-alert v-if="discounts_info"
+        title=""
+        type="warning"
+        :description="discounts_info">
+      </el-alert>
+    </el-row>
+    <el-row>
     <div class="block">
       <course-filter-box :searchForm="searchForm"></course-filter-box>
     </div>
@@ -228,7 +235,8 @@ export default {
       current_school: state => state.current_user.current_school,
       teacher_info: state => state.clazz.teacherInfo.data || {},
       course: state => state.order.course.data || [],
-      currentClazz: state => state.clazz.selectedClazz.data
+      currentClazz: state => state.clazz.selectedClazz.data,
+      discounts: state => state.discount.list.data || []
     }),
     ...mapGetters([
       "terms",
@@ -248,6 +256,17 @@ export default {
     rightTabWidth() {
       let width = this.rightTabOpened ? "340px" : "65px";
       return width;
+    },
+    discounts_info() {
+      let disc_1 = this.discounts.map(v => {
+        if (v.discount_type == 1) {
+          return v.title;
+        }
+      });
+      if(disc_1.length==0){
+        return null;
+      }
+      return "连报优惠:" + disc_1.toString();
     }
   },
   beforeRouteUpdate(to, from, next) {
@@ -282,8 +301,11 @@ export default {
       },
       this.$route.query
     );
-
     this.search();
+
+    if (!this.discounts || this.discounts.length == 0) {
+      this.getDiscountList({ school_id: this.current_school.id });
+    }
   },
   methods: {
     ...mapActions({
@@ -291,7 +313,8 @@ export default {
       getTeacherInfo: "getTeacherInfo",
       getClazzById: "getClazzById",
       fetchCourseLesson: "fetchCourseLesson",
-      getProduct: "getProduct"
+      getProduct: "getProduct",
+      getDiscountList: "getDiscountList"
     }),
 
     handleEnrollmentClick(data) {

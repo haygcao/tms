@@ -23,6 +23,10 @@ const actions = {
         let res = await course.create(payload);
         commit(mutations_types.create, { res })
     },
+    async removeCourse({ commit, state, getters }, payload) {
+        let res = await course.remove(payload);
+        return Promise.resolve(res)
+    },
     async getCourseDetail({ commit, state, getters }, payload) {
         let res = await course.detail(payload);
         commit(mutations_types.detail, { res })

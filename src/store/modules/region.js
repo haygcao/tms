@@ -18,6 +18,9 @@ const state = {
 
 const getters = {
     provinceList: state => {
+        if(!state.regions){
+            return []
+        }
         let province = state.regions.filter(region => region.parent_id == '1');
         let list = province.map(v => {
             return { label: v.region_name, value: v.region_code, id: v.region_id, cities: [] }
@@ -31,6 +34,9 @@ const getters = {
         return list;
     },
     regionName: (state) => (code) => {
+        if(!state.regions){
+            return ''
+        }
         let region = state.regions.find(p => p.region_code == code);
         if (region) {
             return region.region_name;
@@ -38,6 +44,9 @@ const getters = {
     },
     // // provinceList: state => state.regions.filter(p => p.parent_id = '1'),
     children: (state) => (id) => {
+        if(!state.regions){
+            return []
+        }
         let l = state.regions.filter(p => p.parent_id === id);
         return l;
     }

@@ -114,12 +114,13 @@
                   <el-input type="number" v-model="preferenceForm.extra_reduction_amount" placeholder="0"></el-input>
                 </el-form-item>
                 <el-form-item prop="extra_reduction_desction" label="优惠说明">
-                   <el-input v-model="preferenceForm.extra_reduction_desction" placeholder="优惠说明（100字以内）"></el-input>
+                   <el-input v-model="preferenceForm.extra_reduction_desction" :maxlength="50" placeholder="优惠说明（50字以内）"></el-input>
                 </el-form-item>
         </el-form>
         <br>
         <div><span class="text-info">应付:</span>
         <cny class="amount-total margin-left-15 text-danger"  :value="amount_payable"></cny>
+        <span class="amount-total margin-left-15 text-info" >已优惠</span><cny class="amount-total margin-left-15 text-info"  :value="amount_discounted"></cny>
         </div>
     </el-row>
     
@@ -233,14 +234,10 @@ export default {
         return {};
       }
       let total_quantity = this.$shoppingCard.quantity;
-      let discounts_sorted = this.discounts.slice().sort((a, b) => {
-        return a - b;
-      });
-      let filter = discounts_sorted.filter(
-        v => v.min_quantity <= total_quantity
-      );
+
+      let filter = this.discounts.filter(v => v.min_quantity <= total_quantity);
       if (filter && filter.length > 0) {
-        return filter[filter.length];
+        return filter[filter.length - 1];
       }
       return {};
     },
@@ -250,40 +247,25 @@ export default {
         this.$shoppingCard.amount * discount -
         (this.preferenceForm.extra_reduction_amount || 0);
       return amount;
+    },
+    amount_discounted() {
+      let discs = this.$shoppingCard.amount - this.amount_payable;
+      return discs;
     }
   },
-  created() {
-    // this.clearOrderCreateStates();
-  },
+  created() {},
   mounted() {
-    // this.getClazzById({
-    //   clazz_id: this.$route.query.clazz_id
-    // });
-    if (!this.discounts) {
+    if (!this.discounts || this.discounts.length == 0) {
       this.getDiscountList({ school_id: this.current_school.id });
     }
     this.validateClazz();
     this.getConsultants({ school_id: this.current_school.id });
   },
-  watch: {
-    // createOrderResult(val, old) {
-    //   if (val && val.code == 0) {
-    //     this.$router.replace({
-    //       name: "cashier",
-    //       query: { order_id: val.data.order_id, sign: val.data.sign }
-    //     });
-    //   }
-    // }
-  },
   methods: {
     ...mapActions({
       getClazzById: "getClazzById",
-      //   getStudentByMobile: "getOrderStudentByMobile",
-      //   checkStudentExist: "checkStudentExist",
-      //   createStudent: "createStudent",
-      //   addStudentParent: "addStudentParent",
+      getDiscountList: "getDiscountList",
       clearOrderCreateStates: "clearOrderCreateStates",
-      //   fetchCourseLesson: "fetchCourseLesson",
       createOrder: "createOrder",
       getConsultants: "getConsultants"
     }),

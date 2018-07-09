@@ -87,7 +87,12 @@ const getters = {
 }
 
 const mutations = {
-
+  // [mutation_types.CLEAR_STATE](state) {
+  //   for (let k in modules) {
+  //     state[k]={};
+  //   }
+  //   console.log('state cleared');
+  // }
 }
 const actions = {
   async clearState({ commit, state, getters }, payload) {
