@@ -6,15 +6,16 @@
       text-color="#fff"
       active-text-color="#f56c6c" -->
   <el-menu :router="true" 
-     
+      :default-active="defaultActive"
       :unique-opened="true"
+      active-text-color="#f56c6c"
       :collapse-transition="true"
-      class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-  <el-menu-item index="/dashboard">
+      class="el-menu-vertical" @open="handleOpen" @close="handleClose" ref="leftMenu" :collapse="isCollapse">
+  <el-menu-item index="/dashboard" :route="{path:'/dashboard'}">
     <i class="iconfont icon-pie-chart"></i>
     <span slot="title">校区概况</span>
   </el-menu-item>
-  <el-menu-item index="/home/employee/1" v-if="business_master">
+  <el-menu-item index="/home/employee/1" v-if="business_master" :route="{name:'employee_list',params:{page:1}}">
     <i class="iconfont icon-employee"></i>
     <span slot="title">员工管理</span>
   </el-menu-item>
@@ -64,7 +65,7 @@ export default {
   },
   data() {
     return {
-      // isCollapse: true
+      defaultActive: undefined
     };
   },
   computed: {
@@ -93,6 +94,12 @@ export default {
       ]);
     }
   },
+  mounted() {
+    let index = Object.keys(this.$refs["leftMenu"].items).find(
+      v => this.$router.match(v).name == this.$route.name
+    );
+    this.defaultActive = index;
+  },
   methods: {
     handleMenuCollapse() {
       // this.isCollapse = !this.isCollapse;
@@ -115,9 +122,10 @@ export default {
 .menu-wrap .el-menu {
   border-right: none;
 }
+
 .menu-wrap.scroll_bar::-webkit-scrollbar {
-    width: 0px;
-    background-color: #ffffff;
+  width: 0px;
+  background-color: #ffffff;
 }
 
 .menu-wrap {
@@ -189,10 +197,12 @@ export default {
 .menu-switch {
   transition: all 0.3s;
 }
+
 .el-menu--collapse .el-submenu__title, .el-menu--collapse .el-menu-item {
   font-size: 20px;
 }
-.el-menu-item [class^=el-icon-],.el-menu-item [class*='icon-'] {
+
+.el-menu-item [class^=el-icon-], .el-menu-item [class*='icon-'] {
   margin-right: 5px;
   width: 24px;
   text-align: center;
@@ -200,7 +210,7 @@ export default {
   vertical-align: middle;
 }
 
- .el-submenu [class*='icon-'] {
+.el-submenu [class*='icon-'] {
   vertical-align: middle;
   margin-right: 5px;
   width: 24px;

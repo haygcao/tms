@@ -37,6 +37,8 @@
                         :key="item.id"
                         :label="item.name"
                         :value="item.id">
+                        <span style="float: left">{{ item.name }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.s_no }}</span>
                         </el-option>
                     </el-select>
               </el-form-item>
@@ -66,6 +68,8 @@
                         :key="item.id"
                         :label="item.name"
                         :value="item.id">
+                        <span style="float: left">{{ item.name }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.s_no }}</span>
                         </el-option>
                     </el-select>
               </el-form-item>

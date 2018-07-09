@@ -20,7 +20,7 @@
               <el-input prefix-icon="iconfont icon-password el-icon-none fs-18" type="password" placeholder="密码" clearable v-model="loginForm.password" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button :loading="logining" type="danger" class="login-button" @click="submitForm('loginForm')">登录</el-button>
+              <el-button :loading="logining" type="danger" class="login-button" @click="submitForm('loginForm')"><span class="letter-space">登录</span></el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -215,10 +215,11 @@ export default {
   font-size: 16px;
   padding-top: 12px;
   padding-bottom: 12px;
-  letter-spacing: 5px;
   font-weight: 400;
 }
-
+.letter-space{
+  letter-spacing: 8px;
+}
 .login-button:hover {
   background-color: rgba(212, 21, 26, 0.8);
 }
