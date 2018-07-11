@@ -46,7 +46,7 @@
     </div>
   </el-row>
   <el-row v-loading="loading">
-    <el-card class="box-card  clearfix" shadow="always" v-for="item in employeeList.rows" :key="item.id">
+    <el-card class="box-card  clearfix" shadow="hover" v-for="item in employeeList.rows" :key="item.id">
 
       <div class="employee-item" :class="{'disabled':item.state!=1}">
 

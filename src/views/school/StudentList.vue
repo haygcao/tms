@@ -21,7 +21,7 @@
         </el-row>
         <el-row class="">
             <div class="student-list" v-loading="loading">
-              <div class="student-item block" v-for="student in studentList.rows" :key="student.id">
+              <div class="student-item block is-show-shadow" v-for="student in studentList.rows" :key="student.id">
                 <div class="tag-student-state" :class="{'active':isStudy(student)}"><span class="student-state-text">{{isStudy(student)?'在学':'不在学'}}</span></div>
                 <div class="col-1">
                   <img class="img-circle" :src="student.avatar_url?student.avatar_url:(student.gender==1?student_avatar_boy:student_avatar_girl)"

@@ -72,7 +72,7 @@
     <el-row class="">
       <div class="clazz-list">
         <transition-group name="list" tag="div">
-        <div class="clazz-item block" v-for="clazz in clazzList.rows" :key="clazz.id">
+        <div class="clazz-item block is-show-shadow" v-for="clazz in clazzList.rows" :key="clazz.id">
           <div class="clazz-item-p1">
             <div>{{clazz.begin_date|formatDateTime(' M月D日')}}-{{clazz.finish_date|formatDateTime(' M月D日')}}</div>
             <div>

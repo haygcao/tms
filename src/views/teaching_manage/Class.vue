@@ -1,66 +1,101 @@
 <template>
 <div class="clazz">
-    <el-row>
+    <!-- <el-row>
         <div class="page-breadcrumb clearfix">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/teaching' }">教学管理</el-breadcrumb-item>
                 <el-breadcrumb-item>班级管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+    </el-row> -->
+    <el-row>
+    <div class="block">
+      <course-filter-box :searchForm="searchForm"></course-filter-box>
+    </div>
     </el-row>
     <el-row>
-        <el-button type="danger" @click="onAddClass" size="small" icon="el-icon-circle-plus-outline">新建班级</el-button>
+      <el-tooltip effect="dark" content="新建班级" placement="top">
+        <el-button style="position: absolute;top: -42px;right: 0;" circle type="danger" @click="onAddClass" icon="el-icon-plus"></el-button>
+      </el-tooltip>
     </el-row>
     <el-row>
-        <el-form :inline="true" :model="searchForm" size="small" class="search-form-inline">
+        <el-form :inline="true" ref="searchForm" :model="searchForm" size="small" class="search-form-inline clearfix" @keydown.native.enter.prevent="()=>{}">
           <el-form-item prop="year">
-                <el-select v-model="searchForm.year" placeholder="年份" clearable>
+                <el-select style="width:120px;" @change="onSearch" v-model="searchForm.year" placeholder="年份" clearable>
                     <el-option v-for="item in yearOptions" :key="item" :label="item" :value="item">
                     </el-option>
                 </el-select>
             </el-form-item>
-             <el-form-item prop="subject">
-                <el-select v-model="searchForm.subject" placeholder="学科" clearable>
-                    <el-option v-for="item in subjects" :key="item.key" :label="item.name" :value="item.key">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-             <el-form-item prop="grade">
-                <el-select v-model="searchForm.grade" placeholder="年级" clearable>
-                    <el-option v-for="item in subjectGrades" :key="item.key" :label="item.name" :value="item.key">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-             <el-form-item prop="term">
-                <el-select v-model="searchForm.term" placeholder="学期" clearable>
-                    <el-option v-for="item in terms" :key="item.key" :label="item.name" :value="item.key">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item prop="class_type">
-                <el-select v-model="searchForm.class_type" placeholder="选择班型" clearable>
-                    <el-option v-for="item in class_types" :key="item.key" :label="item.name" :value="item.key">
-                    </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item>
-                <el-select v-model="searchForm.state" placeholder="班级状态" clearable>
+                <el-select style="width:120px;" v-model="searchForm.state" @change="onSearch" placeholder="班级状态"  clearable>
                     <el-option label="未开课" value="0"></el-option>
                     <el-option label="开课中" value="1"></el-option>
                     <el-option label="已结课" value="2"></el-option>
-                    <el-option label="已关闭" value="3"></el-option>
+                    <el-option label="已关闭" value="99"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-input form="no" v-model="searchForm.teacher_name" placeholder="输入老师姓名" clearable style="min-width:220px"></el-input>
+                <el-input style="width:240px;" @keyup.enter.native="onSearch" v-model="searchForm.teacher_name" placeholder="输入老师姓名" clearable></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="danger" @click="onSearch" icon="el-icon-search">查询</el-button>
             </el-form-item>
         </el-form>
     </el-row>
+    <el-row v-if="clazzListCopy.length==0">
+      <empty-data-view ></empty-data-view>
+    </el-row>
+    <el-row v-else class="clazz-list">
+      <transition-group name="list" tag="div">
+        <el-card v-for="clazz in clazzListCopy" :key="clazz.id" shadow="hover" class="box-card">
+        <div slot="header" class="clearfix">
+          <span>{{clazz.year}}{{clazz.subject|subjectName}}<span class="text-warning">{{clazz.grade|grade}}</span>{{clazz.term|terms}}{{clazz.class_type|classType}}</span>
+          <span style="float: right;">
+            <el-tooltip effect="dark" content="删除" placement="top">
+              <el-button :disabled="clazz.state==1||clazz.student_count>0" style="padding: 3px;" @click="handleDelClick(clazz)" size="" type="text" icon="el-icon-delete"></el-button>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="关闭班级" placement="top">
+              <el-button :disabled="clazz.state==99" style="padding: 3px;" @click="handleCloseClick(clazz)" size="" type="text" icon="el-icon-remove-outline"></el-button>
+            </el-tooltip>
+          </span>
+        </div>
+        <div class="content" style="display:flex">
+          <div class="" style="flex:1 padding:0px 5px">
+            <div class="text-info text-small">{{clazz.begin_date|toDateString}}-{{clazz.finish_date|toDateString}}</div>
+            <strong> <span v-if="clazz.class_type=='0'||clazz.class_type=='1'">{{clazz.begin_date|weekDay}}</span> 
+            {{clazz.class_begin_time|toShortTimeString}}-{{clazz.class_finish_time|toShortTimeString}}</strong>
+            <p class="text-small"><span class="text-info">授课老师:</span> {{clazz.teacher_name}}</p>
+            <p class="text-small text-info"> <i class="el-icon-location-outline"></i>{{clazz.classroom_name}}</p>
+          </div>
+          <div style="flex:1">
+            <div class="text-center">
+              <div class="text-info text-small">剩余课次/总课次</div>
+              <strong> {{clazz.total_lesson_number - (clazz.current_lesson_number||0)}}</strong>/<strong> {{clazz.total_lesson_number||0}}</strong>
+            </div>
+            <div class="text-center">
+              <div class="text-info text-small">报名人数/限额</div>
+              <strong> {{clazz.student_count}}</strong>/<strong> {{clazz.student_limit||0}}</strong>
+            </div>
+          </div>
+        </div>
+        <div class="bottom clearfix">
+          <span style="line-height: 20px;" :class="{'text-success':clazz.state==1}">{{clazz.state|classState}}</span>
+          <el-tooltip effect="dark" content="公开状态的班级才可报名" placement="top">
+          <el-switch style="float:right;margin-right:10px;" :disabled="!(clazz.state==0&&clazz.student_count==0)"
+            v-model="clazz.visible"
+            @change="handleVisibleClick(clazz)"
+            active-color="#13ce66"
+            active-text="公开"
+            inactive-text="隐藏">
+          </el-switch>
+          </el-tooltip>
+          <div class="text-info text-small" >{{clazz.created_at|formatDateTime('YYYY/MM/DD HH:mm:ss')}}</div>
+        </div>
+      </el-card>
+      </transition-group>
+    </el-row>
+    <!-- <el-row class="block " >
 
-    <el-row class="block" >
         <el-table v-loading="loading" :data="clazzList.rows" stripe size="medium">
             <el-table-column type="index" label="#" width="40">
             </el-table-column>
@@ -125,7 +160,7 @@
           </template>
             </el-table-column>
         </el-table>
-    </el-row>
+    </el-row> -->
     <el-row>
         <div class="text-center" v-if="clazzList.count>0">
             <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :current-page.sync="currentPage" :total="clazzList.count">
@@ -143,6 +178,7 @@
 <script>
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
 import AddClass from "@/views/teaching_manage/AddClass.vue";
+import CourseFilterBox from "@/components/CourseFilterBox.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -167,7 +203,8 @@ export default {
       currentPage: 1,
       loading: false,
       operate_mode: "create",
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      clazzListCopy: []
     };
   },
   computed: {
@@ -234,15 +271,15 @@ export default {
     },
     handleVisibleClick(data) {
       if (data.state > 0) {
-        this.$alert("已开课班级无法隐藏");
+        this.$alert("已开课班级无法隐藏", { showClose: false });
         return false;
       }
       if (data.student_count > 0) {
-        this.$alert("已报名班级无法隐藏");
+        this.$alert("已报名班级无法隐藏", { showClose: false });
         return false;
       }
       let msg = `确定要公开该班级？公开后班级信息将无法修改`;
-      if (data.visible) {
+      if (!data.visible) {
         msg = `确定要隐藏该班级？隐藏后班级将无法报名`;
       }
       this.$confirm(msg, "提示", {
@@ -253,7 +290,7 @@ export default {
         .then(_ => {
           this.setClazzVisibleState({
             clazz_id: data.id,
-            visible: !data.visible
+            visible: data.visible
           }).then(res => {
             if (res.code == 0) {
               this.$message.success("设置成功");
@@ -263,15 +300,17 @@ export default {
             }
           });
         })
-        .catch(_ => {});
+        .catch(_ => {
+          data.visible = !data.visible;
+        });
     },
     handleCloseClick(data) {
       if (data.state == 1) {
-        this.$alert("开课中班级无法关闭");
+        this.$alert("开课中班级无法关闭", { showClose: false });
         return false;
       }
       if (data.state == 0 && data.student_count > 0) {
-        this.$alert("该班级已有学生报名，结课后才可关闭");
+        this.$alert("该班级已有学生报名，无法关闭", { showClose: false });
         return false;
       }
       // if (data.state == 0 && data.student_count > 0) {
@@ -297,11 +336,13 @@ export default {
       let self = this;
 
       if (data.state == 1 || (data.state == 0 && data.student_count > 0)) {
-        this.$alert("开课中班级或已报名的班级无法删除");
+        this.$alert("开课中班级或已报名的班级无法删除", { showClose: false });
         return false;
       }
       if (data.visible) {
-        this.$alert("公开状态的班级无法删除，请先设置成隐藏状态");
+        this.$alert("公开状态的班级无法删除，请先设置成隐藏状态", {
+          showClose: false
+        });
         return false;
       }
       this.$confirm("确认删除？", "警告", { type: "error" })
@@ -336,8 +377,11 @@ export default {
       payload.school_id = this.current_school.id;
       this.getClazzList(payload).then(res => {
         this.loading = false;
-        this.clazzListTracker = res.data.rows.map(v => {
-          return { id: v.id, visible: v.visible };
+        // this.clazzListTracker = res.data.rows.map(v => {
+        //   return { id: v.id, visible: v.visible };
+        // });
+        this.clazzListCopy = (res.data.rows || []).map(v => {
+          return Object.assign({}, v);
         });
       });
     },
@@ -363,7 +407,8 @@ export default {
     }
   },
   components: {
-    AddClass
+    AddClass,
+    CourseFilterBox
   }
 };
 </script>
@@ -376,11 +421,22 @@ export default {
   text-overflow: ellipsis;
 }
 
-.clazz .search-form-inline .el-input {
-  max-width: 120px;
-}
+
 .visible-link {
   text-decoration: none;
   cursor: pointer;
+}
+.clazz {
+  max-width: 1440px;
+}
+.clazz-list .box-card {
+  /* width: 340px; */
+  width: 340px;
+  display: inline-block;
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+.box-card .bottom {
+  margin-top: 13px;
 }
 </style>

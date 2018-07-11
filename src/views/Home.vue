@@ -56,6 +56,7 @@ export default {
 
 .home .el-main {
   padding: 0px;
+  -webkit-overflow-scrolling: touch
 }
 
 .home .el-main >div {
