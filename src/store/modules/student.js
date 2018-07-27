@@ -9,12 +9,12 @@ const mutations_types = {
     clear_state: "student/clear_state",
     fetched_student: "student/fetched_student",
     list_students: "student/list_students",
-    reset_password:"student/reset_password",
+    reset_password: "student/reset_password",
 }
 const state = {
     // clazzList: {},
     current: {},
-    studentList:{},
+    studentList: {},
     createStudentResult: {},
     updateStudentResult: {},
     addStudentParentResult: {},
@@ -85,14 +85,14 @@ const mutations = {
         state.current = {};
         state.createStudentResult = {};
         state.addStudentParentResult = {};
-        state.studentList={};
+        state.studentList = {};
 
     },
     [CLEAR_STATE](state) {
         state.current = {};
         state.createStudentResult = {};
         state.addStudentParentResult = {};
-        state.studentList={};
+        state.studentList = {};
     },
 }
 export default {

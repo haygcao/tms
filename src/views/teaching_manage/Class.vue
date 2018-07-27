@@ -45,9 +45,10 @@
     <el-row v-if="clazzListCopy.length==0">
       <empty-data-view ></empty-data-view>
     </el-row>
-    <el-row v-else class="clazz-list">
+    <el-row v-else class="clazz-list" style="margin-left:-10px;margin-right:-10px;">
       <transition-group name="list" tag="div">
-        <el-card v-for="clazz in clazzListCopy" :key="clazz.id" shadow="hover" class="box-card">
+        <el-col style="padding:10px" :xs="24" :sm="12" :md="8" :lg="6" v-for="clazz in clazzListCopy" :key="clazz.id">
+        <el-card  shadow="hover" class="box-card">
         <div slot="header" class="clearfix">
           <span>{{clazz.year}}{{clazz.subject|subjectName}}<span class="text-warning">{{clazz.grade|grade}}</span>{{clazz.term|terms}}{{clazz.class_type|classType}}</span>
           <span style="float: right;">
@@ -92,6 +93,7 @@
           <div class="text-info text-small" >{{clazz.created_at|formatDateTime('YYYY/MM/DD HH:mm:ss')}}</div>
         </div>
       </el-card>
+        </el-col>
       </transition-group>
     </el-row>
     <!-- <el-row class="block " >
@@ -431,10 +433,10 @@ export default {
 }
 .clazz-list .box-card {
   /* width: 340px; */
-  width: 340px;
+  /* width: 340px;
   display: inline-block;
   margin-right: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 15px; */
 }
 .box-card .bottom {
   margin-top: 13px;

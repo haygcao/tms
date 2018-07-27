@@ -73,11 +73,17 @@
             <h1 slot="title">修改学员信息</h1>
             <add-student :mode="addStudentMode" :studentId="selectedStudentId" :school="current_school.id" v-if="dialogAddStudentVisible" @success="onCreateStudentSuccess" @cancel="dialogAddStudentVisible=false"></add-student>
         </el-dialog>
+        <el-dialog :visible.sync="dialogRescheduleVisible" fullscreen  center >
+          <keep-alive>
+          <reschedule v-if="dialogRescheduleVisible" :student="selectedStudent"></reschedule>
+          </keep-alive>
+        </el-dialog>
     </div>
 </template>
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
 import AddStudent from "@/views/school/AddStudent.vue";
+import Reschedule from "@/views/school/Reschedule.vue";
 export default {
   data() {
     return {
@@ -89,6 +95,8 @@ export default {
       loading: false,
       selectedStudentId: undefined,
       dialogAddStudentVisible: false,
+      dialogRescheduleVisible: false,
+      selectedStudent: undefined,
       addStudentMode: "edit",
       student_avatar_girl: require("@/assets/img/student_0.png"),
       student_avatar_boy: require("@/assets/img/student_1.png")
@@ -99,7 +107,7 @@ export default {
       if (val.id != old.id) {
         this.search();
       }
-    },
+    }
     // $route(val, old) {
     //   let query = val.query;
     //   this.currentPage = parseInt(val.params.page);
@@ -193,7 +201,14 @@ export default {
         })
         .catch(_ => {});
     },
-    onShiftSchedule(data) {},
+    onShiftSchedule(data) {
+      // return this.$router.push({
+      //   name: "reschedule",
+      //   params: { student: data.id }
+      // });
+      this.dialogRescheduleVisible = true;
+      this.selectedStudent = data;
+    },
     onShiftClazz(data) {},
     onLockStudent(data) {},
     onCreateStudentSuccess(mobile) {
@@ -203,7 +218,8 @@ export default {
     }
   },
   components: {
-    AddStudent
+    AddStudent,
+    Reschedule
   }
 };
 </script>

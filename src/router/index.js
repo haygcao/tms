@@ -152,6 +152,11 @@ export default new Router({
           component: require('@/views/school/StudentList.vue').default
         },
         {
+          name: 'reschedule',
+          path: 'reschedule/:student',
+          component: require('@/views/school/Reschedule.vue').default
+        },
+        {
           name: 'products',
           path: 'classes/:page(\\d+)?',
           component: require('@/views/school/ClazzList.vue').default

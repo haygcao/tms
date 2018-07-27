@@ -293,7 +293,10 @@ export default {
           var creds = res.data.token;
           var client = new oss.Wrapper({
             region: OssConfig.region,
+            endpoint: OssConfig.endpoint,
             bucket: OssConfig.bucket,
+            cname:OssConfig.cname,
+            secure:OssConfig.secure,
             accessKeyId: creds.AccessKeyId,
             accessKeySecret: creds.AccessKeySecret,
             stsToken: creds.SecurityToken

@@ -82,6 +82,9 @@ export const Educations = [
 
 export const OssConfig = {
     region: 'oss-cn-beijing',
+    endpoint: "s.reallyedu.com",
+    secure: true,
+    cname:true,
     // accessKeyId: 'LTAINyj3tqkqy64w',
     // accessKeySecret: 'TZoibtVyWiKNZcOEbLYQHn2jWIrbgC',
     // stsToken: creds.SecurityToken,
@@ -91,4 +94,4 @@ export const CoursewareBasePath = process.env.VUE_APP_CoursewareBasePath || "kj-
 export const STS_Server = process.env.VUE_APP_TMSAPI
 export const CoursewareDomain = 'https://s.reallyedu.com';
 export const HomeworkDomain = 'https://s.reallyedu.com';
-export const HomeworkBasePath= process.env.VUE_APP_HomeworkBasePath|| "homework-test";
+export const HomeworkBasePath = process.env.VUE_APP_HomeworkBasePath || "homework-test";

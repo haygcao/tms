@@ -63,6 +63,16 @@ async function resetPassword(payload) {
         return { code: 500, data: {}, message: err.response.data.error || '提交失败' }
     }
 }
+async function getClazzList(payload) {
+    try {
+        const response = await axios.get('/api/student/clazz/list', {
+            params: payload
+        });
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
+    }
+}
 export default {
     list,
     create,
@@ -70,6 +80,7 @@ export default {
     findById,
     addParent,
     update,
-    resetPassword
-   
+    resetPassword,
+    getClazzList
+
 }

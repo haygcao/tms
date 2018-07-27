@@ -45,8 +45,9 @@
       <div>校区管理<span class="count-number">{{employeeCountSummary.school_manager}}</span>人</div>
     </div>
   </el-row>
-  <el-row v-loading="loading">
-    <el-card class="box-card  clearfix" shadow="hover" v-for="item in employeeList.rows" :key="item.id">
+  <el-row v-loading="loading" style="margin-left:-10px;margin-right:-10px;">
+    <el-col style="padding:10px" :xs="24" :sm="12" :md="8" :lg="6" v-for="item in employeeList.rows" :key="item.id">
+    <el-card class="box-card  clearfix" shadow="hover">
 
       <div class="employee-item" :class="{'disabled':item.state!=1}">
 
@@ -83,6 +84,7 @@
       </div>
       </div>
     </el-card>
+    </el-col>
   </el-row>
   <el-row>
     <div class="text-center" v-if="employeeList.count>0">
@@ -268,10 +270,10 @@ export default {
 }
 
 .box-card {
-  width: 340px;
-  display: inline-block;
-  margin-right: 30px;
-  margin-bottom: 30px;
+  // width: 340px;
+  // display: inline-block;
+  // margin-right: 30px;
+  // margin-bottom: 30px;
   position: relative;
 }
 
