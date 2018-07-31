@@ -227,10 +227,10 @@ export default {
       this.dialogCreateEmployeeVisible = true;
     },
     onCreateEmployeeSuccess() {
-      self.search();
+      this.search();
     },
     onEditEmployeeSuccess() {
-      self.search();
+      this.search();
     },
     onEditEmployee(data) {
       if (data.state != 1) {
