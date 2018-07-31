@@ -31,8 +31,8 @@ if (process.env.VUE_APP_TEST) {
 
 
 export const Terms = {
-    5: '暑秋',
-    6: '寒春',
+    5: '秋寒',
+    6: '春暑',
     7: '全年',
     1: '暑假',
     2: '秋季',

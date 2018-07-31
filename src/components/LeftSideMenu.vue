@@ -31,10 +31,10 @@
     <i class="iconfont icon-clazz"></i>
     <span slot="title">班级管理</span>
   </el-menu-item>
-   <el-menu-item index="/teaching/schedule" v-if="school_master">
+   <!-- <el-menu-item index="/teaching/schedule" v-if="school_master">
     <i class="iconfont icon-schedule-setting"></i>
     <span slot="title">开班排课</span>
-  </el-menu-item>
+  </el-menu-item> -->
   <el-menu-item index="/school/classes/1" v-if="school_master||student_master">
     <i class="iconfont icon-consume-course"></i>
     <span slot="title">选课报名</span>

@@ -51,7 +51,7 @@
 
       <div class="employee-item" :class="{'disabled':item.state!=1}">
 
-        <div v-if="item.state==1" class="tool-bar"><a @click="onEditEmployee(item)" class="bar">编辑</a>
+        <div v-if="item.state==1&&item.job_title!='investor'" class="tool-bar"><a @click="onEditEmployee(item)" class="bar">编辑</a>
         |<el-popover
           placement="bottom"
           width="400"
