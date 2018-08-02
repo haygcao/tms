@@ -54,7 +54,7 @@
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item><a @click="onUpdateStudent(student)">修改资料</a></el-dropdown-item>
                                 <el-dropdown-item><a @click="onResetPassword(student)" type="danger">重置密码</a></el-dropdown-item>
-                                <el-dropdown-item   :disabled="!isStudy(student)"><a @click="onLockStudent(student)" type="danger" size="small">锁定</a></el-dropdown-item>
+                                <!-- <el-dropdown-item   :disabled="!isStudy(student)"><a @click="onLockStudent(student)" type="danger" size="small">锁定</a></el-dropdown-item> -->
                                 <el-dropdown-item divided :disabled="!isStudy(student)"><a @click="onShiftClazz(student)" type="danger" size="small">转班</a></el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>

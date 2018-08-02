@@ -9,8 +9,8 @@
     "build:preview": "npm run build:stage && serve -s dist",
     "test": "vue-cli-service test",
     "lint": "vue-cli-service lint",
-    "build:stage:docker": "npm run build:stage && docker build -t really_edu/tms-web .",
-    "build:docker": "npm run build && docker build -t really_edu/tms-web ."
+    "build:stage:docker": "npm run build:stage && docker build -t registry.cn-beijing.aliyuncs.com/reallyedu/tms-web:latest .",
+    "build:docker": "npm run build && docker build -t registry.cn-beijing.aliyuncs.com/reallyedu/tms-web:release ."
   },
   "dependencies": {
     "ali-oss": "^5.3.0",

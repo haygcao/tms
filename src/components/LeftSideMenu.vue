@@ -11,10 +11,10 @@
       active-text-color="#f56c6c"
       :collapse-transition="true"
       class="el-menu-vertical" @open="handleOpen" @close="handleClose" ref="leftMenu" :collapse="isCollapse">
-  <el-menu-item index="/dashboard" :route="{path:'/dashboard'}">
+  <!-- <el-menu-item index="/dashboard" :route="{path:'/dashboard'}">
     <i class="iconfont icon-pie-chart"></i>
     <span slot="title">校区概况</span>
-  </el-menu-item>
+  </el-menu-item> -->
   <el-menu-item index="/home/employee/1" v-if="business_master" :route="{name:'employee_list',params:{page:1}}">
     <i class="iconfont icon-employee"></i>
     <span slot="title">员工管理</span>

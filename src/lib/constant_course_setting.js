@@ -8,6 +8,10 @@ export const CourseSetting = [{
             terms: [
                 { key: 5, name: '秋寒', default_lesson_count: 22 },
                 { key: 6, name: '春暑', default_lesson_count: 22 },
+                { key: 1, name: '暑假', default_lesson_count: 11 },
+                { key: 2, name: '秋季', default_lesson_count: 11 },
+                { key: 3, name: '寒假', default_lesson_count: 11 },
+                { key: 4, name: '春季', default_lesson_count: 11 },
             ]
         },
         {
@@ -16,6 +20,10 @@ export const CourseSetting = [{
             terms: [
                 { key: 5, name: '秋寒', default_lesson_count: 22 },
                 { key: 6, name: '春暑', default_lesson_count: 22 },
+                { key: 1, name: '暑假', default_lesson_count: 11 },
+                { key: 2, name: '秋季', default_lesson_count: 11 },
+                { key: 3, name: '寒假', default_lesson_count: 11 },
+                { key: 4, name: '春季', default_lesson_count: 11 },
             ]
 
         },
@@ -25,6 +33,10 @@ export const CourseSetting = [{
             terms: [
                 { key: 5, name: '秋寒', default_lesson_count: 22 },
                 { key: 6, name: '春暑', default_lesson_count: 22 },
+                { key: 1, name: '暑假', default_lesson_count: 11 },
+                { key: 2, name: '秋季', default_lesson_count: 11 },
+                { key: 3, name: '寒假', default_lesson_count: 11 },
+                { key: 4, name: '春季', default_lesson_count: 11 },
             ]
 
         }
@@ -32,6 +44,10 @@ export const CourseSetting = [{
     terms: [
         { key: 5, name: '秋寒' },
         { key: 6, name: '春暑' },
+        { key: 1, name: '暑假', default_lesson_count: 11 },
+        { key: 2, name: '秋季', default_lesson_count: 11 },
+        { key: 3, name: '寒假', default_lesson_count: 11 },
+        { key: 4, name: '春季', default_lesson_count: 11 },
     ]
 },
 {
@@ -44,6 +60,10 @@ export const CourseSetting = [{
             terms: [
                 { key: 5, name: '秋寒', default_lesson_count: 24 },
                 { key: 6, name: '春暑', default_lesson_count: 24 },
+                { key: 1, name: '暑假', default_lesson_count: 12 },
+                { key: 2, name: '秋季', default_lesson_count: 12 },
+                { key: 3, name: '寒假', default_lesson_count: 12 },
+                { key: 4, name: '春季', default_lesson_count: 12 },
             ]
         },
         {
@@ -52,6 +72,10 @@ export const CourseSetting = [{
             terms: [
                 { key: 5, name: '秋寒', default_lesson_count: 24 },
                 { key: 6, name: '春暑', default_lesson_count: 24 },
+                { key: 1, name: '暑假', default_lesson_count: 12 },
+                { key: 2, name: '秋季', default_lesson_count: 12 },
+                { key: 3, name: '寒假', default_lesson_count: 12 },
+                { key: 4, name: '春季', default_lesson_count: 12 },
             ]
 
         },
@@ -59,6 +83,10 @@ export const CourseSetting = [{
     terms: [
         { key: 5, name: '秋寒' },
         { key: 6, name: '春暑' },
+        { key: 1, name: '暑假', default_lesson_count: 11 },
+        { key: 2, name: '秋季', default_lesson_count: 11 },
+        { key: 3, name: '寒假', default_lesson_count: 11 },
+        { key: 4, name: '春季', default_lesson_count: 11 },
     ]
 
 },
@@ -103,7 +131,7 @@ export const CourseSetting = [{
 }]
 export const ClassTypeSetting = [
     { key: 1, name: '周末班', enable: true },
-    { key: 2, name: '平时班', enable: process.env.VUE_APP_TEST },
+    { key: 2, name: '平日班', enable: true },
     { key: 3, name: '短期班', enable: process.env.VUE_APP_TEST },
     { key: 4, name: '连续班', enable: process.env.VUE_APP_TEST },
     { key: 5, name: '试听班', enable: true },
@@ -115,10 +143,10 @@ export const TermsSetting = [
     { key: 5, name: '秋寒', enable: true },
     { key: 6, name: '春暑', enable: true },
     { key: 7, name: '全年', enable: true },
-    { key: 1, name: '暑假', enable: false },
-    { key: 2, name: '秋季', enable: false },
-    { key: 3, name: '寒假', enable: false },
-    { key: 4, name: '春季', enable: false },
+    { key: 1, name: '暑假', enable: true },
+    { key: 2, name: '秋季', enable: true },
+    { key: 3, name: '寒假', enable: true },
+    { key: 4, name: '春季', enable: true },
 ]
 
 export const GradesSetting = [

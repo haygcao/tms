@@ -1,1 +1,1 @@
-docker build -t reallyedu/tms-web .
+docker build -t registry.cn-beijing.aliyuncs.com/reallyedu/tms-web:latest .
