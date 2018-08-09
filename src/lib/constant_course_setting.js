@@ -6,6 +6,7 @@ export const CourseSetting = [{
             key: 'A1',
             name: '3-4岁',
             terms: [
+                { key: 7, name: '全年', default_lesson_count: 44 },
                 { key: 5, name: '秋寒', default_lesson_count: 22 },
                 { key: 6, name: '春暑', default_lesson_count: 22 },
                 { key: 1, name: '暑假', default_lesson_count: 11 },
@@ -18,6 +19,7 @@ export const CourseSetting = [{
             key: 'A2',
             name: '4-5岁',
             terms: [
+                { key: 7, name: '全年', default_lesson_count: 44 },
                 { key: 5, name: '秋寒', default_lesson_count: 22 },
                 { key: 6, name: '春暑', default_lesson_count: 22 },
                 { key: 1, name: '暑假', default_lesson_count: 11 },
@@ -31,6 +33,7 @@ export const CourseSetting = [{
             key: 'A3',
             name: '5-6岁',
             terms: [
+                { key: 7, name: '全年', default_lesson_count: 44 },
                 { key: 5, name: '秋寒', default_lesson_count: 22 },
                 { key: 6, name: '春暑', default_lesson_count: 22 },
                 { key: 1, name: '暑假', default_lesson_count: 11 },
@@ -42,6 +45,7 @@ export const CourseSetting = [{
         }
     ],
     terms: [
+        { key: 7, name: '全年', default_lesson_count: 48 },
         { key: 5, name: '秋寒' },
         { key: 6, name: '春暑' },
         { key: 1, name: '暑假', default_lesson_count: 11 },
@@ -58,6 +62,7 @@ export const CourseSetting = [{
             key: 'H1',
             name: '3-4.5岁',
             terms: [
+                { key: 7, name: '全年', default_lesson_count: 48 },
                 { key: 5, name: '秋寒', default_lesson_count: 24 },
                 { key: 6, name: '春暑', default_lesson_count: 24 },
                 { key: 1, name: '暑假', default_lesson_count: 12 },
@@ -70,6 +75,7 @@ export const CourseSetting = [{
             key: 'H2',
             name: '4.5-6岁',
             terms: [
+                { key: 7, name: '全年', default_lesson_count: 48 },
                 { key: 5, name: '秋寒', default_lesson_count: 24 },
                 { key: 6, name: '春暑', default_lesson_count: 24 },
                 { key: 1, name: '暑假', default_lesson_count: 12 },
@@ -81,6 +87,7 @@ export const CourseSetting = [{
         },
     ],
     terms: [
+        { key: 7, name: '全年', default_lesson_count: 50 },
         { key: 5, name: '秋寒' },
         { key: 6, name: '春暑' },
         { key: 1, name: '暑假', default_lesson_count: 11 },
@@ -98,35 +105,81 @@ export const CourseSetting = [{
         {
             key: 'B1',
             name: '2-4岁',
-            terms: [{ key: 7, name: '全年', default_lesson_count: 50 }]
+            terms: [
+                { key: 7, name: '全年', default_lesson_count: 50 },
+                { key: 5, name: '秋寒', default_lesson_count: 25 },
+                { key: 6, name: '春暑', default_lesson_count: 25 },
+                { key: 1, name: '暑假', default_lesson_count: 12 },
+                { key: 2, name: '秋季', default_lesson_count: 12 },
+                { key: 3, name: '寒假', default_lesson_count: 12 },
+                { key: 4, name: '春季', default_lesson_count: 12 },
+            ]
 
         },
         {
             key: 'B2',
             name: '4-5岁',
-            terms: [{ key: 7, name: '全年', default_lesson_count: 50 }]
+            terms: [
+                { key: 7, name: '全年', default_lesson_count: 50 },
+                { key: 5, name: '秋寒', default_lesson_count: 25 },
+                { key: 6, name: '春暑', default_lesson_count: 25 },
+                { key: 1, name: '暑假', default_lesson_count: 12 },
+                { key: 2, name: '秋季', default_lesson_count: 12 },
+                { key: 3, name: '寒假', default_lesson_count: 12 },
+                { key: 4, name: '春季', default_lesson_count: 12 },
+            ]
 
         },
         {
             key: 'B3',
             name: '5-6岁',
-            terms: [{ key: 7, name: '全年', default_lesson_count: 50 }]
+            terms: [
+                { key: 7, name: '全年', default_lesson_count: 50 },
+                { key: 5, name: '秋寒', default_lesson_count: 25 },
+                { key: 6, name: '春暑', default_lesson_count: 25 },
+                { key: 1, name: '暑假', default_lesson_count: 12 },
+                { key: 2, name: '秋季', default_lesson_count: 12 },
+                { key: 3, name: '寒假', default_lesson_count: 12 },
+                { key: 4, name: '春季', default_lesson_count: 12 },
+            ]
 
         },
         {
             key: 'B4',
             name: '6-8岁',
-            terms: [{ key: 7, name: '全年', default_lesson_count: 50 }]
+            terms: [
+                { key: 7, name: '全年', default_lesson_count: 50 },
+                { key: 5, name: '秋寒', default_lesson_count: 25 },
+                { key: 6, name: '春暑', default_lesson_count: 25 },
+                { key: 1, name: '暑假', default_lesson_count: 12 },
+                { key: 2, name: '秋季', default_lesson_count: 12 },
+                { key: 3, name: '寒假', default_lesson_count: 12 },
+                { key: 4, name: '春季', default_lesson_count: 12 },
+            ]
 
         },
         {
             key: 'B5',
             name: '8-9岁',
-            terms: [{ key: 7, name: '全年', default_lesson_count: 50 }]
+            terms: [
+                { key: 7, name: '全年', default_lesson_count: 50 },
+                { key: 5, name: '秋寒', default_lesson_count: 25 },
+                { key: 6, name: '春暑', default_lesson_count: 25 },
+                { key: 1, name: '暑假', default_lesson_count: 12 },
+                { key: 2, name: '秋季', default_lesson_count: 12 },
+                { key: 3, name: '寒假', default_lesson_count: 12 },
+                { key: 4, name: '春季', default_lesson_count: 12 },
+            ]
         },
     ],
     terms: [
-        { key: 7, name: '全年', default_lesson_count: 50 }]
+        { key: 7, name: '全年', default_lesson_count: 50 },
+        { key: 5, name: '秋寒', default_lesson_count: 25 },
+        { key: 6, name: '春暑', default_lesson_count: 25 },
+        { key: 1, name: '暑假', default_lesson_count: 12 },
+        { key: 2, name: '秋季', default_lesson_count: 12 },
+        { key: 3, name: '寒假', default_lesson_count: 12 },
+        { key: 4, name: '春季', default_lesson_count: 12 },]
 
 }]
 export const ClassTypeSetting = [
