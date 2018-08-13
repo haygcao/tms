@@ -132,11 +132,13 @@
             </div>
           </div>
           <div class="clazz-item-p3">
-            <h3 v-if="clazz.student_limit<=clazz.student_count">已报满</h3>
+            <h3 v-if="clazz.student_limit<=clazz.student_count"><a @click="viewClazzStudents(clazz)">已报满</a></h3>
             <div v-else>
               <p>
+                <a @click="viewClazzStudents(clazz)">
                 <small>剩余名额</small>
                 <span :class="{'text-danger':(clazz.student_limit-clazz.student_count)<4}" class="clazz-last-count">{{clazz.student_limit-clazz.student_count}}</span>
+                </a>
               </p>
               <div>
                 <el-button @click="handleEnrollmentClick(clazz)" size="small" type="danger">报名</el-button>
@@ -165,6 +167,14 @@
          <div slot="footer" class="dialog-footer">
         </div>
      </el-dialog>
+     <el-dialog :visible.sync="dialogClazzStudentVisible" fullscreen  center >
+        <h1 slot="title">班级成员<small class="text-info">(共{{clazzStudents.length}}人)</small></h1>
+       <el-row>
+         <el-col v-if="dialogClazzStudentVisible" style="padding:10px" :xs="24" :sm="12" :md="12" :lg="8" v-for="student in clazzStudents" :key="student.id">
+        <student-info-card :student="student"></student-info-card>
+         </el-col>
+        </el-row>
+     </el-dialog>
   </div>
 </template>
 
@@ -173,6 +183,7 @@ import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
 import CourseFilterBox from "@/components/CourseFilterBox.vue";
 import ShoppingCard from "@/views/school/ShoppingCard.vue";
 import StudentPicker from "@/views/school/StudentPicker.vue";
+import StudentInfoCard from "@/components/StudentInfoCard.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -226,7 +237,8 @@ export default {
       rightTabOpened: false,
       teacher_avatar_man: require("@/assets/img/teacher_1.png"),
       teacher_avatar_woman: require("@/assets/img/teacher_0.png"),
-      dialogStudentPickerVisible: false
+      dialogStudentPickerVisible: false,
+      dialogClazzStudentVisible: false
     };
   },
   computed: {
@@ -236,7 +248,8 @@ export default {
       teacher_info: state => state.clazz.teacherInfo.data || {},
       course: state => state.order.course.data || [],
       currentClazz: state => state.clazz.selectedClazz.data,
-      discounts: state => state.discount.list.data || []
+      discounts: state => state.discount.list.data || [],
+      clazzStudents: state => state.clazz.clazzStudents.data || []
     }),
     ...mapGetters([
       "terms",
@@ -263,7 +276,7 @@ export default {
           return v.title;
         }
       });
-      if(disc_1.length==0){
+      if (disc_1.length == 0) {
         return null;
       }
       return "连报优惠:" + disc_1.toString();
@@ -314,7 +327,8 @@ export default {
       getClazzById: "getClazzById",
       fetchCourseLesson: "fetchCourseLesson",
       getProduct: "getProduct",
-      getDiscountList: "getDiscountList"
+      getDiscountList: "getDiscountList",
+      getClazzStudents: "getClazzStudents"
     }),
 
     handleEnrollmentClick(data) {
@@ -367,12 +381,24 @@ export default {
     },
     confirmToPurchase() {
       this.$router.push({ name: "create_order" });
+    },
+    async viewClazzStudents(clazz) {
+      if (clazz.student_count==0) {
+        return false;
+      }
+      let res = await this.getClazzStudents({ clazz_id: clazz.id });
+      if (res && res.code == 0) {
+        this.dialogClazzStudentVisible = true;
+      } else {
+        this.$message.error("无法获取学员名单");
+      }
     }
   },
   components: {
     CourseFilterBox,
     ShoppingCard,
-    StudentPicker
+    StudentPicker,
+    StudentInfoCard
   }
 };
 </script>

@@ -75,7 +75,7 @@
             </div>
             <div class="text-center">
               <div class="text-info text-small">报名人数/限额</div>
-              <strong> {{clazz.student_count}}</strong>/<strong> {{clazz.student_limit||0}}</strong>
+              <a @click="showClazzStudents(clazz)"><strong> {{clazz.student_count}}</strong>/<strong> {{clazz.student_limit||0}}</strong></a>
             </div>
           </div>
         </div>
@@ -96,73 +96,6 @@
         </el-col>
       </transition-group>
     </el-row>
-    <!-- <el-row class="block " >
-
-        <el-table v-loading="loading" :data="clazzList.rows" stripe size="medium">
-            <el-table-column type="index" label="#" width="40">
-            </el-table-column>
-            <el-table-column  label="名称">
-                <template slot-scope="scope">
-              {{scope.row.year}}{{scope.row.subject|subjectName}}{{scope.row.grade|grade}}{{scope.row.term|terms}}{{scope.row.class_type|classType}}
-          </template>
-            </el-table-column>
-            <el-table-column width="200" label="开课日期">
-                <template slot-scope="scope">
-            <p>{{scope.row.begin_date|toDateString}}-{{scope.row.finish_date|toDateString}}</p>
-            <p> <span v-if="scope.row.class_type=='0'||scope.row.class_type=='1'">{{scope.row.begin_date|weekDay}}</span> {{scope.row.class_begin_time|toShortTimeString}}-{{scope.row.class_finish_time|toShortTimeString}}</p>
-          </template>
-            </el-table-column>
-            <el-table-column width="120" label="上课地点">
-                <template slot-scope="scope">
-            {{scope.row.classroom_name}}
-          </template>
-            </el-table-column>
-            <el-table-column width="120" label="授课老师">
-                <template slot-scope="scope">
-            {{scope.row.teacher_name}}
-          </template>
-            </el-table-column>
-            <el-table-column width="70" label="总课次">
-                <template slot-scope="scope">
-            {{scope.row.total_lesson_number||0}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="剩余课次">
-                <template slot-scope="scope">
-             {{scope.row.total_lesson_number - (scope.row.current_lesson_number||0)}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="报名人数">
-                <template slot-scope="scope">
-            {{scope.row.student_count}}
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="班级状态">
-                <template slot-scope="scope">
-            <span :class="{'text-success':scope.row.state==1}">{{scope.row.state|classState}}</span>
-          </template>
-            </el-table-column>
-            <el-table-column width="80" label="显示状态" >
-                <template slot-scope="scope">
-                  <div v-if="(scope.row.state==0&&scope.row.student_count==0)">
-                    <a :class="{'el-button--success':scope.row.visible,'el-button--info':!scope.row.visible}" class="visible-link el-button  el-button--mini is-plain" @click="handleVisibleClick(scope.row)"  @mouseover="handleMouseEnter($event,scope.row)" @mouseout="handleMouseLeve($event,scope.row)">{{scope.row.visible?"公开":"隐藏"}}</a>
-                  </div>
-                  <div v-else><el-button disabled=""  plain size="small" :type="scope.row.visible?'success':'info'">{{scope.row.visible?"公开":"隐藏"}}</el-button> </div>
-                </template>
-            </el-table-column>
-             <el-table-column label="创建时间">
-                <template slot-scope="scope">
-                    <span>{{scope.row.created_at|formatDateTime('YYYY/MM/DD HH:mm:ss')}}</span>
-                </template>
-          </el-table-column>
-            <el-table-column fixed="right" label="操作" width="100">
-                <template slot-scope="scope">
-            <el-button @click="handleCloseClick(scope.row)" type="text" size="small">关班</el-button>
-            <el-button @click="handleDelClick(scope.row)" type="text" size="small">删除</el-button>
-          </template>
-            </el-table-column>
-        </el-table>
-    </el-row> -->
     <el-row>
         <div class="text-center" v-if="clazzList.count>0">
             <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="pageSize" :current-page.sync="currentPage" :total="clazzList.count">
@@ -174,6 +107,14 @@
       <add-class v-if="dialogFormVisible" v-bind:mode="operate_mode" @update-success="onUpdated"
         @create-success="onCreated"></add-class>
     </el-dialog>
+    <el-dialog :visible.sync="dialogClazzStudentVisible" fullscreen  center >
+        <h1 slot="title">班级成员<small class="text-info">(共{{clazzStudents.length}}人)</small></h1>
+       <el-row>
+         <el-col v-if="dialogClazzStudentVisible" style="padding:10px" :xs="24" :sm="12" :md="12" :lg="8" v-for="student in clazzStudents" :key="student.id">
+        <student-info-card :student="student"></student-info-card>
+         </el-col>
+        </el-row>
+     </el-dialog>
 </div>
 </template>
 
@@ -181,6 +122,7 @@
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
 import AddClass from "@/views/teaching_manage/AddClass.vue";
 import CourseFilterBox from "@/components/CourseFilterBox.vue";
+import StudentInfoCard from "@/components/StudentInfoCard.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -206,13 +148,15 @@ export default {
       loading: false,
       operate_mode: "create",
       dialogFormVisible: false,
-      clazzListCopy: []
+      clazzListCopy: [],
+      dialogClazzStudentVisible: false
     };
   },
   computed: {
     ...mapState({
       clazzList: state => state.clazz.clazzList.data || {},
-      current_school: state => state.current_user.current_school
+      current_school: state => state.current_user.current_school,
+      clazzStudents: state => state.clazz.clazzStudents.data || []
     }),
     ...mapGetters([
       "terms",
@@ -259,7 +203,8 @@ export default {
       getClazzList: "getClazzList",
       setClazzVisibleState: "setClazzVisibleState",
       removeClazz: "removeClazz",
-      closeClazz: "closeClazz"
+      closeClazz: "closeClazz",
+      getClazzStudents: "getClazzStudents"
     }),
     handleMouseEnter(event, data) {
       this.$nextTick(() => {
@@ -406,11 +351,23 @@ export default {
     onAddClass() {
       this.operate_mode = "create";
       this.dialogFormVisible = true;
+    },
+    async showClazzStudents(clazz) {
+      if (clazz.student_count==0) {
+        return false;
+      }
+      let res = await this.getClazzStudents({ clazz_id: clazz.id });
+      if (res && res.code == 0) {
+        this.dialogClazzStudentVisible = true;
+      } else {
+        this.$message.error("无法获取学员名单");
+      }
     }
   },
   components: {
     AddClass,
-    CourseFilterBox
+    CourseFilterBox,
+    StudentInfoCard
   }
 };
 </script>
@@ -422,7 +379,6 @@ export default {
   word-break: normal;
   text-overflow: ellipsis;
 }
-
 
 .visible-link {
   text-decoration: none;

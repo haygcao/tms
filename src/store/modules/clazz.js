@@ -11,7 +11,8 @@ const mutations_types = {
     clazz_close: "clazz/clazz_close",
     clazz_remove: "clazz/clazz_remove",
     clazz_set_visible_state: "clazz/clazz_set_visible_state",
-    visibled_clazz_list: "clazz/visibled_clazz_list"
+    visibled_clazz_list: "clazz/visibled_clazz_list",
+    clazzStudents: 'clazz/clazzStudents'
 }
 const state = {
     clazzList: {},
@@ -20,6 +21,7 @@ const state = {
     selectedClazz: {},
     teacherInfo: {},
     clazzListVisibled: {},
+    clazzStudents: {}
 }
 const getters = {
 
@@ -71,8 +73,14 @@ const actions = {
         let res = await clazz.create(payload);
         commit(mutations_types.clazz_create, { res })
     },
+    //班级学员名单
+    async getClazzStudents({ commit, state, getters }, payload) {
+        let res = await clazz.getClazzStudent(payload);
+        commit(mutations_types.clazzStudents, { res });
+        return res;
+    },
     async clearClazzCreateStates({ commit, state, getters }) {
-        commit(mutations_types.clear_state)
+        commit(mutations_types.clear_state);
     }
 }
 const mutations = {
@@ -110,6 +118,9 @@ const mutations = {
     [mutations_types.clear_state](state) {
         state.course = {};
         state.createResult = {}
+    },
+    [mutations_types.clazzStudents](state, { res }) {
+        state.clazzStudents = res;
     },
     [CLEAR_STATE](state) {
         state.course = {};
