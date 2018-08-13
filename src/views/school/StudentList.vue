@@ -40,7 +40,7 @@
                   </div>
                 </div>
                 <div class="col-4 clearfix">
-                  <div class="student-fileds"><span class="fileds-title">累计报班:</span><span class="fileds-counter">{{student.clazz_count}}</span></div>
+                  <div class="student-fileds"><span class="fileds-title">累计报班:</span><span class="fileds-counter"><span v-if="student.clazz_count<=0">{{student.clazz_count}}</span><a v-else class="link" @click="showStudentClazz(student.id)">{{student.clazz_count}}</a></span></div>
                   <div class="student-fileds"><span class="fileds-title">消课/购课:</span><span class="fileds-counter">{{student.consume_lesson_count}}<span style="color:#b1b1b1;font-size:14px">/</span>{{student.total_lesson_count}}</span></div>
                   <div class="student-fileds"><span class="fileds-title" title="(当前/累计)">睿乐币:</span><span class="fileds-counter">{{student.points||0}}<span style="color:#b1b1b1;font-size:14px">/</span>{{student.points_total||0}}</span></div>
                 </div>
@@ -78,12 +78,23 @@
           <reschedule v-if="dialogRescheduleVisible" :student="selectedStudent"></reschedule>
           </keep-alive>
         </el-dialog>
+         <el-dialog :visible.sync="dialogStudentClazzVisible" fullscreen  center >
+            <h1 slot="title">报班记录</h1>
+            <el-row class="clazz-list">
+              <el-col style="padding:10px" :xs="24" :sm="12" :md="12" :lg="6" v-for="clazz in clazzList" :key="clazz.id">
+              <clazz-info-card :clazz="clazz.clazz">
+                <small class="text-info" slot="footer">{{clazz.join_time|formatDateTime('YYYY/MM/DD HH:mm')}}加入班级</small>
+              </clazz-info-card>
+              </el-col>
+            </el-row>
+        </el-dialog>
     </div>
 </template>
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
 import AddStudent from "@/views/school/AddStudent.vue";
 import Reschedule from "@/views/school/Reschedule.vue";
+import ClazzInfoCard from "@/views/school/ClazzInfoCard.vue";
 export default {
   data() {
     return {
@@ -96,6 +107,7 @@ export default {
       selectedStudentId: undefined,
       dialogAddStudentVisible: false,
       dialogRescheduleVisible: false,
+      dialogStudentClazzVisible: false,
       selectedStudent: undefined,
       addStudentMode: "edit",
       student_avatar_girl: require("@/assets/img/student_0.png"),
@@ -126,7 +138,8 @@ export default {
   computed: {
     ...mapState({
       studentList: state => state.student.studentList.data || [],
-      current_school: state => state.current_user.current_school
+      current_school: state => state.current_user.current_school,
+      clazzList: state => state.student.studentClazzList.data || []
     })
   },
   mounted() {
@@ -139,7 +152,8 @@ export default {
   methods: {
     ...mapActions({
       getStudentListBySchool: "getStudentListBySchool",
-      resetStudentPassword: "resetStudentPassword"
+      resetStudentPassword: "resetStudentPassword",
+      getClazzList: "getStudentClazzList"
     }),
     isStudy(row) {
       return row.total_lesson_count - row.consume_lesson_count > 0;
@@ -215,17 +229,32 @@ export default {
       let self = this;
       this.dialogAddStudentVisible = false;
       this.onSearch();
+    },
+    async showStudentClazz(id) {
+      const res = await this.getClazzList({ student_id: id });
+      if (res && res.code == 0) {
+        this.dialogStudentClazzVisible = true;
+      } else {
+        this.$message.error("无法获取报班记录");
+      }
     }
   },
   components: {
     AddStudent,
-    Reschedule
+    Reschedule,
+    ClazzInfoCard
   }
 };
 </script>
 <style scoped>
 .el-table--small .el-dropdown-link {
   font-size: 12px;
+}
+.link {
+  color: #409eff;
+}
+.link:hover {
+  color: #66b1ff;
 }
 .mr-10 {
   margin-right: 10px;
@@ -341,6 +370,11 @@ export default {
 .student-item:not(.disabled) .student-gender-female {
   color: #f56c6c;
   color: rgba(245, 108, 108, 0.5);
+}
+.clazz-list {
+  margin: 0 auto;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 </style>
 

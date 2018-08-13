@@ -28,7 +28,7 @@
         <div class="bottom clearfix">
           <span style="line-height: 20px;" :class="{'text-success':clazz.state==1}">{{clazz.state|classState}}</span>
         </div>
-        <div>
+        <div class="footer extra">
             <slot name="footer"></slot>
         </div>
       </el-card>
@@ -45,4 +45,11 @@ export default {
   }
 };
 </script>
+<style scoped>
+.footer{
+  margin-top: 10px;
+  line-height: 12px;
+}
+</style>
+
 
