@@ -89,7 +89,7 @@
 <script>
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
 import { mapGetters, mapState, mapActions } from "vuex";
-import ClazzInfoCard from "@/views/school/ClazzInfoCard.vue";
+import ClazzInfoCard from "@/components/ClazzInfoCard.vue";
 import moment from "moment";
 export default {
   props: {

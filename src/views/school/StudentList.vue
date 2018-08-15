@@ -46,7 +46,8 @@
                 </div>
                 <div class="col-5">
                     <div>
-                        <el-button :disabled="!isStudy(student)" @click="onShiftSchedule(student)" class="mr-10" size="small" type="primary">调课</el-button>
+                        <!-- <el-button :disabled="!isStudy(student)" @click="onShiftSchedule(student)" class="mr-10" size="small" type="primary">调课</el-button> -->
+                        <el-button :disabled="!isStudy(student)" @click="onTransferClazz(student)" class="mr-10" size="small" type="primary">转班</el-button>
                         <el-dropdown trigger="click" size="small">
                             <el-button type="danger" size="small">
                                 更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -55,7 +56,7 @@
                                 <el-dropdown-item><a @click="onUpdateStudent(student)">修改资料</a></el-dropdown-item>
                                 <el-dropdown-item><a @click="onResetPassword(student)" type="danger">重置密码</a></el-dropdown-item>
                                 <!-- <el-dropdown-item   :disabled="!isStudy(student)"><a @click="onLockStudent(student)" type="danger" size="small">锁定</a></el-dropdown-item> -->
-                                <el-dropdown-item divided :disabled="!isStudy(student)"><a @click="onShiftClazz(student)" type="danger" size="small">转班</a></el-dropdown-item>
+                                <!-- <el-dropdown-item divided :disabled="!isStudy(student)"><a @click="onTransferClazz(student)" type="danger" size="small">转班</a></el-dropdown-item> -->
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -78,6 +79,9 @@
           <reschedule v-if="dialogRescheduleVisible" :student="selectedStudent"></reschedule>
           </keep-alive>
         </el-dialog>
+        <el-dialog :visible.sync="dialogTransferClazzVisible" fullscreen  center >
+          <transfer-clazz v-if="dialogTransferClazzVisible" :student="selectedStudent" @finished="dialogTransferClazzVisible=false"></transfer-clazz>
+        </el-dialog>
          <el-dialog :visible.sync="dialogStudentClazzVisible" fullscreen  center >
             <h1 slot="title">报班记录</h1>
             <el-row class="clazz-list">
@@ -94,7 +98,8 @@
 import { mapGetters, mapState, mapActions } from "vuex";
 import AddStudent from "@/views/school/AddStudent.vue";
 import Reschedule from "@/views/school/Reschedule.vue";
-import ClazzInfoCard from "@/views/school/ClazzInfoCard.vue";
+import TransferClazz from "@/views/school/TransferClazz.vue";
+import ClazzInfoCard from "@/components/ClazzInfoCard.vue";
 export default {
   data() {
     return {
@@ -108,6 +113,7 @@ export default {
       dialogAddStudentVisible: false,
       dialogRescheduleVisible: false,
       dialogStudentClazzVisible: false,
+      dialogTransferClazzVisible: false,
       selectedStudent: undefined,
       addStudentMode: "edit",
       student_avatar_girl: require("@/assets/img/student_0.png"),
@@ -120,12 +126,6 @@ export default {
         this.search();
       }
     }
-    // $route(val, old) {
-    //   let query = val.query;
-    //   this.currentPage = parseInt(val.params.page);
-    //   this.searchForm.kw = query.kw;
-    //   this.search();
-    // }
   },
   beforeRouteUpdate(to, from, next) {
     // react to route changes...
@@ -216,14 +216,13 @@ export default {
         .catch(_ => {});
     },
     onShiftSchedule(data) {
-      // return this.$router.push({
-      //   name: "reschedule",
-      //   params: { student: data.id }
-      // });
       this.dialogRescheduleVisible = true;
       this.selectedStudent = data;
     },
-    onShiftClazz(data) {},
+    onTransferClazz(data) {
+      this.dialogTransferClazzVisible = true;
+      this.selectedStudent = data;
+    },
     onLockStudent(data) {},
     onCreateStudentSuccess(mobile) {
       let self = this;
@@ -242,7 +241,8 @@ export default {
   components: {
     AddStudent,
     Reschedule,
-    ClazzInfoCard
+    ClazzInfoCard,
+    TransferClazz
   }
 };
 </script>
