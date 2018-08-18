@@ -139,8 +139,11 @@ export default {
     return {
       pickerOptions: {
         disabledDate: function(current) {
-          let now=new Date();
-          if (current.getTime() < new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime()) {
+          let now = new Date();
+          if (
+            current.getTime() <
+            new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+          ) {
             return true;
           }
           return false;
@@ -403,7 +406,7 @@ export default {
         });
       } else {
         this.$message.success("保存成功");
-        this.$emit('create-success')
+        this.$emit("create-success");
         this.resetForm();
       }
     },
@@ -483,6 +486,9 @@ class ClazzDate {
       case 4:
       case 5:
       case 99:
+        end = start.getTime() + 0x5265c00 * (total - 1);
+        break;
+      default:
         end = start.getTime() + 0x5265c00 * (total - 1);
         break;
     }

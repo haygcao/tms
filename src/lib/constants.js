@@ -23,7 +23,7 @@ export const ClassType = {
     3: '短期班',
     4: '连续班',
     5: '试听班',
-
+    98: 'T1'
 }
 if (process.env.VUE_APP_TEST) {
     ClassType[99] = "测试班"
@@ -84,7 +84,7 @@ export const OssConfig = {
     region: 'oss-cn-beijing',
     endpoint: "s.reallyedu.com",
     secure: true,
-    cname:true,
+    cname: true,
     // accessKeyId: 'LTAINyj3tqkqy64w',
     // accessKeySecret: 'TZoibtVyWiKNZcOEbLYQHn2jWIrbgC',
     // stsToken: creds.SecurityToken,

@@ -188,6 +188,7 @@ export const ClassTypeSetting = [
     { key: 3, name: '短期班', enable: process.env.VUE_APP_TEST },
     { key: 4, name: '连续班', enable: process.env.VUE_APP_TEST },
     { key: 5, name: '试听班', enable: true },
+    { key: 98, name: 'T1', enable: true },
 ]
 if (process.env.VUE_APP_TEST) {
     ClassTypeSetting.push({ key: 99, name: '测试班', enable: true })

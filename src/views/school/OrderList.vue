@@ -36,7 +36,7 @@
 
     <el-row>
         <div class="block">
-        <el-table :data="orderList.rows" stripe size="medium">
+        <el-table ref="order_table" :data="orderList.rows" stripe size="medium" :row-key="(row)=>row.id" :expand-row-keys="expandRows"	>
 
             <el-table-column type="expand" width="40">
               <template slot-scope="scope">
@@ -139,6 +139,7 @@ export default {
         student: undefined,
         order_no: undefined
       },
+      expandRows: [],
       pageSize: 10,
       currentPage: 1
     };
@@ -215,7 +216,7 @@ export default {
       this.search();
     },
     search() {
-     let payload = Object.assign({}, this.searchForm);
+      let payload = Object.assign({}, this.searchForm);
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
       payload.school_id = this.current_school.id;
@@ -270,7 +271,13 @@ export default {
         })
         .catch(_ => {});
     },
-    onRefundOrder(payload) {}
+    onShowDetail(row) {
+      // this.expandRows = [row.id];
+      this.$refs['order_table'].toggleRowExpansion(row,true);
+    },
+    onRefundOrder(payload) {
+      alert('oops 功能还没有呢')
+    }
   },
   filters: {},
   components: {}
