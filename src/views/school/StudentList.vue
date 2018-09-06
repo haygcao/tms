@@ -40,7 +40,7 @@
                   </div>
                 </div>
                 <div class="col-4 clearfix">
-                  <div class="student-fileds"><span class="fileds-title">累计报班:</span><span class="fileds-counter"><span v-if="student.clazz_count<=0">{{student.clazz_count}}</span><a v-else class="link" @click="showStudentClazz(student.id)">{{student.clazz_count}}</a></span></div>
+                  <div class="student-fileds"><span class="fileds-title">累计报班:</span><span class="fileds-counter"><span v-if="student.clazz_count<=0">{{student.clazz_count}}</span><a v-else class="link" @click="showStudentClazz(student)">{{student.clazz_count}}</a></span></div>
                   <div class="student-fileds"><span class="fileds-title">消课/购课:</span><span class="fileds-counter">{{student.consume_lesson_count}}<span style="color:#b1b1b1;font-size:14px">/</span>{{student.total_lesson_count}}</span></div>
                   <div class="student-fileds"><span class="fileds-title" title="(当前/累计)">睿乐币:</span><span class="fileds-counter">{{student.points||0}}<span style="color:#b1b1b1;font-size:14px">/</span>{{student.points_total||0}}</span></div>
                 </div>
@@ -83,10 +83,12 @@
           <transfer-clazz v-if="dialogTransferClazzVisible" :student="selectedStudent" @finished="dialogTransferClazzVisible=false"></transfer-clazz>
         </el-dialog>
          <el-dialog :visible.sync="dialogStudentClazzVisible" fullscreen  center >
-            <h1 slot="title">报班记录</h1>
+            <h1 slot="title"><span v-if="selectedStudent" class="">{{selectedStudent.name}}的</span>报班记录</h1>
+            <empty-data-view v-if="clazzList.length==0"></empty-data-view>
             <el-row class="clazz-list">
               <el-col style="padding:10px" :xs="24" :sm="12" :md="12" :lg="6" v-for="clazz in clazzList" :key="clazz.id">
               <clazz-info-card :clazz="clazz.clazz">
+                <el-button v-if="clazz.clazz.state<2" slot="extra" style="float: right; padding: 3px 0" type="text" @click="onClickExitClazz(clazz.clazz_id)">退出班级</el-button>
                 <small class="text-info" slot="footer">{{clazz.join_time|formatDateTime('YYYY/MM/DD HH:mm')}}加入班级</small>
               </clazz-info-card>
               </el-col>
@@ -153,7 +155,8 @@ export default {
     ...mapActions({
       getStudentListBySchool: "getStudentListBySchool",
       resetStudentPassword: "resetStudentPassword",
-      getClazzList: "getStudentClazzList"
+      getClazzList: "getStudentClazzList",
+      studentExitClazz: "studentExitClazz"
     }),
     isStudy(row) {
       return row.total_lesson_count - row.consume_lesson_count > 0;
@@ -229,12 +232,27 @@ export default {
       this.dialogAddStudentVisible = false;
       this.onSearch();
     },
-    async showStudentClazz(id) {
-      const res = await this.getClazzList({ student_id: id });
+    async showStudentClazz(student) {
+      this.dialogStudentClazzVisible = true;
+      this.selectedStudent = student;
+      const res = await this.getClazzList({ student_id: student.id });
       if (res && res.code == 0) {
-        this.dialogStudentClazzVisible = true;
       } else {
+        this.dialogStudentClazzVisible = false;
+
         this.$message.error("无法获取报班记录");
+      }
+    },
+    async onClickExitClazz(clazz_id) {
+      let res = await this.studentExitClazz({
+        clazz_id,
+        student_id: this.selectedStudent.id
+      });
+      if (res.code == 0 && res.data == true) {
+        this.$message.success("操作成功");
+        this.search();
+      } else {
+        this.$message.error("退出班级失败");
       }
     }
   },

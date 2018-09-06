@@ -3,8 +3,12 @@
         <div slot="header" class="clearfix">
             <slot name="header">
           <span>{{clazz.year}}{{clazz.subject|subjectName}}<span class="text-warning">{{clazz.grade|grade}}</span>{{clazz.term|terms}}{{clazz.class_type|classType}}</span>
-
+          
             </slot>
+            <div style="float:right">
+            <slot name="extra">
+            </slot>
+            </div>
         </div>
         <div class="content" style="display:flex">
           <div class="" style="flex:1 padding:0px 5px">

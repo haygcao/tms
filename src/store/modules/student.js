@@ -10,7 +10,7 @@ const mutations_types = {
     fetched_student: "student/fetched_student",
     list_students: "student/list_students",
     reset_password: "student/reset_password",
-    get_clazz_list: "student/getClazzList"
+    get_clazz_list: "student/getClazzList",
 }
 const state = {
     // clazzList: {},
@@ -19,7 +19,7 @@ const state = {
     createStudentResult: {},
     updateStudentResult: {},
     addStudentParentResult: {},
-    studentClazzList:{}
+    studentClazzList: {},
 }
 const getters = {
 
@@ -69,6 +69,13 @@ const actions = {
     async getStudentClazzList({ commit, state, getters }, payload) {
         let res = await student.getClazzList(payload);
         commit(mutations_types.get_clazz_list, { res })
+        return res;
+    },
+    async studentExitClazz({ commit, state, getters, dispatch }, payload) {
+        let res = await student.exitClazz(payload);
+        if (res.code == 0) {
+            dispatch('getStudentClazzList', payload)
+        }
         return res;
     },
 }

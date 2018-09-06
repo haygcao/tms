@@ -264,7 +264,7 @@ export default {
       //   this.$alert("该班级已有学生报名，无法关闭");
       //   return false;
       // }
-      this.$confirm("确认关闭班级？", "警告", { type: "error" })
+      this.$confirm("确认关闭班级？", "警告", { type: "warning" })
         .then(_ => {
           this.closeClazz({
             clazz_id: data.id
