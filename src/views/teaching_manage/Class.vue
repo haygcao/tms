@@ -49,8 +49,9 @@
       <transition-group name="list" tag="div">
         <el-col style="padding:10px" :xs="24" :sm="12" :md="8" :lg="6" v-for="clazz in clazzListCopy" :key="clazz.id">
         <el-card  shadow="hover" class="box-card">
+          <div class="subject-state" :class="{'subject-state-2':clazz.subject==2,'subject-state-3':clazz.subject==3}" style="">{{clazz.subject|subjectName}}</div>
         <div slot="header" class="clearfix">
-          <span>{{clazz.year}}{{clazz.subject|subjectName}}<span class="text-warning">{{clazz.grade|grade}}</span>{{clazz.term|terms}}{{clazz.class_type|classType}}</span>
+          <span>{{clazz.year}}<span class="text-warning">{{clazz.grade|grade}}</span>{{clazz.term|terms}}{{clazz.class_type|classType}}</span>
           <span style="float: right;">
             <el-tooltip effect="dark" content="删除" placement="top">
               <el-button :disabled="clazz.state==1||clazz.student_count>0" style="padding: 3px;" @click="handleDelClick(clazz)" size="" type="text" icon="el-icon-delete"></el-button>
@@ -353,7 +354,7 @@ export default {
       this.dialogFormVisible = true;
     },
     async showClazzStudents(clazz) {
-      if (clazz.student_count==0) {
+      if (clazz.student_count == 0) {
         return false;
       }
       let res = await this.getClazzStudents({ clazz_id: clazz.id });
@@ -393,8 +394,26 @@ export default {
   display: inline-block;
   margin-right: 15px;
   margin-bottom: 15px; */
+  position: relative;
 }
 .box-card .bottom {
   margin-top: 13px;
+}
+.box-card .subject-state {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  background-color: #409eff;
+  /* background-color: rgba(245, 108, 108, 0.6); */
+  color: #ffffff;
+  padding: 5px 5px;
+  font-size: 14px;
+  border-radius: 50% 0px 0px 0px;
+}
+.box-card .subject-state-2 {
+  background-color: #e6a23c;
+}
+.box-card .subject-state-3 {
+  background-color: #f56c6c;
 }
 </style>

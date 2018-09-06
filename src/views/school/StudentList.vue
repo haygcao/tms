@@ -187,9 +187,14 @@ export default {
       payload.limit = this.pageSize;
       payload.offset = (this.currentPage - 1) * this.pageSize;
       payload.school_id = this.current_school.id;
-      this.getStudentListBySchool(payload).then(_ => {
-        this.loading = false;
-      });
+      this.getStudentListBySchool(payload)
+        .then(_ => {
+          this.loading = false;
+        })
+        .catch(err => {
+          this.$message.error("请求失败");
+          this.loading = false;
+        });
     },
     handleCurrentChange(val) {
       this.$router.push({
@@ -244,15 +249,27 @@ export default {
       }
     },
     async onClickExitClazz(clazz_id) {
-      let res = await this.studentExitClazz({
-        clazz_id,
-        student_id: this.selectedStudent.id
-      });
-      if (res.code == 0 && res.data == true) {
-        this.$message.success("操作成功");
-        this.search();
-      } else {
-        this.$message.error("退出班级失败");
+      try {
+        let confirm = await this.$confirm("确定要退出该班级?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        });
+        // console.log("confirm==>", confirm);
+        if (confirm) {
+          let res = await this.studentExitClazz({
+            clazz_id,
+            student_id: this.selectedStudent.id
+          });
+          if (res.code == 0 && res.data == true) {
+            this.$message.success("操作成功");
+            this.search();
+          } else {
+            this.$message.error("退出班级失败");
+          }
+        }
+      } catch (err) {
+        // console.error(err);
       }
     }
   },
