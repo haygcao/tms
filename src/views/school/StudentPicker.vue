@@ -4,12 +4,18 @@
         <div v-show="!showAddStudentModal" class="">
         <h3 class="text-info text-center" v-show="!showAddStudentModal">请为您选的课程选择一个学员</h3>
 
-        <el-form v-if="!student" @keydown.native.enter.prevent="()=>{}" @keyup.enter.native="onSearch" :inline="true" size="small" class="search-form" ref="searchForm" :rules="searchFormRules" :model="searchForm">
+        <el-form v-if="!student" @keydown.native.enter.prevent="()=>{}" @keyup.enter.native="onSearch" :inline="true" size="small" class="search-form"  ref="searchForm" :rules="searchFormRules" :model="searchForm">
                 <el-form-item prop="mobile">
-                    <el-input style="width:320px" v-model="searchForm.mobile" clearable placeholder="输入学员家长的手机号查询"></el-input>
+                    <el-input style="width:320px" v-model="searchForm.mobile" clearable placeholder="输入学员家长的手机号查询">
+                      <el-button slot="append" type="danger" @click="onSearch" :loading="loading" icon="el-icon-search"></el-button>
+                    </el-input>
                 </el-form-item>
+                 <!-- <el-form-item>
+                    <el-button type="danger" @click="onSearch" :loading="loading" icon="el-icon-search">查询</el-button>
+
+                   </el-form-item> -->
                 <el-form-item>
-                    <el-button type="danger" @click="onSearch" :loading="loading" icon="el-icon-search">查询</el-button><span class="text-info" style="margin:0 10px">或者</span>
+                    <span class="text-info" style="margin:0 10px">或者</span>
                     <el-button type="text" size="medium"  @click="onCreateStudent" icon="el-icon-edit-outline">创建新学员</el-button>
                 </el-form-item>
         </el-form>
@@ -131,7 +137,7 @@ export default {
       this.showAddStudentModal = true;
       this.addStudentMode = "create";
     },
-     onEditStudent() {
+    onEditStudent() {
       this.showAddStudentModal = true;
       this.addStudentMode = "edit";
     },
@@ -149,10 +155,10 @@ export default {
         .catch(err => {
           this.loading = false;
         });
-        this.showAddStudentModal=false;
+      this.showAddStudentModal = false;
     },
-    gotoPurchase(){
-        this.$emit('student-picked')
+    gotoPurchase() {
+      this.$emit("student-picked");
     }
   },
   components: {
