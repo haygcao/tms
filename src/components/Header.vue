@@ -4,7 +4,7 @@
     <div  class="container">
     <h1><router-link to="/"><img src="../assets/logo.png" alt="element-logo" class="nav-logo">
     </router-link></h1>
-    <ul class="nav nav-left"><li class="nav-item"><school-select></school-select></li></ul>
+    <ul class="nav nav-left"><li class="nav-item nav-schools"><school-select></school-select></li></ul>
    <ul class="nav">
     <li class="nav-item">
        
@@ -56,7 +56,7 @@ export default {
     logout() {
       this.$auth.logout();
       this.$store.dispatch("clearState");
-      
+
       // this.$store.replaceState({});
     }
   },
@@ -144,5 +144,20 @@ header .nav-item {
   position: relative;
   cursor: pointer;
   padding: 0 15px;
+}
+
+header .nav-schools {
+  margin-left: 15px;
+}
+
+header .nav-schools:after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 24px;
+  background: #DCDFE6;
+  position: absolute;
+  top: 13px;
+  left: 0;
 }
 </style>

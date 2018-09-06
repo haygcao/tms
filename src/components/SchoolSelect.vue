@@ -1,10 +1,11 @@
 <template>
-   <el-dropdown v-if="schools.length>0" size="" trigger="click" @command="switchSchoolCommand">
-        <el-button type="danger" plain size="small">
+
+   <el-dropdown v-if="schools.length>0" trigger="click" @command="switchSchoolCommand">
+        <span type="text" style="font-size:16px;" class="text-danger">
             {{current_school.name}}<i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button>
+        </span>
         <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="school in schools" :key="school.id" :command="school.id">{{school.name}}</el-dropdown-item>
+            <el-dropdown-item v-for="school in schools" :key="school.id" :command="school.id"><span style="font-size:16px;">{{school.name}}</span></el-dropdown-item>
         </el-dropdown-menu>
     </el-dropdown>
 </template>
