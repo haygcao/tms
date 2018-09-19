@@ -62,6 +62,13 @@ const actions = {
         commit(mutations_types.clazz_remove, { res })
         return Promise.resolve(res)
     },
+    //关闭班级
+    async updateCurriculumScheduleTime({ commit, state, getters }, payload) {
+        let res = await clazz.updateCurriculumScheduleTime(payload);
+        // commit(mutations_types.clazz_close, { res, payload })
+        // return Promise.resolve(res)
+        return res;
+    },
     //设置班级显示状态
     async setClazzVisibleState({ commit, state, getters }, payload) {
         let res = await clazz.setClazzVisibleState(payload);

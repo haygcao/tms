@@ -45,20 +45,30 @@
     <el-row v-if="clazzListCopy.length==0">
       <empty-data-view ></empty-data-view>
     </el-row>
-    <el-row v-else class="clazz-list" style="margin-left:-10px;margin-right:-10px;">
+    <el-row v-else class="clazz-list" style="margin-left:-5px;margin-right:-5px;">
       <transition-group name="list" tag="div">
-        <el-col style="padding:10px" :xs="24" :sm="12" :md="8" :lg="6" v-for="clazz in clazzListCopy" :key="clazz.id">
+        <el-col style="padding:5px" :xs="24" :sm="12" :md="8" :lg="6" v-for="clazz in clazzListCopy" :key="clazz.id">
         <el-card  shadow="hover" class="box-card">
           <div class="subject-state" :class="{'subject-state-2':clazz.subject==2,'subject-state-3':clazz.subject==3}" style="">{{clazz.subject|subjectName}}</div>
         <div slot="header" class="clearfix">
-          <span>{{clazz.year}}<span class="text-warning">{{clazz.grade|grade}}</span>{{clazz.term|terms}}{{clazz.class_type|classType}}</span>
+          <span>{{clazz.year}}{{clazz.term|terms}}<span class="text-warning">{{clazz.grade|grade}}</span>{{clazz.class_type|classType}}</span>
           <span style="float: right;">
-            <el-tooltip effect="dark" content="删除" placement="top">
+            <el-dropdown szie="mini" trigger="click" @command="clazzOperateCommand">
+              <el-button plain type="primary" size="mini">
+                <i class="el-icon-more"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :disabled="clazz.state==1||clazz.student_count>0" :command="{op:'del',data:clazz}">删除</el-dropdown-item>
+                <el-dropdown-item :disabled="clazz.state==99" :command="{op:'close',data:clazz}">关闭班级</el-dropdown-item>
+                <el-dropdown-item :disabled="clazz.state>=2" :command="{op:'schedule',data:clazz}">课程表</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <!-- <el-tooltip effect="dark" content="删除" placement="top">
               <el-button :disabled="clazz.state==1||clazz.student_count>0" style="padding: 3px;" @click="handleDelClick(clazz)" size="" type="text" icon="el-icon-delete"></el-button>
             </el-tooltip>
             <el-tooltip effect="dark" content="关闭班级" placement="top">
               <el-button :disabled="clazz.state==99" style="padding: 3px;" @click="handleCloseClick(clazz)" size="" type="text" icon="el-icon-remove-outline"></el-button>
-            </el-tooltip>
+            </el-tooltip> -->
           </span>
         </div>
         <div class="content" style="display:flex">
@@ -116,12 +126,17 @@
          </el-col>
         </el-row>
      </el-dialog>
+     <el-dialog :visible.sync="dialogClazzScheduleVisible" fullscreen  center >
+        <h1 slot="title">课程表<small class="text-info">({{currentClazz.year}}{{currentClazz.term|terms}}{{currentClazz.subject|subjectName}}{{currentClazz.grade|grade}}{{currentClazz.class_type|classType}})</small></h1>
+       <clazz-schedule v-if="dialogClazzScheduleVisible" :clazzId="currentClazz.id"></clazz-schedule>
+     </el-dialog>
 </div>
 </template>
 
 <script>
 import { ClassType, SubjectName, Terms, Grade } from "@/lib/constants";
 import AddClass from "@/views/teaching_manage/AddClass.vue";
+import ClazzSchedule from "@/views/teaching_manage/ClazzSchedule.vue";
 import CourseFilterBox from "@/components/CourseFilterBox.vue";
 import StudentInfoCard from "@/components/StudentInfoCard.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
@@ -150,7 +165,9 @@ export default {
       operate_mode: "create",
       dialogFormVisible: false,
       clazzListCopy: [],
-      dialogClazzStudentVisible: false
+      dialogClazzStudentVisible: false,
+      dialogClazzScheduleVisible: false,
+      currentClazz: {}
     };
   },
   computed: {
@@ -217,6 +234,7 @@ export default {
         event.target.innerText = data.visible ? "公开" : "隐藏";
       });
     },
+
     handleVisibleClick(data) {
       if (data.state > 0) {
         this.$alert("已开课班级无法隐藏", { showClose: false });
@@ -251,6 +269,24 @@ export default {
         .catch(_ => {
           data.visible = !data.visible;
         });
+    },
+    clazzOperateCommand(cmd) {
+      let op = cmd.op;
+      switch (op) {
+        case "close":
+          this.handleCloseClick(cmd.data);
+          break;
+        case "del":
+          this.handleDelClick(cmd.data);
+          break;
+        case "schedule":
+          this.handleScheduleClick(cmd.data);
+          break;
+      }
+    },
+    handleScheduleClick(data) {
+      this.dialogClazzScheduleVisible = true;
+      this.currentClazz = data;
     },
     handleCloseClick(data) {
       if (data.state == 1) {
@@ -368,7 +404,8 @@ export default {
   components: {
     AddClass,
     CourseFilterBox,
-    StudentInfoCard
+    StudentInfoCard,
+    ClazzSchedule
   }
 };
 </script>

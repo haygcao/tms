@@ -69,6 +69,18 @@ async function findById(payload) {
     }
 
 }
+/**
+ * 
+ * @param { id, clazz_id, begin_time, end_time, class_date} payload 
+ */
+async function updateCurriculumScheduleTime(payload) {
+    try {
+        const response = await axios.post('api/clazz/schedules/update_time', payload);
+        return response.data;
+    } catch (err) {
+        return { code: 500, data: {}, message: err.response.data.error || '提交失败' }
+    }
+}
 async function getTeacherInfo(payload) {
     try {
         const response = await axios.get('/api/teacher/info', { params: payload });
@@ -103,4 +115,5 @@ export default {
     setClazzVisibleState,
     searchVisibledClazzList,
     getClazzStudent,
+    updateCurriculumScheduleTime
 }
