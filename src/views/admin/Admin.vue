@@ -53,6 +53,10 @@
             <i class="el-icon-goods"></i>
             <span slot="title">课程价格</span>
         </el-menu-item>
+        <el-menu-item index="/admin/rts/updates">
+            <i class="el-icon-sold-out"></i>
+            <span slot="title">客户端更新</span>
+        </el-menu-item>
     </el-menu>
     </el-aside>
       <el-main>
@@ -202,19 +206,20 @@ export default {
     position: relative;
     cursor: pointer;
 }
+
 .admin .el-menu-item [class^=el-icon-], .admin .el-menu-item [class*='icon-'] {
-  margin-right: 5px;
-  width: 24px;
-  text-align: center;
-  font-size: 18px;
-  vertical-align: middle;
+    margin-right: 5px;
+    width: 24px;
+    text-align: center;
+    font-size: 18px;
+    vertical-align: middle;
 }
 
 .admin .el-submenu [class*='icon-'] {
-  vertical-align: middle;
-  margin-right: 5px;
-  width: 24px;
-  text-align: center;
-  font-size: 18px;
+    vertical-align: middle;
+    margin-right: 5px;
+    width: 24px;
+    text-align: center;
+    font-size: 18px;
 }
 </style>

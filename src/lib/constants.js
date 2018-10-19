@@ -95,3 +95,16 @@ export const STS_Server = process.env.VUE_APP_TMSAPI
 export const CoursewareDomain = 'https://s.reallyedu.com';
 export const HomeworkDomain = 'https://s.reallyedu.com';
 export const HomeworkBasePath = process.env.VUE_APP_HomeworkBasePath || "homework-test";
+
+export const RTSClientPath = process.env.VUE_APP_RTSClientPath || 'RTS-client-test';
+export const RTSClientDownloadDomain = 'https://resource.reallyedu.com';
+export const ResourceOssConfig = {
+    region: 'oss-cn-beijing',
+    endpoint: "resource.reallyedu.com",
+    secure: true,
+    cname: true,
+    // accessKeyId: 'LTAINyj3tqkqy64w',
+    // accessKeySecret: 'TZoibtVyWiKNZcOEbLYQHn2jWIrbgC',
+    // stsToken: creds.SecurityToken,
+    bucket: 'reallyedu'
+}

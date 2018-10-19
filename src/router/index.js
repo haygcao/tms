@@ -41,17 +41,17 @@ const scrollBehavior = (to, from, savedPosition) => {
 export default new Router({
   scrollBehavior,
   routes: [
-    
+
     {
       path: '/',
       name: 'default',
       component: Home,
-      redirect:'/index',
+      redirect: '/index',
       meta: { auth: true },
       children: [
         {
           path: '/index',
-          name:'index',
+          name: 'index',
           // redirect:'/dashboard',
           component: require('@/views/Default.vue').default
         },
@@ -104,7 +104,7 @@ export default new Router({
         {
           name: 'course_list_default',
           path: 'course/list',
-          redirect:'/admin/course/list/1',
+          redirect: '/admin/course/list/1',
         },
         {
           name: 'course_list',
@@ -135,6 +135,11 @@ export default new Router({
           name: 'homework_setting',
           path: 'homework/list',
           component: require('@/views/admin/homework/Homework.vue').default
+        },
+        {
+          name: 'rts_updates',
+          path: 'rts/updates',
+          component: require('@/views/admin/rtsclient/Updates.vue').default
         }
 
 
@@ -193,7 +198,7 @@ export default new Router({
         {
           // 当 /user/:id/profile 匹配成功，
           // UserProfile 会被渲染在 User 的 <router-view> 中
-          name:"classroom",
+          name: "classroom",
           path: 'classroom',
           component: require('@/views/teaching_manage/Classroom.vue').default
         },
