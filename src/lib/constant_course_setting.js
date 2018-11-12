@@ -60,7 +60,7 @@ export const CourseSetting = [{
     grades: [
         {
             key: 'H1',
-            name: '3-4.5岁',
+            name: 'H1',
             terms: [
                 { key: 7, name: '全年', default_lesson_count: 48 },
                 { key: 5, name: '秋寒', default_lesson_count: 24 },
@@ -73,7 +73,7 @@ export const CourseSetting = [{
         },
         {
             key: 'H2',
-            name: '4.5-6岁',
+            name: 'H2',
             terms: [
                 { key: 7, name: '全年', default_lesson_count: 48 },
                 { key: 5, name: '秋寒', default_lesson_count: 24 },

@@ -45,8 +45,8 @@ export const Grade = {
     A1: '3-4岁',
     A2: '4-5岁',
     A3: '5-6岁',
-    H1: '3-4.5岁',
-    H2: '4.5-6岁',
+    H1: 'H1',
+    H2: 'H2',
     B1: '2-4岁',
     B2: '4-5岁',
     B3: '5-6岁',
@@ -89,6 +89,15 @@ export const OssConfig = {
     // accessKeySecret: 'TZoibtVyWiKNZcOEbLYQHn2jWIrbgC',
     // stsToken: creds.SecurityToken,
     bucket: 'reallyedu-course'
+}
+export const MarketChannelOrigin = {
+    1: '电话呼入',
+    2: '到访',
+    3: '互联网',
+    3: '活动',
+    4: '合作机构',
+    5: '转介绍',
+    6: '其他'
 }
 export const CoursewareBasePath = process.env.VUE_APP_CoursewareBasePath || "kj-test";
 export const STS_Server = process.env.VUE_APP_TMSAPI

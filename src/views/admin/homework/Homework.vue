@@ -49,6 +49,13 @@
       prop="s_no"
       label="编号">
     </el-table-column>
+    <el-table-column
+      prop="created_at"
+      label="创建于">
+       <template slot-scope="scope">
+           {{scope.row.created_at|formatDateTime('YYYY-MM-DD H:mm')}}
+       </template>
+    </el-table-column>
      <el-table-column
       prop="file_path"
       label="路径">

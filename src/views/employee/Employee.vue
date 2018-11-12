@@ -46,7 +46,7 @@
     </div>
   </el-row>
   <el-row v-loading="loading" style="margin-left:-10px;margin-right:-10px;">
-    <el-col style="padding:10px" :xs="24" :sm="12" :md="8" :lg="6" v-for="item in employeeList.rows" :key="item.id">
+    <el-col style="padding:5px" :xs="24" :sm="12" :md="8" :lg="8" v-for="item in employeeList.rows" :key="item.id">
     <el-card class="box-card  clearfix" shadow="hover">
 
       <div class="employee-item" :class="{'disabled':item.state!=1}">

@@ -315,7 +315,7 @@ export default {
   justify-content: flex-start;
   align-items: stretch;
   padding: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   font-size: 14px;
   position: relative;
   overflow: hidden;

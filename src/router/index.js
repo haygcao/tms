@@ -102,6 +102,11 @@ export default new Router({
           component: require('@/views/admin/AddSchool.vue').default
         },
         {
+          name: 'course_clazz_type',
+          path: 'course/settings/clazz_type',
+          component: require('@/views/admin/course/ClazzType.vue').default
+        },
+        {
           name: 'course_list_default',
           path: 'course/list',
           redirect: '/admin/course/list/1',
@@ -144,6 +149,18 @@ export default new Router({
 
 
       ]
+    },
+    {
+      path: '/market',
+      name: 'market_manage',
+      component: Home,
+      meta: { auth: true },
+      children: [
+        {
+          name: 'channel',
+          path: 'channel/:page(\\d+)?',
+          component: require('@/views/market/MarketChannel.vue').default
+        },]
     },
     {
       path: '/school',

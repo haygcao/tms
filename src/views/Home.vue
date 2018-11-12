@@ -24,7 +24,8 @@ export default {
   name: "home",
   data() {
     return {
-      isCollapse: true
+      isCollapse: true,
+      white_bg: "bg-white"
     };
   },
   computed: {
@@ -54,9 +55,13 @@ export default {
   background-color: #F5F5F6;
 }
 
+.home.white_bg {
+  background-color: #ffffff;
+}
+
 .home .el-main {
   padding: 0px;
-  -webkit-overflow-scrolling: touch
+  -webkit-overflow-scrolling: touch;
 }
 
 .home .el-main >div {

@@ -330,7 +330,8 @@ class Authenticate {
             if (auth.isAuthenticated()) {
                 config.headers[tokenHeader] = [
                     auth.options.tokenType, auth.getToken()
-                ].join(' ')
+                ].join(' ');
+                
             } else {
                 delete config.headers[tokenHeader]
             }

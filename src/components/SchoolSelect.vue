@@ -51,9 +51,11 @@ export default {
         franchisee_id: franchisee_id
       });
       this.switchSchool(school);
-      window.dispatchEvent(
-        new CustomEvent("school-switched", { detail: school })
-      );
+      // window.dispatchEvent(
+      //   new CustomEvent("school-switched", { detail: school })
+      // );
+      this.$router.go(this.$router.currentRoute);
+      // window.location.reload();// = window.location.href;
     }
   },
   destroyed() {

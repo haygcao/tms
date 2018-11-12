@@ -66,6 +66,13 @@
       prop="md5"
       label="md5">
     </el-table-column>
+     <el-table-column
+      prop="created_at"
+      label="创建于">
+       <template slot-scope="scope">
+           {{scope.row.created_at|formatDateTime('YYYY-MM-DD H:mm')}}
+       </template>
+    </el-table-column>
     <el-table-column
       label="文件地址">
        <template slot-scope="scope">
@@ -295,8 +302,8 @@ export default {
             region: OssConfig.region,
             endpoint: OssConfig.endpoint,
             bucket: OssConfig.bucket,
-            cname:OssConfig.cname,
-            secure:OssConfig.secure,
+            cname: OssConfig.cname,
+            secure: OssConfig.secure,
             accessKeyId: creds.AccessKeyId,
             accessKeySecret: creds.AccessKeySecret,
             stsToken: creds.SecurityToken

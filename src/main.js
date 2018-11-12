@@ -6,7 +6,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import axios from 'axios'
 import VueAxios from '@/plugin/vueAxios'
-import Auth from './plugin/auth'
+import Auth from './plugin/auth';
+import HttpErrorHandler from './plugin/httpErrorIntercepter'
+import httpCustomHeaderIntercepter from './plugin/httpCustomHeaderIntercepter'
 import { sync } from 'vuex-router-sync'
 import * as filters from '@/filters'
 import vueHeadful from 'vue-headful';
@@ -28,13 +30,15 @@ Vue.router = router;
 sync(store, router);//use vuex-router-sync to sync store and router state
 Vue.use(VueAxios, axios)
 axios.defaults.baseURL = process.env.VUE_APP_TMSAPI || 'http://localhost:7001/';
-Vue.use(Auth, { router: router, store: store })
+Vue.use(Auth, { router: router, store: store });
+Vue.use(HttpErrorHandler);
+Vue.use(httpCustomHeaderIntercepter);
 Vue.use(ShoppingCard);
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.component('vue-headful', vueHeadful);
 Vue.component('empty-data-view', EmptyDataView);
-Vue.component('cny',CNY);
+Vue.component('cny', CNY);
 
 new Vue({
   router,

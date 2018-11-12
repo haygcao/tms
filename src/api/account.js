@@ -18,7 +18,7 @@ async function login(user) {
 }
 async function profile() {
     try {
-        const res = await axios.get('/api/me');
+        const res = await axios.get('/api/account/me');
         return res.data
     } catch (err) {
         console.log(err);

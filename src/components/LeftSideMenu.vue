@@ -19,6 +19,19 @@
     <i class="iconfont icon-employee"></i>
     <span slot="title">员工管理</span>
   </el-menu-item>
+  <el-submenu index="/market/channel/1">
+            <template slot="title">
+            <i class="el-icon-goods"></i>
+            <span slot="title">市场管理</span>
+            </template>
+            <el-menu-item index="/market/channel/1">渠道管理</el-menu-item>
+            <el-menu-item index="/market/track/list/1">跟踪记录</el-menu-item>
+            
+  </el-submenu>
+  <!-- <el-menu-item index="/market/channel/1" v-if="school_master||student_master" :route="{name:'employee_list',params:{page:1}}">
+    <i class="iconfont icon-employee"></i>
+    <span slot="title">市场管理</span>
+  </el-menu-item> -->
   <el-menu-item index="/home/promotion/discount" v-if="business_master">
     <i class="iconfont icon-discount-setting"></i>
     <span slot="title">促销折扣</span>

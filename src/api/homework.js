@@ -1,7 +1,7 @@
 import axios from 'axios';
 async function list(payload) {
     try {
-        const response = await axios.get('/resource/homework/list', {
+        const response = await axios.get('/api/resource/homework/list', {
             params: payload
         });
         return response.data;
@@ -13,7 +13,7 @@ async function list(payload) {
 
 async function fetch(payload) {
     try {
-        const response = await axios.get('/resource/homework/fetch', {
+        const response = await axios.get('/api/resource/homework/fetch', {
             params: payload
         });
         return response.data;
@@ -24,7 +24,7 @@ async function fetch(payload) {
 }
 async function remove(payload) {
     try {
-        const response = await axios.get('/resource/homework/remove', {
+        const response = await axios.get('/api/resource/homework/remove', {
             params: payload
         });
         return response.data;
@@ -35,7 +35,7 @@ async function remove(payload) {
 }
 async function create(payload) {
     try {
-        const response = await axios.post('/resource/homework/create', payload);
+        const response = await axios.post('/api/resource/homework/create', payload);
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '保存失败' }
@@ -44,7 +44,7 @@ async function create(payload) {
 }
 async function update(payload) {
     try {
-        const response = await axios.post('/resource/homework/update', payload);
+        const response = await axios.post('/api/resource/homework/update', payload);
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '保存失败' }

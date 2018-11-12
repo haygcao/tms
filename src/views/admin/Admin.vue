@@ -26,7 +26,7 @@
     </header></div>
     <el-container class="layout-main">
         <el-aside :width="memuWidth">
-      <el-menu default-active="/admin/franchisee" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+      <el-menu :default-active="defaultActive" ref="leftMenu" :router="true" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
 
         <el-submenu index="1">
             <template slot="title">
@@ -36,6 +36,20 @@
             <el-menu-item index="/admin/franchisee">加盟校列表</el-menu-item>
             <el-menu-item index="/admin/franchisee/create">新建加盟校</el-menu-item>
             
+        </el-submenu>
+        <el-submenu index="2">
+            <template slot="title">
+            <i class="el-icon-location"></i>
+            <span slot="title">课程设置</span>
+            </template>
+            <el-menu-item index="/admin/course/settings/clazz_type">
+                <i class="el-icon-date"></i>
+                <span slot="title">班型设置</span>
+            </el-menu-item>
+            <el-menu-item index="/admin/course/list/1">
+                <i class="el-icon-date"></i>
+                <span slot="title">课程管理</span>
+            </el-menu-item>
         </el-submenu>
          <el-menu-item index="/admin/courseware/list">
             <i class="iconfont el-icon- icon-ppt"></i>
@@ -79,8 +93,7 @@ export default {
   data() {
     return {
       isCollapse: false,
-      activeIndex: "1",
-      activeIndex2: "1",
+      defaultActive: undefined,
       memuWidth: "200px"
     };
   },
@@ -94,6 +107,12 @@ export default {
     this.$nextTick(() => {
       window.__app_tms_loaded = true;
     });
+  },
+  mounted() {
+    let index = Object.keys(this.$refs["leftMenu"].items).find(
+      v => this.$router.match(v).name == this.$route.name
+    );
+    this.defaultActive = index;
   },
   methods: {
     logout() {
