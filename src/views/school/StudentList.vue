@@ -1,5 +1,5 @@
 <template>
-    <div class="students" >
+    <div class="students main-content" >
         <el-row>
         <div class="page-breadcrumb clearfix">
             <el-breadcrumb separator-class="el-icon-arrow-right">

@@ -6,12 +6,14 @@ const { market_channel, market_sub_channel } = api;
 const mutations_types = {
     created: "market_channel/create",
     fetch: "market_channel/fetch",
-    list: "market_channel/list"
+    list: "market_channel/list",
+    all: "market_channel/all"
 }
 
 
 const state = {
     list: {},
+    all:{}
 }
 
 const getters = {
@@ -32,6 +34,11 @@ const actions = {
     async getMarketChannelList({ commit, state, getters }, payload) {
         let res = await market_channel.list(payload);
         commit(mutations_types.list, { res })
+        return res;
+    },
+    async getAllMarketChannelList({ commit, state, getters }, payload) {
+        let res = await market_channel.findAll(payload);
+        commit(mutations_types.all, { res })
         return res;
     },
     async getMarketChannelById({ commit, state, getters }, payload) {
@@ -63,7 +70,9 @@ const actions = {
 }
 const mutations = {
 
-
+    [mutations_types.all](state, { res }) {
+        state.all = res;
+    },
     [mutations_types.list](state, { res }) {
         state.list = res;
     },

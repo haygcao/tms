@@ -1,5 +1,5 @@
 <template>
-  <div class="clazz" style="max-width:1400px;" :style="{'padding-right':rightTabWidth}">
+  <div class="clazz main-content" style="max-width:1400px;" :style="{'padding-right':rightTabWidth}">
     <vue-headful title="睿乐教育-选课报名" description="睿乐教育" />
     <!-- <el-row>
       <div class="page-breadcrumb clearfix">

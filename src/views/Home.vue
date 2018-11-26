@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home white_bg">
     <Header></Header>
     <el-container class="layout-main">
        <transition name="el-fade-in-linear">
@@ -52,11 +52,20 @@ export default {
 <style lang="stylus">
 .home {
   height: 100%;
-  background-color: #F5F5F6;
 }
 
 .home.white_bg {
   background-color: #ffffff;
+}
+
+.gray-bg {
+  background-color: #f8f8f9;
+  min-height: calc(100% - 40px);
+  min-height: fill-available;
+}
+
+.home .el-main .main-content {
+  padding: 20px;
 }
 
 .home .el-main {
@@ -64,10 +73,9 @@ export default {
   -webkit-overflow-scrolling: touch;
 }
 
-.home .el-main >div {
-  padding: 20px;
-}
-
+// .home .el-main >div {
+// padding: 20px;
+// }
 .layout-main {
   height: 100%;
   padding-top: 50px;
@@ -83,6 +91,11 @@ export default {
   &:first-child {
     margin-top: 0;
   }
+}
+
+.bg-white {
+  background-color: #ffffff;
+  min-height: fill-available;
 }
 </style>
 

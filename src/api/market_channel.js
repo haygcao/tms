@@ -35,9 +35,16 @@ async function create(payload) {
     }
 
 }
+async function  findAll(payload) {
+    const response = await axios.get('/api/market/channel/all', {
+        params: payload
+    });
+    return response.data;
+}
 
 export default {
     list,
+    findAll,
     create,
     fetch,
     update,

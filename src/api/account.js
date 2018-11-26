@@ -26,7 +26,8 @@ async function profile() {
     }
 }
 async function logout() {
-    return { success: true };
+    const res = await axios.get('/account/logout');
+    return res.data;
 }
 export default {
     getAccounts,

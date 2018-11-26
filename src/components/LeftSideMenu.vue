@@ -25,6 +25,7 @@
             <span slot="title">市场管理</span>
             </template>
             <el-menu-item index="/market/channel/1">渠道管理</el-menu-item>
+            <el-menu-item index="/market/customer/1">客户管理</el-menu-item>
             <el-menu-item index="/market/track/list/1">跟踪记录</el-menu-item>
             
   </el-submenu>

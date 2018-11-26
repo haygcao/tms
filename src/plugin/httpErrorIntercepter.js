@@ -22,19 +22,19 @@ function HttpErrorInterceptor(Vue, options) {
     })
     axios.interceptors.request.use(function (config) {
         // Do something before request is sent
-        store.commit('httpInterceptor/Http_REQUESTING', { config: config, status: 0, message: 'prepending' })
+        // store.commit('httpInterceptor/Http_REQUESTING', { config: config, status: 0, message: 'prepending' })
         return config;
     });
     axios.interceptors.response.use(_responseIntercept, _responseErrorIntercept);
     function _responseIntercept(res) {
-        store.commit('httpInterceptor/Http_RESPONSE_SUCCEED', res)
+        // store.commit('httpInterceptor/Http_RESPONSE_SUCCEED', res)
         return res;
     }
     function _responseErrorIntercept(error) {
         if (error.response.status > 410) {
             error.response.data = { code: error.response.status, data: error.response.data }
         }
-        store.commit('httpInterceptor/Http_RESPONSE_ERROR', error)
+        // store.commit('httpInterceptor/Http_RESPONSE_ERROR', error)
         return Promise.reject(error);
     }
     start = true;

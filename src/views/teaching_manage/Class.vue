@@ -1,5 +1,5 @@
 <template>
-<div class="clazz">
+<div class="clazz main-content gray-bg">
     <!-- <el-row>
         <div class="page-breadcrumb clearfix">
             <el-breadcrumb separator-class="el-icon-arrow-right">

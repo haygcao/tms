@@ -5,6 +5,12 @@
     margin: 0 auto;
 }
 
+.page-header {
+    background-color: #f8f8f9;
+    padding-left: 20px;
+    /* border-bottom: 1px solid #EBEEF5; */
+}
+
 .info-block.hover, .info-block.is-show-shadow:hover {
     box-shadow: 0 0 8px 0 rgba(232, 237, 250, .6), 0 2px 4px 0 rgba(232, 237, 250, .5)
 }
@@ -17,7 +23,7 @@
 }
 
 .block.hover, .block.is-show-shadow:hover {
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1)
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1)
 }
 
 .text-center {
@@ -36,9 +42,11 @@
     cursor: pointer;
     color: #303133
 }
-.pull-right{
+
+.pull-right {
     float: right !important;
 }
+
 .page-breadcrumb {
     border-bottom: 1px solid #EBEEF5;
     padding: 15px 0
@@ -107,13 +115,14 @@ a:hover {
     vertical-align: middle;
     margin: auto 2px;
     overflow: hidden;
-  }
-  
-  .img-circle.small {
+}
+
+.img-circle.small {
     width: 30px;
     height: 30px;
     line-height: 30px;
-  }
+}
+
 /*
  * scroll_bar STYLE
  */

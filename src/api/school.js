@@ -56,7 +56,8 @@ async function getClassroom(payload) {
 }
 async function getTeachers(payload) {
     try {
-        const response = await axios.get('/api/employee/teachers', { params: payload });
+        // const response = await axios.get('/api/employee/teachers', { params: payload });
+        const response = await axios.get('/api/employee/find_by_job_title', { params: Object.assign({ state: 1, job_title: 'teacher' }, payload) });
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '获取失败' }
@@ -65,7 +66,7 @@ async function getTeachers(payload) {
 }
 async function getConsultants(payload) {
     try {
-        const response = await axios.get('/api/employee/consultant_list', { params: payload });
+        const response = await axios.get('/api/employee/find_by_job_title', { params: Object.assign({ state: 1, job_title: 'consultant' }, payload) });
         return response.data;
     } catch (err) {
         return { code: 500, data: {}, message: err.response.data.error || '获取失败' }

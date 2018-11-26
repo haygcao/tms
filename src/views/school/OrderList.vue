@@ -1,5 +1,5 @@
 <template>
-<div class="order-list">
+<div class="order-list main-content">
     <el-row>
         <div class="page-breadcrumb clearfix">
             <el-breadcrumb separator-class="el-icon-arrow-right">

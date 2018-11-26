@@ -6,19 +6,20 @@ const region = api.region;
 //mutations types
 const mutations_types = {
     received_region: "region.received",
-    received_provinces: "region.received_provinces"
+    received_provinces: "region.received_provinces",
+    received_city_tree: "region.received_city_tree",
 }
 
 
 const state = {
     regions: [],
     provinces: [],
-
+    cities_tree: [],
 }
 
 const getters = {
     provinceList: state => {
-        if(!state.regions){
+        if (!state.regions) {
             return []
         }
         let province = state.regions.filter(region => region.parent_id == '1');
@@ -34,7 +35,7 @@ const getters = {
         return list;
     },
     regionName: (state) => (code) => {
-        if(!state.regions){
+        if (!state.regions) {
             return ''
         }
         let region = state.regions.find(p => p.region_code == code);
@@ -44,20 +45,26 @@ const getters = {
     },
     // // provinceList: state => state.regions.filter(p => p.parent_id = '1'),
     children: (state) => (id) => {
-        if(!state.regions){
+        if (!state.regions) {
             return []
         }
         let l = state.regions.filter(p => p.parent_id === id);
         return l;
-    }
+    },
 }
+
 const actions = {
 
     async getRegions({ commit, state }, payload) {
         let res = await region.getRegions();
         // await this.dispatch('provinces');
         commit(mutations_types.received_region, { res })
-
+        return res;
+    },
+    async getCityTree({ commit, dispatch, state }, payload) {
+        let res = await region.getCityTree();
+        commit(mutations_types.received_city_tree, { res })
+        return res;
     },
     async provinces({ commit, state, getters }, payload) {
         // let res = getters.children('1')
@@ -70,6 +77,9 @@ const mutations = {
 
     [mutations_types.received_region](state, { res }) {
         state.regions = res;
+    },
+    [mutations_types.received_city_tree](state, { res }) {
+        state.cities_tree = res;
     },
     [mutations_types.received_provinces](state, { res }) {
         state.provinces = res;

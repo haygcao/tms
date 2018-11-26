@@ -1,5 +1,5 @@
 <template>
-    <div class="promotion">
+    <div class="promotion main-content">
         <vue-headful title="促销折扣-睿乐教育" description="睿乐教育" />
         <el-row >
             <div class="page-breadcrumb">

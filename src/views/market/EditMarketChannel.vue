@@ -26,7 +26,7 @@ import { MarketChannelOrigin } from "@/lib/constants";
 import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   props: {
-    channel_id: { type: Number, required: true }
+    channel_id: { type: String, required: true }
   },
   data() {
     return {
@@ -40,8 +40,8 @@ export default {
           { required: true, message: "请输入渠道名称", trigger: "blur" },
           {
             min: 1,
-            max: 50,
-            message: "长度在 3 到 50 个字符",
+            max: 10,
+            message: "长度在 1 到 10 个字符",
             trigger: "blur"
           },
           {

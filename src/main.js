@@ -14,6 +14,7 @@ import * as filters from '@/filters'
 import vueHeadful from 'vue-headful';
 import ShoppingCard from './plugin/shoppingCard'
 import EmptyDataView from '@/components/EmptyDataView.vue'
+import Divider from '@/components/Divider.vue'
 import CNY from '@/components/CNY.vue'
 // 实例化Vue的filter
 Object.keys(filters).forEach(k => {
@@ -38,6 +39,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.component('vue-headful', vueHeadful);
 Vue.component('empty-data-view', EmptyDataView);
+Vue.component('divider', Divider);
 Vue.component('cny', CNY);
 
 new Vue({

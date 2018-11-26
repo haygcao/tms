@@ -213,4 +213,10 @@ const JobTitles = {
 export const jobTitle = (val) => {
     return JobTitles[val] || ''
 }
-
+export const parentRelation = (val) => {
+    if (typeof val !== 'number') {
+        return ''
+    }
+    const _parentRelations = { 1: "爸爸", 2: "妈妈", 3: "爷爷", 4: "奶奶", 5: "姥爷", 6: "姥姥", 7: "其他", };
+    return _parentRelations[val] || '其他';
+}

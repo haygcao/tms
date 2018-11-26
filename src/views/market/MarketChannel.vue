@@ -1,5 +1,5 @@
 <template>
-<div class="channel-list">
+<div class="channel-list main-content">
     <el-row>
         <div class="page-breadcrumb clearfix">
             <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -24,15 +24,29 @@
 
     <el-row>
         <div class="">
-        <el-table ref="channel_table" :data="channelList.rows" stripe border size="medium" :row-key="(row)=>row.id" >
+        <el-table ref="channel_table" :data="channelList.rows" size="medium" :row-key="(row)=>row.id" >
 
-            <el-table-column type="index" label="#" width="40">
+            <el-table-column type="index" label="" width="40">
             </el-table-column>
-            <el-table-column prop="name" width="160" label="渠道名称">
+            <el-table-column prop="name" width="150" :show-overflow-tooltip="true" label="渠道名称">
+            </el-table-column>
+            <el-table-column width="100" label="">
+              <template slot-scope="scope">
+                <div class="channel-item-operate">
+                  <el-tooltip class="item" effect="dark" content="编辑渠道" placement="top">
+                <a @click="onUpdateChannel(scope.row)" type="text" size="small"><i class="el-icon-edit-outline"></i></a>
+                  </el-tooltip>
+                  <divider type="vertical"/>
+                   <el-tooltip class="item" effect="dark" content="添加子渠道" placement="top">
+                <a @click="onAddSubChannel(scope.row)" type="text" size="small"><i class="el-icon-tickets"></i></a>
+                   </el-tooltip>
+                </div>
+                
+              </template>
             </el-table-column>
             <el-table-column label="子渠道">
                 <template slot-scope="scope">
-                    <el-button class="sub-channel-tag" @click="onUpdateSubChannel(sub)" round :type="sub.state==1?'success':''" size="mini" v-for="sub in scope.row.market_sub_channels" :key="sub.id">{{sub.name}}</el-button>
+                    <el-button class="sub-channel-tag" @click="onUpdateSubChannel(sub)" round :type="sub.state==1?'info':''" size="mini" v-for="sub in scope.row.market_sub_channels" :key="sub.id">{{sub.name}}</el-button>
                 </template>
             </el-table-column>
             <el-table-column width="80" label="状态">
@@ -45,12 +59,12 @@
             {{scope.row.created_at|formatDateTime("YYYY-MM-DD H:mm")}}
           </template>
              </el-table-column>
-            <el-table-column fixed="right" label="操作" width="150">
+            <!-- <el-table-column fixed="right" label="" width="150">
                 <template slot-scope="scope">
             <el-button @click="onUpdateChannel(scope.row)" type="text" size="small">编辑</el-button>
             <el-button @click="onAddSubChannel(scope.row)" type="text" size="small">添加子渠道</el-button>
           </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
         </div>
     </el-row>
@@ -165,7 +179,7 @@ export default {
       this.getMarketChannelList(payload);
     },
     onSearchEnterPress() {
-        this.onSearch();
+      this.onSearch();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -228,6 +242,21 @@ export default {
 }
 .sub-channel-tag {
   margin: 3px;
+}
+.channel-item-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 160px;
+}
+.channel-item-operate {
+  display: none;
+}
+.channel-item-operate a{
+  padding: 5px;
+}
+.el-table__row:hover .channel-item-operate {
+  display: block;
 }
 </style>
 

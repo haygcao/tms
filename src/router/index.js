@@ -160,6 +160,16 @@ export default new Router({
           name: 'channel',
           path: 'channel/:page(\\d+)?',
           component: require('@/views/market/MarketChannel.vue').default
+        },
+        {
+          name: 'customer',
+          path: 'customer/:page(\\d+)?',
+          component: require('@/views/market/CustomerList.vue').default
+        },
+        {
+          name: 'customer_create',
+          path: 'customer/create',
+          component: require('@/views/market/AddCustomer.vue').default
         },]
     },
     {
