@@ -285,23 +285,23 @@ export default {
             }
           ],
           birthday: [
-            // {
-            //   required: true,
-            //   message: "请填写生日",
-            //   trigger: ["blur", "change"]
-            // },
-            // {
-            //   validator: (rule, value, callback) => {
-            //     if (!value) {
-            //       return callback(new Error("请填写生日"));
-            //     }
-            //     if (Date.now() - new Date(value) < 0) {
-            //       return callback(new Error("请填写正确的生日"));
-            //     }
-            //     return callback();
-            //   },
-            //   trigger: "blur"
-            // }
+            {
+              required: true,
+              message: "请填写生日",
+              trigger: ["blur", "change"]
+            },
+            {
+              validator: (rule, value, callback) => {
+                if (!value) {
+                  return callback(new Error("请填写生日"));
+                }
+                if (Date.now() - new Date(value) < 0) {
+                  return callback(new Error("请填写正确的生日"));
+                }
+                return callback();
+              },
+              trigger: "blur"
+            }
           ]
         },
         parents_rule: {
