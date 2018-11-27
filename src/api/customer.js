@@ -59,6 +59,14 @@ async function createCommunication(payload) {
         return err.response.data;
     }
 }
+async function distibuteToEmployee(payload) {
+    const res = await axios.post('/api/customer/distibute', payload);
+    return res.data
+}
+async function batchDistibuteToEmployee(payload) {
+    const res = await axios.post('/api/customer/distibute_batch', payload);
+    return res.data
+}
 export default {
     list,
     create,
@@ -66,6 +74,8 @@ export default {
     fetch,
     getCommunicationsByCustomerId,
     searchCommunicationsList,
-    createCommunication
+    createCommunication,
+    batchDistibuteToEmployee,
+    distibuteToEmployee
 
 }

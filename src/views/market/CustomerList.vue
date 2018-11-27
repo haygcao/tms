@@ -115,9 +115,9 @@
                         <i class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                       <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click="onBookAudition(scope.row)">试听</el-dropdown-item>
-                        <el-dropdown-item @click="onContract(scope.row)">签单</el-dropdown-item>
-                        <el-dropdown-item @click="onRedistribute(scope.row)">转派</el-dropdown-item>
+                        <el-dropdown-item><a @click="onBookAudition(scope.row)">试听</a></el-dropdown-item>
+                        <el-dropdown-item ><a @click="onContract(scope.row)">签单</a></el-dropdown-item>
+                        <el-dropdown-item ><a @click="onRedistribute(scope.row)">转派</a></el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -135,6 +135,22 @@
             <h2 slot="title">添加记录</h2>
              <add-communication @create-success="onCreateLogSuccess" @create-error="onCreateLogError" @cancel="dialogAddLogVisible=!dialogAddLogVisible" :customer_id="current_customer_id" v-if="dialogAddLogVisible"></add-communication>
         </el-dialog>
+         <el-dialog :visible.sync="dialogRedistributeVisible" :close-on-click-modal="false" >
+            <h4 slot="title">选择要分配的顾问</h4>
+             <el-form size="" :model="redistributeForm" ref="redistributeForm">
+                <el-form-item prop="employee" label="选择顾问" :rules="[{required:true,message: '选择顾问',trigger: 'change'}]">
+                       <el-select value-key="id" v-model="redistributeForm.employee"  placeholder="顾问">
+                        <el-option v-for="item in schoolConsultants" :key="item.id" :label="item.name" :value="item"></el-option>
+                        </el-select>
+                </el-form-item>
+                <!-- <el-form-item>
+                  <el-button @click="onSubmitRedistribute">提交</el-button>
+                </el-form-item> -->
+             </el-form>
+             <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onSubmitRedistribute">确 定</el-button>
+              </span>
+        </el-dialog>
     </div>
     </div>
 </template>
@@ -145,9 +161,11 @@ import AddCommunication from "./AddCommunication.vue";
 export default {
   data() {
     return {
+      dialogRedistributeVisible: false,
       dialogAddLogVisible: false,
       current_customer_id: undefined,
       loading: false,
+      redistributeForm: { customer_list: [], employee: undefined },
       searchForm: {
         keyword: undefined,
         // employee:undefined,
@@ -225,7 +243,8 @@ export default {
     ...mapActions({
       getConsultants: "getConsultants",
       getMarketChannelList: "getMarketChannelList",
-      searchCustomerList: "searchCustomerList"
+      searchCustomerList: "searchCustomerList",
+      batchDistibuteCustomerToEmployee: "batchDistibuteCustomerToEmployee"
     }),
     handleSelectionChange(val) {
       this.multipleSelectionCustomer = val;
@@ -292,7 +311,31 @@ export default {
       this.dialogAddLogVisible = false;
       this.$notify.error("提交失败");
     },
-    async onRedistribute(row) {},
+    async onRedistribute(row) {
+      this.dialogRedistributeVisible = true;
+      this.redistributeForm.customer_list = [
+        {
+          customer_id: row.customer_id,
+          employee_id: (row.customer_distributes[0] || {}).employee_id
+        }
+      ];
+    },
+    onSubmitRedistribute() {
+      this.$refs["redistributeForm"].validate(valid => {
+        if (valid) {
+          let payload = Object.assign(
+            { school_id: this.current_school.id },
+            this.redistributeForm
+          );
+          this.batchDistibuteCustomerToEmployee(payload).then(res=>{
+            if(res&&res.code==0){
+              this.$notify.success('提交成功');
+            }
+            this.dialogRedistributeVisible = false;
+          })
+        }
+      });
+    },
     async onContract(row) {},
     handleCurrentChange(val) {
       this.currentPage = val;

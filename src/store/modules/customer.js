@@ -53,6 +53,10 @@ const actions = {
         let res = await customer.createCommunication(payload);
         return res;
     },
+    async batchDistibuteCustomerToEmployee({ commit, state, getters }, payload) {
+        let res = await customer.batchDistibuteToEmployee(payload);
+        return res;
+    },
 }
 const mutations = {
 
