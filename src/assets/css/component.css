@@ -123,6 +123,13 @@ a:hover {
     line-height: 30px;
 }
 
+.loading-index {
+    background: url(../ellipsis-loading.gif) 0 center no-repeat;
+    width: 77px;
+    height: 60px;
+    display: inline-block;
+}
+
 /*
  * scroll_bar STYLE
  */

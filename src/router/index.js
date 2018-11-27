@@ -167,6 +167,25 @@ export default new Router({
           component: require('@/views/market/CustomerList.vue').default
         },
         {
+          name: 'customer_info',
+          path: 'customer/u/:id',
+          redirect: { name: 'customer_detail' },
+          component: require('@/views/market/CustomerInfo.vue').default,
+          children: [{
+            name: 'customer_detail',
+            path: 'basic',
+            component: require('@/views/market/CustomerBasic.vue').default
+          }, {
+            name: 'customer_communication',
+            path: 'communication',
+            component: require('@/views/market/CustomerCommunication.vue').default
+          }, {
+            name: 'customer_audition',
+            path: 'audition',
+            component: require('@/views/market/CustomerAudition.vue').default
+          },],
+        },
+        {
           name: 'customer_create',
           path: 'customer/create',
           component: require('@/views/market/AddCustomer.vue').default

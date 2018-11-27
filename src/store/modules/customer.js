@@ -22,6 +22,11 @@ const actions = {
         return res
 
     },
+    async getCustomerById({ commit, state }, payload) {
+        let res = await customer.fetch(payload);
+        return res
+
+    },
     // async updateMarketChannel({ commit, state, getters }, payload) {
     //     let res = await market_channel.update(payload);
     //     return res;
@@ -34,6 +39,18 @@ const actions = {
     },
     async getStudentParentByMobile({ commit, state, getters }, payload) {
         let res = await customer.findByMobile(payload);
+        return res;
+    },
+    async getCommunicationsByCustomerId({ commit, state, getters }, payload) {
+        let res = await customer.getCommunicationsByCustomerId(payload);
+        return res;
+    },
+    async searchCommunicationsList({ commit, state, getters }, payload) {
+        let res = await customer.searchCommunicationsList(payload);
+        return res;
+    },
+    async createCommunication({ commit, state, getters }, payload) {
+        let res = await customer.createCommunication(payload);
         return res;
     },
 }

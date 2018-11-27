@@ -1,6 +1,6 @@
 <template>
   <div class="classroom">
-    <el-row>
+    <el-row class="page-header">
       <div class="page-breadcrumb clearfix">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item>教学管理</el-breadcrumb-item>
@@ -9,6 +9,7 @@
       </div>
 
     </el-row>
+    <div class="main-content gray-bg">
     <el-row>
       <el-button type="danger" @click="onAddClassroom" size="small" icon="el-icon-circle-plus-outline">新建教室</el-button>
     </el-row>
@@ -68,6 +69,7 @@
         </el-table-column>
       </el-table>
     </el-row>
+    </div>
     <el-dialog :visible.sync="dialogFormVisible" fullscreen center>
       <h1 slot="title">{{operate_mode=='create'?'新建':'修改'}}教室</h1>
       <add-classroom v-if="dialogFormVisible" v-bind:mode="operate_mode" :classroom="selected_id" @updated-success="onUpdated"

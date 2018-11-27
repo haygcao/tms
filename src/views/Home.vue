@@ -9,7 +9,7 @@
        </transition>
       <el-main>
         <transition name="el-fade-in" mode="out-in">
-          <router-view/>
+          <router-view></router-view>
         </transition>
       </el-main>
     </el-container>
@@ -60,6 +60,7 @@ export default {
 
 .gray-bg {
   background-color: #f8f8f9;
+  height: 100%;
   min-height: calc(100% - 40px);
   min-height: fill-available;
 }
@@ -73,9 +74,10 @@ export default {
   -webkit-overflow-scrolling: touch;
 }
 
-// .home .el-main >div {
-// padding: 20px;
-// }
+.home .el-main >div {
+  height: 100%;
+}
+
 .layout-main {
   height: 100%;
   padding-top: 50px;

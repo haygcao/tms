@@ -45,9 +45,9 @@
                 </el-form-item>
             </el-form>
         </el-row>
-        <el-row>
-        <div class="">
-        <el-table v-loading="loading" ref="customer_table" :data="customerList.rows" size="medium" :row-key="(row)=>row.id" @selection-change="handleSelectionChange">>
+        <el-row v-loading="loading" element-loading-spinner="loading-index">
+        <div v-if="!loading" class="">
+        <el-table ref="customer_table" :data="customerList.rows" size="medium" :row-key="(row)=>row.id" @selection-change="handleSelectionChange">>
             <el-table-column
             type="selection"
             width="55">
@@ -103,7 +103,7 @@
             <el-table-column fixed="right" label="操作" width="150">
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" content="查看" placement="top">
-                    <a @click="onUpdate(scope.row)" type="text" style="padding:8px;"><i class="el-icon-document"></i></a>
+                    <a @click="onShow(scope.row)" type="text" style="padding:8px;"><i class="el-icon-document"></i></a>
                     </el-tooltip>
                     <divider type="vertical"/>
                     <el-tooltip class="item" effect="dark" content="跟进" placement="top">
@@ -115,30 +115,38 @@
                         <i class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                       <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>试听</el-dropdown-item>
-                        <el-dropdown-item>签单</el-dropdown-item>
+                        <el-dropdown-item @click="onBookAudition(scope.row)">试听</el-dropdown-item>
+                        <el-dropdown-item @click="onContract(scope.row)">签单</el-dropdown-item>
+                        <el-dropdown-item @click="onRedistribute(scope.row)">转派</el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
                 </template>
             </el-table-column>
         </el-table>
         </div>
-    </el-row>
-    <el-row>
-        <div class="text-center">
-            <el-pagination v-if="customerList.count" background @current-change="handleCurrentChange" :current-page.sync="currentPage" layout="prev, pager, next" :page-size="pageSize" :total="customerList.count">
-            </el-pagination>
-        </div>
-    </el-row>
+        </el-row>
+        <el-row v-if="!loading">
+            <div class="text-center">
+                <el-pagination v-if="customerList.count" background @current-change="handleCurrentChange" :current-page.sync="currentPage" layout="prev, pager, next" :page-size="pageSize" :total="customerList.count">
+                </el-pagination>
+            </div>
+        </el-row>
+        <el-dialog :visible.sync="dialogAddLogVisible" :close-on-click-modal="false"  center >
+            <h2 slot="title">添加记录</h2>
+             <add-communication @create-success="onCreateLogSuccess" @create-error="onCreateLogError" @cancel="dialogAddLogVisible=!dialogAddLogVisible" :customer_id="current_customer_id" v-if="dialogAddLogVisible"></add-communication>
+        </el-dialog>
     </div>
     </div>
 </template>
 <script>
 import { MarketChannelOrigin } from "@/lib/constants";
 import { mapGetters, mapState, mapActions } from "vuex";
+import AddCommunication from "./AddCommunication.vue";
 export default {
   data() {
     return {
+      dialogAddLogVisible: false,
+      current_customer_id: undefined,
       loading: false,
       searchForm: {
         keyword: undefined,
@@ -232,6 +240,8 @@ export default {
       this.currentPage = 1;
       if (this.employee && this.employee.id) {
         this.searchForm.employee_id = this.employee.id;
+      } else {
+        this.searchForm.employee_id = undefined;
       }
       this.$router.push({
         params: { page: this.currentPage },
@@ -261,8 +271,29 @@ export default {
     async onAddCustomer() {
       this.$router.push({ name: "customer_create" });
     },
-    async onUpdate(row) {},
-    async onAddLog(row) {},
+    async onShow(row) {
+      this.$router.push({
+        name: "customer_detail",
+        params: { id: row.customer_id }
+      });
+    },
+    async onAddLog(row) {
+      this.current_customer_id = row.customer_id;
+      this.dialogAddLogVisible = true;
+    },
+    onCreateLogSuccess() {
+      this.dialogAddLogVisible = false;
+      this.$notify.success("提交成功");
+      this.$nextTick(_ => {
+        this.search();
+      });
+    },
+    onCreateLogError() {
+      this.dialogAddLogVisible = false;
+      this.$notify.error("提交失败");
+    },
+    async onRedistribute(row) {},
+    async onContract(row) {},
     handleCurrentChange(val) {
       this.currentPage = val;
       this.$router.push({
@@ -295,6 +326,9 @@ export default {
     customer_origin(val) {
       return MarketChannelOrigin[val] || "";
     }
+  },
+  components: {
+    AddCommunication
   }
 };
 </script>

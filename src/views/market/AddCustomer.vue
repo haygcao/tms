@@ -1,5 +1,5 @@
 <template>
-     <div class="gray-bg">
+     <div class="">
             <el-row class="page-header" style="">
                 <!-- <div class="page-breadcrumb clearfix">
                     <el-breadcrumb separator-class="el-icon-arrow-right">

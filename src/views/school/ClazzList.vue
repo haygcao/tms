@@ -1,5 +1,5 @@
 <template>
-  <div class="clazz main-content" style="max-width:1400px;" :style="{'padding-right':rightTabWidth}">
+  <div class="clazz main-content gray-bg" style="max-width:1400px;" :style="{'padding-right':rightTabWidth}">
     <vue-headful title="睿乐教育-选课报名" description="睿乐教育" />
     <!-- <el-row>
       <div class="page-breadcrumb clearfix">
@@ -271,15 +271,16 @@ export default {
       return width;
     },
     discounts_info() {
-      let disc_1 = this.discounts.map(v => {
-        if (v.discount_type == 1) {
-          return v.title;
-        }
-      });
-      if (disc_1.length == 0) {
-        return null;
-      }
-      return "连报优惠:" + disc_1.toString();
+      return '';
+      // let disc_1 = this.discounts.map(v => {
+      //   if (v.discount_type == 1) {
+      //     return v.title;
+      //   }
+      // });
+      // if (disc_1.length == 0) {
+      //   return null;
+      // }
+      // return "连报优惠:" + disc_1.toString();
     }
   },
   beforeRouteUpdate(to, from, next) {

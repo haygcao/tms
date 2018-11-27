@@ -1,6 +1,6 @@
 <template>
-  <div class="employee main-content gray-bg">
-   <el-row >
+  <div class="employee">
+   <el-row class="page-header" >
      <div class="page-breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>业务管理</el-breadcrumb-item>
@@ -9,6 +9,7 @@
      </div>
     
   </el-row>
+  <div class="main-content gray-bg">
   <el-row>
     <el-form :inline="true" size="small" :model="searchForm" class="search-form-inline">
       <el-form-item>
@@ -98,6 +99,7 @@
       </el-pagination>
     </div>
   </el-row>
+  </div>
   <el-dialog :visible.sync="dialogEditEmployeeVisible" :close-on-click-modal="false" center >
             <h2 slot="title">修改员工信息</h2>
             <keep-alive>
